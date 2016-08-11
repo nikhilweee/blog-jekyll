@@ -1,0 +1,29 @@
+---
+layout: page
+title: Categories
+---
+
+<div class="tags-expo">
+  <ul class="pager main-pager">
+    {% for tag in site.categories %}
+    <li>
+    <a href="#{{ tag[0] | slugify }}" class="post-tag">{{ tag[0] }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+  <hr/>
+  <div class="tags-expo-section">
+    {% for tag in site.categories %}
+    <h2 id="{{ tag[0] | slugify }}">{{ tag[0] }}</h2>
+    <ul class="tags-expo-posts">
+      {% for post in tag[1] %}
+      <li>
+        <a class="post-title" href="{{ site.baseurl }}{{ post.url }}">
+          <strong>{{ post.title }}</strong> {{ post.subtitle }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endfor %}
+  </div>
+</div>
