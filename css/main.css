@@ -4,17 +4,21 @@
 
 body {
   font-family: 'Merriweather', 'Lora', 'Times New Roman', serif;
-  font-size: 18px;
+  font-size: 16px;
   color: #404040;
   position: relative;
   background: #FFF;
+}
+@media only screen and (min-width: 768px) {
+  body {
+    font-size: 18px;
+  }
 }
 p {
   line-height: 1.75;
   margin: 30px 0;
 }
 p a {
-  /* text-decoration: underline */
   color: #008AFF;
 }
 p.related-post {
@@ -99,6 +103,13 @@ img {
   .disqus-comments {
     margin-top: 40px;
   }
+}
+
+div.footnotes{
+  font-size: 0.7em;
+}
+div.footnotes p{
+  margin: 0px;
 }
 
 /* --- Navbar --- */

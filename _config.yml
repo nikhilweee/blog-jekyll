@@ -16,6 +16,9 @@ baseurl: ""
 # Name of website
 title: Nikhil Verma
 
+# URL for tags
+tag-url: tags
+
 # Short description of your site
 description: A virtual proof that name is awesome!
 
@@ -23,9 +26,11 @@ description: A virtual proof that name is awesome!
 
 # List of links in the navigation bar
 navbar-links:
-  Blog: "blog"
-  Categories: "blog/categories#hacks"
-  About Me: "aboutme"
+  Blog: ""
+  About Me: "about"
+  More:
+    - Categories: "categories"
+    - References: "reference"
   # Resources:
   #   - Beautiful Jekyll: "http://deanattali.com/beautiful-jekyll/"
   #   - Learn markdown: "http://www.markdowntutorial.com/"
@@ -34,7 +39,7 @@ navbar-links:
 
 # Image to show in the navigation bar - image must be a square (width = height)
 # Remove this parameter if you don't want an image in the navbar
-# avatar: "/img/avatar-icon.png"
+avatar: "/img/avatar-icon.jpg"
 
 # --- Footer options --- #
 
@@ -51,12 +56,12 @@ author:
 
 # Select which links to show in the footer
 footer-links-active:
-  rss: false
+  rss: true
   facebook: true
   email: true
   twitter: true
   github: true
-  linkedin: false
+  linkedin: true
   stackoverflow: false
 
 # Select whether or not to show related posts
@@ -64,7 +69,7 @@ show-related-posts: true
 
 # How to display the link to the website in the footer
 # Remove this if you don't want a link in the footer
-url-pretty: "nikhilweee.me"  # eg. "deanattali.com/beautiful-jekyll"
+# url-pretty: "nikhilweee.me"  # eg. "deanattali.com/beautiful-jekyll"
 
 # --- Misc --- #
 
@@ -72,7 +77,7 @@ url-pretty: "nikhilweee.me"  # eg. "deanattali.com/beautiful-jekyll"
 disqus: "nikhilweee"
 
 # Fill in your Google Analytics ID to track your website using GA
-#google_analytics: ""
+google_analytics: "UA-72048305-1"
 
 # --- Don't need to touch anything below here (but you can if you want) --- #
 
@@ -80,9 +85,9 @@ disqus: "nikhilweee"
 timezone: "Asia/Kolkata"
 markdown: kramdown
 highlighter: rouge
-permalink: /blog/:year/:month/:day/:title/
+permalink: /posts/:year-:month-:day/:title/
 paginate: 5
-paginate_path: "/blog/page:num/"
+paginate_path: "/page:num/"
 
 kramdown:
   input: GFM
@@ -162,7 +167,7 @@ prose:
 
 gems:
   - jekyll-paginate
-  - jekyll-redirect-from
+  # - jekyll-redirect-from
 
 
 # Beautiful Jekyll / Dean Attali
