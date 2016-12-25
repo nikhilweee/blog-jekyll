@@ -11,8 +11,6 @@ layout: base
         {{ content }}
       </article>
 
-      {% include share-page.html %}
-
       {% if page.tags.size > 0 %}
         <div class="blog-tags">
           Tags:
@@ -25,6 +23,8 @@ layout: base
           {% endif %}
         </div>
       {% endif %}
+
+      {% include share-page.html %}
 
       <hr>
 

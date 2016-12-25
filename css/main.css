@@ -288,9 +288,7 @@ div pre {
 /* --- Sharing --- */
 
 ul.share-buttons{
-  list-style: none;
-  padding: 0;
-  text-align: left;
+  text-align: right;
 }
 
 ul.share-buttons strong.heading{
@@ -298,19 +296,12 @@ ul.share-buttons strong.heading{
   font-weight: 700;
 }
 
-ul.share-buttons li{
-  display: inline;
+ul.share-buttons li a{
+  color: #404040;
 }
 
-ul.share-buttons .sr-only {
-  position: absolute;
-  clip: rect(1px 1px 1px 1px);
-  clip: rect(1px, 1px, 1px, 1px);
-  padding: 0;
-  border: 0;
-  height: 1px;
-  width: 1px;
-  overflow: hidden;
+ul.share-buttons li a:hover, ul.share-buttons li a:focus{
+  color: #0085a1;
 }
 
 /* --- Footer --- */

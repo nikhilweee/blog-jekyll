@@ -4,7 +4,7 @@
 # baseurl is the website's URL without the hostname
 
 # If you are building a simple GitHub user page (http://username.github.io) then use these settings:
-url: "http://nikhilweee.github.io"
+url: "http://nikhilweee.me"
 baseurl: ""
 
 # If you are building a GitHub project page then use these settings:
@@ -40,6 +40,9 @@ navbar-links:
 # Image to show in the navigation bar - image must be a square (width = height)
 # Remove this parameter if you don't want an image in the navbar
 # avatar: "/img/avatar-icon.jpg"
+
+# Image to use while sharing on social media
+share-img: "http://i.imgur.com/KRRbzAk.jpg"
 
 # --- Footer options --- #
 
