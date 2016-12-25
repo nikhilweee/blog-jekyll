@@ -1,8 +1,8 @@
 ---
 layout: post
 title: Persistent Mounts
-subtitle: Automatically mounting your partition in linux <br>using the terminal
-tags: [hacks, tutorial, linux]
+subtitle: Automatically mount partitions in linux via the terminal
+tags: [linux]
 category: [hacks]
 ---
 After installing your linux distro, though you'll be able to access your Windows/NTFS partitions easily, things can get annoying sometimes with you having to mount the partition manually everytime. Here I describe how to get away with this mess by automatically mounting partitions on boot.

@@ -1,9 +1,9 @@
 ---
 layout: post
-title: Setting up your Ghost blog
+title: Set up a Ghost blog
 subtitle: from scratch, in under 30 minutes!
-tags: [tutorial, hacks, supervisor, nginx, node, digitalocean]
-categories: [hacks]
+tags: [supervisor, nginx, node, digitalocean, linux]
+categories: [hacks, tutorial]
 ---
 #### Before you read
 This is *not* an in-depth tutorial for a total newbie. Something like that would make this a really long post. Though I've given one-liners explaining each command,

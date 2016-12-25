@@ -1,12 +1,13 @@
 ---
 layout: page
-title: Nikhil Verma
 subtitle: This is where you'll find random stuff I do
 redirect_from: "/"
 bigimg:
-- "/img/cover1.jpg"
-- "/img/cover2.jpg"
-- "/img/cover3.jpg"
+- "http://i.imgur.com/L7bOOAi.jpg"
+- "http://i.imgur.com/QA3JmN8.jpg"
+- "http://i.imgur.com/qqasr35.jpg"
+- "http://i.imgur.com/KRRbzAk.jpg"
+- "http://i.imgur.com/j5GcL6G.jpg"
 ---
 <div class="posts-list">
   {% for post in paginator.posts %}
@@ -26,18 +27,21 @@ bigimg:
     </p>
 
     <div class="post-entry">
+
+	  <a href="{{ post.url | prepend: site.baseurl }}" class="post-read-more">
       {{ post.content | strip_html | xml_escape | truncatewords: 50 }}
-	  <a href="{{ post.url | prepend: site.baseurl }}" class="post-read-more">[Read&nbsp;More]</a>
+      [Read&nbsp;More]</a>
     </div>
 
-    {% if post.tags.size > 0 %}
+    <!-- Remove tags for now -->
+    <!--{% if post.tags.size > 0 %}
     <div class="blog-tags">
       Tags:
       {% for tag in post.tags %}
       <a href="{{ site.baseurl }}/{{ site.tag-url }}/#{{ tag }}">{{ tag }}</a>
       {% endfor %}
     </div>
-    {% endif %}
+    {% endif %}-->
 
    </article>
   {% endfor %}

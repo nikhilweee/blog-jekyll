@@ -2,11 +2,11 @@
 layout: post
 title: Shadowsocks
 subtitle: Dont let your ISP block you
-tags: [shadowsocks, tutorial, tunnel, android, firewall]
-category: [hacks]
+tags: [shadowsocks, tunnel, android, blocked, supervisor, linux, digitalocean]
+category: [hacks, tutorial]
 published: true
 ---
-Shadowsocks! Sounds like the new superhero after _Deadpool_. Well, in a way it _is_ a superhero! It let's you bypass censorship, even the GFW! [^gfw] Okay, so what's this fuss about? Before going further, I think it needs some introduction.
+[Shadowsocks](https://shadowsocks.org/)! Sounds like the new superhero after _Deadpool_. Well, in a way it _is_ a superhero! It let's you bypass censorship, even the GFW! [^gfw] Okay, so what's this fuss about? Before going further, I think it needs some introduction.
 
 [^gfw]: The Great Firewall of China
 

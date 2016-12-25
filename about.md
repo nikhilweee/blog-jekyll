@@ -4,7 +4,7 @@ title: About Me
 ---
 <ul class="pager main-pager">
   <li>
-    <a href="/resume.pdf">Resume</a>
+    <a href="/files/resume.pdf">Resume</a>
   </li>
 </ul>
 

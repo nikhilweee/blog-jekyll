@@ -52,7 +52,7 @@ author:
   github: nikhilweee    # eg. daattali
   twitter: nikhilweee   # eg. daattali
   linkedin: nikhilweee  # eg. daattali
-  stackoverflow: yourlink  # eg. "3943160/daattali"
+  stackoverflow: 5004955/nikhilweee  # eg. "3943160/daattali"
 
 # Select which links to show in the footer
 footer-links-active:
@@ -167,6 +167,7 @@ prose:
 
 gems:
   - jekyll-paginate
+  - jemoji
   # - jekyll-redirect-from
 
 

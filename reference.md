@@ -58,7 +58,7 @@ alias duinfo='sudo du --all --block-size=MB \
               --max-depth=1 | sort -n'
 ```
 
-* I always forget the color scheme of my terminal. It's `base16_isotope`
+* I always forget the color scheme of my terminal. It's `base16_isotope`. Oh! [base16](https://chriskempson.github.io/base16/)!
 
 ### Docker and DC++
 Docker and DC++ don't go hand in hand. Docker creates `iptables` for private ip addresses like 172.17.x.x and DC++ uses the same. You may keep on getting _No route to host_ when you try to connect to a hub, which is really annoying!
