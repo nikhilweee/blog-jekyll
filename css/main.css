@@ -285,6 +285,33 @@ div pre {
   margin-top: -55px;
 }
 
+/* --- Sharing --- */
+
+ul.share-buttons{
+  list-style: none;
+  padding: 0;
+  text-align: left;
+}
+
+ul.share-buttons strong.heading{
+  font-family: 'Lato', 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 700;
+}
+
+ul.share-buttons li{
+  display: inline;
+}
+
+ul.share-buttons .sr-only {
+  position: absolute;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+}
 
 /* --- Footer --- */
 

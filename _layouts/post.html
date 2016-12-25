@@ -10,6 +10,9 @@ layout: base
       <article role="main" class="blog-post">
         {{ content }}
       </article>
+
+      {% include share-page.html %}
+
       {% if page.tags.size > 0 %}
         <div class="blog-tags">
           Tags:
@@ -22,6 +25,9 @@ layout: base
           {% endif %}
         </div>
       {% endif %}
+
+      <hr>
+
       <ul class="pager blog-pager">
         {% if page.previous.url %}
         <li class="previous">
@@ -35,6 +41,8 @@ layout: base
         {% endif %}
       </ul>
 
+      <hr>
+
       {% if site.show-related-posts %}
         <h3 class="related-post-title">Related Posts</h3>
         <div class="post ml2">
@@ -45,6 +53,8 @@ layout: base
         {% endfor %}
       </div>
       {% endif %}
+
+      <hr>
 
 	    {% if page.comments %}
         <div class="disqus-comments">
