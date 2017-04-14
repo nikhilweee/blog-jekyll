@@ -21,6 +21,7 @@ This page hosts little ideas, solutions to problems I've faced in the past or mi
 - [Installing OpenCV](#installing-opencv)
 - [Raspberry Pi](#raspberry-pi)
 - [Configure Mutt with Gmail](#configure-mutt-with-gmail)
+- [Remove python package with dependencies](#remove-python-package-with-dependencies)
 
 ### Some useful aliases
 * Timesync!
@@ -114,3 +115,6 @@ Of course, if you have specific requirements, it's better to build from source.
 
 ### Configure Mutt with Gmail
 [Nick's post](http://nickdesaulniers.github.io/blog/2016/06/18/mutt-gmail-ubuntu/) describes how to use your own gmail account in case you want to set up something like automated email alerts or regular database backups.
+
+### Remove Python Package with Dependencies
+Thanks to [Tomasz Gągor](https://gagor.pl/). You can find his script [here](https://gagor.pl/2016/04/pip-uninstall-package-with-dependencies/)
