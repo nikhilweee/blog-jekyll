@@ -2,12 +2,9 @@
 layout: post
 title: Visual Cube
 subtitle: A visual explanation to popular algorithms for the rubik's cube
-# bigimg:
-# - "https://i.imgur.com/j5GcL6G.jpg" : "Dawn from Triund Hill"
-# - "https://i.imgur.com/KRRbzAk.jpg" : "Sunset at the Triund Hill"
-tags: []
-category: []
-published: false
+tags: [cube, algorithms]
+category: [learn]
+published: true
 ---
 
 The rubik's cube needs no introduction. I've personally seen these since my childhood but I was never quite interested in solving the cube. As a kid, I used to play around, knowing that this is impossible for me to solve. I gave up easily. This was nothing more than a fidgeting toy.
@@ -47,14 +44,6 @@ Swapping the edges on the last layer can be tricky to understand. Take a look be
 Notice how the consecutive `UU`s are important to bring the top edges back to position.
 <object id="base" type="text/html" style="width: 100%; height: 500px;" data="/resources/cube/algorithms/rururuuru"></object>
 
-## Orient the Last Layer Corners
-
-`R' D' R D`
-
-Swapping the edges on the last layer can be tricky to understand. Take a look below.
-Notice how the orienttion of the four corners is changed after an even iteration.
-<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/resources/cube/algorithms/rdrd"></object>
-
 ## Position the Last Layer Corners
 
 `U R U' L' U R' U' L`
@@ -64,3 +53,13 @@ Corner 1 always stays in the same place, and in the same orientation. Notice how
 Also note the positions of the four corners at the end of every iteration. The algorithm repeats itself after three iterations. The highlighted corners can only be in one of the three possibilities.
 
 <object id="base" type="text/html" style="width: 100%; height: 500px;" data="/resources/cube/algorithms/urulurul"></object>
+
+## Orient the Last Layer Corners
+
+`R' D' R D`
+
+Swapping the edges on the last layer can be tricky to understand. Take a look below.
+Notice how the orienttion of the four corners is changed after an even iteration.
+<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/resources/cube/algorithms/rdrd"></object>
+
+I hope this visual tour helps improve your understanding of the cube. I'm sure there might be better interpretations, so please feel free to comment.
