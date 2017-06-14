@@ -683,7 +683,7 @@
             var backup = data;
 
             function loop() {
-                console.log("loop chali");
+                // console.log("loop chali");
                 setTimeout(function () {
                     $('.display').html("F R' D' R F F");
                     // $('div.cube').replaceWith(cube.clone());
@@ -715,7 +715,7 @@
             };
 
             function iteration() {
-                console.log("iteration chala");
+                // console.log("iteration chala");
                 setTimeout(function () {
                     $('.banner').html("Iteration <span style='color: #000'>1</span>");
                     loop();
@@ -729,7 +729,7 @@
             $(document).ready( function () {
                 iteration();
                 setInterval( function () {
-                    console.log("interval chala");
+                    // console.log("interval chala");
                     iteration();
                 }, timeout * 7 * 2);
             });
