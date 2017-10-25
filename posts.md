@@ -1,29 +1,27 @@
 ---
+title: Posts
 layout: page
-title: Tags
 ---
 
 <div class="tags-expo">
   <ul class="pager main-pager">
-    {% for tag in site.tags %}
+    
     <li>
-    <a href="#{{ tag[0] | slugify }}" class="post-tag">{{ tag[0] }}</a>
+    <a href="#" class="post-tag">All what I've written so far</a>
     </li>
-    {% endfor %}
+    
   </ul>
   <hr/>
   <div class="tags-expo-section">
-    {% for tag in site.tags %}
-    <h2 id="{{ tag[0] | slugify }}">{{ tag[0] }}</h2>
     <ul class="tags-expo-posts">
-      {% for post in tag[1] %}
+      {% for post in site.posts %}
       <li>
         <a class="post-title" href="{{ site.baseurl }}{{ post.url }}">
-          <strong>{{ post.title }}</strong> {{ post.subtitle }}
+          <span style="color: #404040;">{{ post.date | date_to_string }}</span>
+          <strong>{{ post.title }}</strong><br>{{ post.subtitle }}
         </a>
       </li>
       {% endfor %}
     </ul>
-    {% endfor %}
   </div>
 </div>

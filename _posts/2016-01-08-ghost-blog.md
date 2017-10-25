@@ -3,7 +3,7 @@ layout: post
 title: Set up a Ghost blog
 subtitle: from scratch, in under 30 minutes!
 tags: [supervisor, nginx, node, digitalocean, linux]
-categories: [hacks, tutorial]
+categories: [tutorial]
 ---
 #### Before you read
 This is *not* an in-depth tutorial for a total newbie. Something like that would make this a really long post. Though I've given one-liners explaining each command,

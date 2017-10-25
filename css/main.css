@@ -168,6 +168,7 @@ div pre {
     }
     .navbar-custom.top-nav-short {
         padding: 0;
+        /* display: none; */
     }
 }
 

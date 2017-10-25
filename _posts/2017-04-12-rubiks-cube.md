@@ -62,4 +62,4 @@ Swapping the edges on the last layer can be tricky to understand. Take a look be
 Notice how the orienttion of the four corners is changed after an even iteration.
 <object id="base" type="text/html" style="width: 100%; height: 500px;" data="/resources/cube/algorithms/rdrd"></object>
 
-I hope this visual tour helps improve your understanding of the cube. I'm sure there might be better interpretations, so please feel free to comment.
+I hope this visual tour helps improve your understanding of the cube. I'm sure there might be better interpretations. Please feel free to comment!
