@@ -22,6 +22,7 @@ This page hosts little ideas, solutions to problems I've faced in the past or mi
 - [Raspberry Pi](#raspberry-pi)
 - [Configure Mutt with Gmail](#configure-mutt-with-gmail)
 - [Remove python package with dependencies](#remove-python-package-with-dependencies)
+- [Academic writing with Pandoc](#academic-writing-with-pandoc)
 
 ### Some useful aliases
 * Timesync!
@@ -32,7 +33,7 @@ alias timesync='sudo /etc/cron.daily/timesync'
 
 ```
 # /etc/cron.daily/timesync
-sudo date -s "$(wget -qSO- --max-redirect=0 google.com
+sudo date -s "$(wget -qSO- --max-redirect=0 google.com \
               2>&1 | grep Date: | cut -d' ' -f5-8)Z"
 ```
 
@@ -62,7 +63,7 @@ alias duinfo='sudo du --all --block-size=MB \
 * I always forget the color scheme of my terminal. It's `base16_isotope`. Oh! [base16](https://chriskempson.github.io/base16/)!
 
 ### Docker and DC++
-Docker and DC++ don't go hand in hand. Docker creates `iptables` for private ip addresses like 172.17.x.x and DC++ uses the same. You may keep on getting _No route to host_ when you try to connect to a hub, which is really annoying!
+Docker and DC++ don't go hand in hand. Docker creates `iptables` routes for private ip addresses like 172.17.x.x and DC++ uses the same. You may keep on getting _No route to host_ when you try to connect to a hub, which is really annoying!
 [@kamermans](https://github.com/kamermans) has a gist [here](https://gist.github.com/kamermans/94b1c41086de0204750b) that helped me out.
 
 ### Test outgoing ports
@@ -118,3 +119,6 @@ Of course, if you have specific requirements, it's better to build from source.
 
 ### Remove Python Package with Dependencies
 Thanks to [Tomasz Gągor](https://gagor.pl/). You can find his script [here](https://gagor.pl/2016/04/pip-uninstall-package-with-dependencies/)
+
+### Academic writing with Pandoc
+Mort Yao's [post](https://www.soimort.org/notes/161117/) at [soimort.org](https://www.soimort.org) is a useful resource on using Pandoc for academic writing.
