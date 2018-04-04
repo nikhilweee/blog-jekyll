@@ -697,3 +697,7 @@ table tr th :first-child, table tr td :first-child {
 table tr th :last-child, table tr td :last-child {
     margin-bottom: 0;
 }
+
+table.borderless tr, table.borderless td {
+    border: none;
+}
