@@ -87,7 +87,7 @@ google_analytics: "UA-72048305-1"
 timezone: "Asia/Kolkata"
 markdown: kramdown
 highlighter: rouge
-permalink: /posts/:year-:month-:day/:title/
+permalink: /posts/:year/:title/
 paginate: 5
 paginate_path: "/page:num/"
 
