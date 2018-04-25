@@ -701,3 +701,8 @@ table tr th :last-child, table tr td :last-child {
 table.borderless tr, table.borderless td {
     border: none;
 }
+
+div.gist table tr, div.gist table tr td, div.gist table tr th {
+    border: none;
+    /* background-color: #ffffff; */
+}
