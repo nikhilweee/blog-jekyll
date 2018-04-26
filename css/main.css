@@ -704,5 +704,5 @@ table.borderless tr, table.borderless td {
 
 div.gist table tr, div.gist table tr td, div.gist table tr th {
     border: none;
-    /* background-color: #ffffff; */
+    background-color: #ffffff;
 }
