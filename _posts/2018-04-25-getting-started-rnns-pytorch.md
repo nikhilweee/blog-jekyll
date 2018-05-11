@@ -130,3 +130,46 @@ lstm = torch.nn.LSTM(input_size=20, hidden_size=10, num_layers=1)
 ## Guide to Mini Batching in PyTorch
 
 
+```
+graph TD
+y_i["y_{i} output"]
+y_ii["y_{i-1} prev_output"]
+s_i["s_{i} decoder_hidden"]
+c_i["c_{i} context"]
+s_ii["s_{i-1} prev_decoder"]
+h_j["h_{j} encoder_hidden"]
+alpha_ij["alpha_{ij} attn_weights"]
+e_ij["e_{ij} attn_energies"]
+subgraph 
+    a[feedforward]
+end
+subgraph 
+    softmax[softmax]
+end
+subgraph 
+    wsum[weighted_sum]
+end
+subgraph 
+    rnn[RNN]
+end
+subgraph 
+    out[feedforward]
+end
+
+s_ii --> a
+h_j --> a
+a --> e_ij
+e_ij --> softmax
+softmax --> alpha_ij
+alpha_ij --> wsum
+h_j --> wsum
+wsum --> c_i
+y_ii --> rnn
+s_ii --> rnn
+c_i --> rnn
+rnn --> s_i
+y_ii --> out
+s_i --> out
+c_i --> out
+out --> y_i
+```
