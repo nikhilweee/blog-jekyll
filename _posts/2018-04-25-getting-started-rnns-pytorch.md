@@ -92,6 +92,22 @@ Let's finally start building our model! Let's first have a general overview of w
 
 Hmm, that sounds easy, right? But how do you actually make it work? Let's dissect the problem step by step. We'll first identify the components needed to build our model, and finally put them to gether as a single piece to make it work.
 
+... but before diving in, it's important to know a couple of things. PyTorch provides implementations for most of the commonly used entities from layers such as LSTMs, CNNs and GRUs to optimizers like SGD, Adam, and what not (Isn't that the whole point of using PyTorch in the first place?!). The general paradigm to use any of these entities is to first create an instance of `torch.nn.<entity>` with some required parameters. As an example, here's how we instantiate an `lstm`. 
+
+```python
+lstm = torch.nn.LSTM(input_size=5, hidden_size=10, batch_first=True)
+```
+
+Next, when we actually want to run an LSTM over some inputs, we call this object with the inputs as parameters as done in the third line below.
+
+```python
+lstm_in = torch.rand(40, 20, 5)
+hidden_in = (torch.zeros(1, 40, 10), torch.zeros(1, 40, 10))
+lstm_out, lstm_hidden = lstm(lstm_in, hidden_in)
+```
+
+This two-stepped process will be seen all through this tutorial and elsewhere. Getting back to code now, let's dissect our 'high level' understanding again.
+
 >... **feed in inputs** to an LSTM to get the predictions ...
 
 To feed in inputs, well, we first need to prepare the inputs. Remember the embedding matrix $$ E $$ we described earlier? we'll use $$ E $$ to convert the pair of indices we get from `dataset()` into the corresponding embedding vectors. Fortunately PyTorch provides a convenient way to do so. We just have to create an instance of `torch.nn.Embedding`.
@@ -115,13 +131,20 @@ tensor([[ 0.4344,  0.3980,  1.6350,  2.7416, -1.5250],
 
 >... feed in inputs **to an LSTM** to get the predictions ...
 
-Next, we need to create an LSTM. In PyTorch, we do this in a similar fashion by creating an instance of `torch.nn.LSTM`. This time, the [docs](https://pytorch.org/docs/stable/nn.html#torch.nn.LSTM) list the required parameters as `input_size: the number of expected features in the input` and `hidden_size: the number of features in the hidden state`. Since LSTMs typically operate on variable length sequences, the `input_size` refers to the size of each entity in the input sequence. In our case, this means the `embedding_dim`. This might sound counter-intuitive, but if you think for a while, it makes sense. `hidden_size`, as the name suggests, is the size of the hidden state of the LSTM. Note that the hidden size can be different from the input size. [colah's blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) doesn't explicitly mention this, but the [docs on LSTMCell](https://pytorch.org/docs/stable/nn.html#torch.nn.LSTMCell) should make it clear.
+Next, we need to create an LSTM. In PyTorch, we do this in a similar fashion by creating an instance of `torch.nn.LSTM`. This time, the [docs](https://pytorch.org/docs/stable/nn.html#torch.nn.LSTM) list the required parameters as `input_size: the number of expected features in the input` and `hidden_size: the number of features in the hidden state`. Since LSTMs typically operate on variable length sequences, the `input_size` refers to the size of each entity in the input sequence. In our case, this means the `embedding_dim`. This might sound counter-intuitive, but if you think for a while, it makes sense. `hidden_size`, as the name suggests, is the size of the hidden state of the LSTM. Note that the hidden size can be different from the input size. [colah's blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) doesn't explicitly mention this, but the [docs on LSTMCell](https://pytorch.org/docs/stable/nn.html#torch.nn.LSTMCell) should make it clear. To summarize the discussion above, here is how we create an LSTM.
 
+```python
+lstm = torch.nn.LSTM(embedding_dim, hidden_dim)
+```
 
-Once we have prepared the inputs, we will now pass them , 
+>... feed in inputs to an LSTM to **get the predictions** ...
 
->... feed in inputs to an LSTM to get the predictions ...
+Once we get the outputs from the LSTM, the next step is to simply find out the most probable character for every character in the input sequence. This is usually done by computing a softmax over the set of all possible characters in the vocabulary. But wait, there's a catch (again).
 
+If we pass on an input of the shape `(seq_len, batch, embedding_dim)`, the outputs we get from the LSTM are of the size `(seq_len, batch, hidden_dim)`. Notice that we have a problem here. We expect the output matrix to be of the size `(seq_len, batch, vocab_size)` in order to compute a softmax over all the possible characters in the vocabulary.
+How do we correct this?
+
+A simple solution is to use matrix multiply. Let's say the output from the LSTM is denoted by $$ x \in \mathbb{R}^H $$ where $$ H $$ is the `hidden_size`. The idea is to multiply $$ x $$ with another matrix $$ W $$ such that the resulting matrix $$ y = W \times x $$ is  If we matrix is $$ out $$, and the 
 
 
 We'll define something called an **Embedding Matrix**, $$E \in \mathbb{R}^{D \times V}$$. This is a $$ D \times V $$ dimensional matrix where $$ D $$ is the `embedding_dim` and $$ V $$ is the length of the vocabulary. Each column $$ E[:, i] $$ of this matrix is the word vector for the 
