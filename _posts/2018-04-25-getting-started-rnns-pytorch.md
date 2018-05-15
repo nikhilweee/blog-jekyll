@@ -15,34 +15,37 @@ You are only expected to have some understanding of recurrent networks. If you d
 
 Before starting off, let's first define the problem in a concrete manner. We wish to decrypt secret messages using an LSTM. For the sake of simplicity, let's assume that our messages are encrypted using the [Caesar Cipher](https://en.wikipedia.org/wiki/Caesar_cipher), which is a really simple substitution cipher.  
 
-Caesar cipher works by replacing each letter of the original message by another letter from a given alphabet to form an encrypted message. In this tutorial we'll use a right shift of 13, which basically means that the encrypted version of each letter in the alphabet is the one which occurs 13 places to the right of it. So `A`(1) becomes `N`(1+13), `B`(2) becomes `O`(2+13), and so on. Our alphabet will include uppercase English characters `A` through `Z`, and an extra letter, `-`, to represent any foreign character.
+Caesar cipher works by replacing each letter of the original message by another letter from a given alphabet to form an encrypted message. In this tutorial we'll use a right shift of 13, which basically means that the encrypted version of each letter in the alphabet is the one which occurs 13 places to the right of it. So `A`(1) becomes `N`(1+13), `B`(2) becomes `O`(2+13), and so on. Our alphabet will only include uppercase English characters `A` through `Z`, and an extra letter, `-`, to represent any foreign character.
 
-With all of these in mind, here's the substitution table for your reference. The first row shows all the letters of the alphabet in order. To encrypt a message, each letter of the first row can be substituted by the corresponding letter from the second row. As an example, the message `THIS-IS-A-SECRET` becomes `FUVEMVEMNMERPDRF` when encrypted.
+With all of these in mind, here's the substitution table for your reference.
 
 ```
 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z -
 N O P Q R S T U V W X Y Z - A B C D E F G H I J K L M
 ```
 
-**But why Neural Networks?**  
-You might be wondering why do we use neural networks in the first place. In our use case, it sure makes more sense to decrypt the messages by conventional programming because we _know_ the encryption function beforehand. _This may not be the case everytime_. We might have enough data but still have no idea about the encryption function. Neural networks fit quite well in such a situation. Another simple reason to choose this problem is that we could generate loads of training examples on the fly. So we don't really need to procure any dataset. Yay!
+The first row shows all the letters of the alphabet in order. To encrypt a message, each letter of the first row can be substituted by the corresponding letter from the second row. As an example, the message `THIS-IS-A-SECRET` becomes `FUVEMVEMNMERPDRF` when encrypted.
+
+[^why-nn]Aside : but [why use neural networks for this problem?](#fn:why-nn)
+
+[^why-nn]: **But why Neural Networks?** You might be wondering why do we use neural networks in the first place. In our use case, it sure makes more sense to decrypt the messages by conventional programming because we _know_ the encryption function beforehand. _This might not be the case everytime_. You might have a situation where you have enough data but still have no idea about the encryption function. Neural networks fit quite well in such a situation. Anyways, keep in mind that this is still a toy problem. One motivation to choose this problem is the ease of generating loads of training examples on the fly. So we don't really need to procure any dataset. Yay!
 
 ## The Dataset
 
-Talking about data, we'll use a parallel dataset of the following form where each tuple represents a pair of (encrypted, decrypted) messages. Having defined our problem, we'll feed the `encrypted` message as the input to our LSTM and expect it to emit the original message as the target. Sounds simple right?
+Like any other neural network, we'll need data. Loads of it. We'll use a parallel dataset of the following form where each tuple represents a pair of (encrypted, decrypted) messages. 
 ```
 ('FUVEMVEMNMERPDRF', 'THIS-IS-A-SECRET')
 ('FUVEMVEMN-AFURDMERPDRF', 'THIS-IS-ANOTHER-SECRET')
 ...
 ```
+Having defined our problem, we'll feed the `encrypted` message as the input to our LSTM and expect it to emit the original message as the target. Sounds simple right?
 
 It does, except that we have a little problem. Neural networks are essentially number crunching machines, and have no idea how to hande our encrypted messages. We'll somehow have to convert our strings into numbers for the network to make sense of them.
 
 ## Word Embeddings
-The way this is usually done is to use something called as word embeddings. The idea is to represent every character in the alphabet with its own $$ D $$ dimensional **embedding vector**, where $$ D $$ is usually called the embedding dimension. So let's say if we decide to use an `embedding_dim` of 5, this basically means that each of the 27 characters of the alphabet, `ABCDEFGHIJKLMNOPQRSTUVWXYZ-`, will have their own embedding vector of length 5.
+The way this is usually done is to use something called as word embeddings. The idea is to represent every character in the alphabet with its own $$ D $$ dimensional **embedding vector**, where $$ D $$ is usually called the embedding dimension. So let's say if we decide to use an `embedding_dim` of 5. This basically means that each of the 27 characters of the alphabet, `ABCDEFGHIJKLMNOPQRSTUVWXYZ-`, will have their own embedding vector of length 5.
 
-Often these vectors are stored together as $$ V \times D $$ dimensional **embedding matrix** $$ E $$, where each row $$ E[i] $$ of the matrix represents the embedding vector for the character with index $$ i $$ in the alphabet. Here $$ V $$ is the length of the vocabulary (alphabet), which is 27 in our case. As an example, the whole embedding matrix $$ E $$ might look something like the one shown below. $$ E[0] $$ then represents the word vector for `A`, which is `[-1.4107, -0.8142,  0.8486,  2.8257, -0.7130]`.
-
+Often, these vectors are stored together as $$ V \times D $$ dimensional **embedding matrix** $$ E $$, where each row $$ E[i] $$ of the matrix represents the embedding vector for the character with index $$ i $$ in the alphabet. Here $$ V $$ is the length of the vocabulary (alphabet), which is 27 in our case. As an example, the whole embedding matrix $$ E $$ might look something like the one shown below.
 
 ```
 [[-1.4107, -0.8142,  0.8486,  2.8257, -0.7130],
@@ -51,8 +54,13 @@ Often these vectors are stored together as $$ V \times D $$ dimensional **embedd
  ...
  [ 2.7912,  1.3261,  1.7603,  3.3852, -2.1643]]
 ```
+$$ E[0] $$ then represents the word vector for `A`, which is `[-1.4107, -0.8142,  0.8486,  2.8257, -0.7130]`.
 
-Strictly speaking, what I just described here is called a _character embedding_, beacause we have a vector for each _character_ in the alphabet. In case we had a vector for each _word_ in a vocabulary, we would be using _word embeddings_ instead. Notice the analogy here. An alphabet is the set of all the letters in a language. Similarly, a vocabulary is the collection of all the words in a language. I'll be using alphabet and vocabulary interchangably throughout the tutorial. Similarly, word embeddings, word vectors, character embeddings, or simply embeddings will mean the same thing.
+[^char-embedding]Aside : but [I read something different!](#fn:char-embedding)
+
+[^char-embedding]: **I think I read something different!** Strictly speaking, what I just described here is called a _character embedding_, beacause we have a vector for each _character_ in the alphabet. In case we had a vector for each _word_ in a vocabulary, we would be using _word embeddings_ instead. Notice the analogy here. An alphabet is the set of all the letters in a language. Similarly, a vocabulary is the collection of all the words in a language. 
+
+P.S. I'll be using alphabet and vocabulary interchangably throughout this tutorial. Similarly, word embeddings, word vectors, character embeddings, or simply embeddings will mean the same thing.
 
 ## The Cipher
 Now that we have enough background, let's get our hands dirty and finally jump in to writing some code. The first thing we have to do is to create a dataset. And to do that, we first need to implement the cipher. Although we implement it as a simple function, it might be a good idea to implement the cipher as a class in the future.
@@ -108,6 +116,8 @@ lstm_out, lstm_hidden = lstm(lstm_in, hidden_in)
 
 This two-stepped process will be seen all through this tutorial and elsewhere. Getting back to code now, let's dissect our 'high level' understanding again.
 
+## 1. Prepare inputs
+
 >... **feed in inputs** to an LSTM to get the predictions ...
 
 To feed in inputs, well, we first need to prepare the inputs. Remember the embedding matrix $$ E $$ we described earlier? we'll use $$ E $$ to convert the pair of indices we get from `dataset()` into the corresponding embedding vectors. Fortunately PyTorch provides a convenient way to do so. We just have to create an instance of `torch.nn.Embedding`.
@@ -129,6 +139,8 @@ tensor([[ 0.4344,  0.3980,  1.6350,  2.7416, -1.5250],
         [ 1.0940,  1.0992, -2.0170,  0.1433,  2.8728]])
 ```
 
+## 2. Build an LSTM
+
 >... feed in inputs **to an LSTM** to get the predictions ...
 
 Next, we need to create an LSTM. In PyTorch, we do this in a similar fashion by creating an instance of `torch.nn.LSTM`. This time, the [docs](https://pytorch.org/docs/stable/nn.html#torch.nn.LSTM) list the required parameters as `input_size: the number of expected features in the input` and `hidden_size: the number of features in the hidden state`. Since LSTMs typically operate on variable length sequences, the `input_size` refers to the size of each entity in the input sequence. In our case, this means the `embedding_dim`. This might sound counter-intuitive, but if you think for a while, it makes sense. `hidden_size`, as the name suggests, is the size of the hidden state of the LSTM. Note that the hidden size can be different from the input size. [colah's blog post](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) doesn't explicitly mention this, but the [docs on LSTMCell](https://pytorch.org/docs/stable/nn.html#torch.nn.LSTMCell) should make it clear. To summarize the discussion above, here is how we create an LSTM.
@@ -141,7 +153,9 @@ lstm = torch.nn.LSTM(embedding_dim, hidden_dim)
 
 Once we get the outputs from the LSTM, the next step is to simply find out the most probable character for every character in the input sequence. This is usually done by computing a softmax over the set of all possible characters in the vocabulary. But wait, there's a catch (again).
 
-If we pass on an input of the shape `(seq_len, batch, embedding_dim)`, the outputs we get from the LSTM are of the size `(seq_len, batch, hidden_dim)`. Notice that we have a problem here. We expect the output matrix to be of the size `(seq_len, batch, vocab_size)` in order to compute a softmax over all the possible characters in the vocabulary.
+## 3. A note on dimensionality
+
+PyTorch expects LSTM inputs to be a 3D input tensor of size `(seq_len, batch, embedding_dim)`, and returns an output tensor of the size `(seq_len, batch, hidden_dim)`. Notice that we have a problem here. For every character in the input, we expect the LSTM to output probabilities corresponding to every possible character in the vocabulary. This way we could simply choose the character with the highest probability to be the output corresponding to the given input. an output matrix of the size `(seq_len, batch, vocab_size)` in order to compute a softmax over all the possible characters in the vocabulary.
 How do we correct this?
 
 A simple solution is to use matrix multiply. Let's say the output from the LSTM is denoted by $$ x \in \mathbb{R}^H $$ where $$ H $$ is the `hidden_size`. The idea is to multiply $$ x $$ with another matrix $$ W $$ such that the resulting matrix $$ y = W \times x $$ is  If we matrix is $$ out $$, and the 
