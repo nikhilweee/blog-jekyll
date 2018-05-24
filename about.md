@@ -4,7 +4,7 @@ title: About Me
 ---
 <ul class="pager main-pager">
   <li>
-    <a href="https://docs.google.com/document/export?format=pdf&id=1kc9YyTDXxPJSkhb4wAVx03zy-Z7YCtLNWVeD7c0YdhQ">Resume</a>
+    <a href="/resume">Resume</a>
   </li>
 </ul>
 

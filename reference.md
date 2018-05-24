@@ -122,3 +122,23 @@ Thanks to [Tomasz Gągor](https://gagor.pl/). You can find his script [here](htt
 
 ### Academic writing with Pandoc
 Mort Yao's [post](https://www.soimort.org/notes/161117/) at [soimort.org](https://www.soimort.org) is a useful resource on using Pandoc for academic writing.
+
+### PuDB Custom Stringifier
+```python
+# see https://github.com/inducer/pudb/blob/master/example-stringifier.py
+import torch
+
+
+def pudb_stringifier(obj):
+    """
+    Returns different representations based on the type
+    """
+    if isinstance(obj, (int, float, complex, str)):
+        return '{}: {}'.format(type(obj).__name__, obj)
+    if isinstance(obj, torch.Tensor):
+        return '{}: {}'.format(str(obj.type()), str(list(obj.size())))
+    if isinstance(obj, (list, dict, tuple)):
+        return '{}: {}'.format(type(obj).__name__, str(len(obj)))
+    else:
+        return type(obj).__name__
+```
