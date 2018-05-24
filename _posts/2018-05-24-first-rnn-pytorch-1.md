@@ -1,13 +1,13 @@
 ---
 layout: post
 title: Building your first RNN
-subtitle: with PyTorch 0.4! (1/2)
+subtitle: with PyTorch 0.4! (Part 1/3)
 tags: [rnn, pytorch]
 category: [learn]
-published: false
+published: true
 mathjax: true
 ---
-> This is part one of a two-part series on getting started with RNNs using PyTorch. Part two can be accessed at [Building your first RNN - Part 2]({% post_url 2018-04-25-first-rnn-pytorch-2 %})
+> This is part one of a three-part series on getting started with RNNs using PyTorch. Part two can be accessed at [Building your first RNN - Part 2]({% post_url 2018-05-24-first-rnn-pytorch-2 %}). Part three is available at [Building your first RNN - Part 3]({% post_url 2018-05-24-first-rnn-pytorch-3 %})
 
 If you have some understanding of recurrent networks, want to get your hands dirty, but haven't really tried to do that on your own, then you are certainly at the right place. This tutorial is a practical guide about getting started with recurrent networks using PyTorch. We'll solve a simple cipher using PyTorch 0.4.0, which is the latest version at the time of this writing.  
 
@@ -69,7 +69,7 @@ P.S. I'll be using alphabet and vocabulary interchangably throughout this tutori
 
 Now that we have enough background, let's get our hands dirty and finally jump in to writing some code. The first thing we have to do is to create a dataset. And to do that, we first need to implement the cipher. Although we implement it as a simple function, it might be a good idea to implement the cipher as a class in the future.
 
-{% gist 13243631f8ed219167ccd3866ce3204e cipher.py %}
+{% gist 13243631f8ed219167ccd3866ce3204e module-cipher.py %}
 
 We create the `encode` function which uses the parameters `vocab` and `key` to encrypt each character. Since we're working with letters, `vocab` in this context simply means the alphabet.  The encryption algorithm should be fairly easy to understand. Notice how we use the modulo operator in line `8` to prevent the indexes from overflowing.
 
@@ -79,7 +79,7 @@ To check the implementation, you can check for some random inputs. For example, 
 
 Okay, let's finally build the dataset. For the sake of simplicity, we'll use a random sequence of characters as a message and encrypt it to create the input to the LSTM. To implement this, we create a simple function called `dataset` which takes in the parameter `num_examples` and returns a list of those many (input, output) pairs.
 
-{% gist 13243631f8ed219167ccd3866ce3204e batch.py %}
+{% gist 13243631f8ed219167ccd3866ce3204e module-batch.py %}
 
 There's something strange about this function though. Have a look at line 24. We're not returning a pair of strings. We're first converting strings into a list of indices which represent their position in the alphabet. If you recall the section on [word embeddings](#word-embeddings), these indices will later be used to extract the corresponding embedding vectors from the embedding matrix $$ E $$. We're then converting these lists into a pair of tensors, which is what the function returns.
 
@@ -98,4 +98,4 @@ You can satisfy yourself by having a look at what this function does. A quick ca
           0,  24,   7,  10,  12,   2,   6,  18])]]
 ```
 
-With this we're done with the basics. We'll build the actual network in [Part 2]({% post_url 2018-04-25-first-rnn-pytorch-2 %})
+With this we're done with the basics. Let's start build the network in [Part 2]({% post_url 2018-05-24-first-rnn-pytorch-2 %})
