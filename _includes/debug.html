@@ -1,0 +1,8 @@
+
+<pre id=jekyll-debug></pre>
+
+<script>
+  var obj = JSON.parse(decodeURIComponent("{{ include.var | jsonify | uri_escape }}"));
+  var pretty_json = JSON.stringify(obj, null, 4);  // Pretty-printed JSON (indented 4 spaces).
+  document.getElementById("jekyll-debug").textContent = pretty_json;
+</script>

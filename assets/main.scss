@@ -1,0 +1,166 @@
+---
+# // Only the main Sass file needs front matter (the dashes are enough)
+---
+@charset "utf-8";
+
+// Our variables
+$base-font-size:   18px;
+
+@mixin media-query($device) {
+  @media screen and (max-width: $device) {
+    @content;
+  }
+}
+
+@mixin relative-font-size($ratio) {
+  font-size: $base-font-size * $ratio;
+}
+
+// Import partials from the `whiteglass` theme
+@import "whiteglass";
+
+
+/**
+ * Home Page
+ */
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: invert($background-color);
+    filter: invert(95%) hue-rotate(180deg);
+  }
+
+  iframe, img, video {
+    filter: invert(95%) hue-rotate(180deg);
+  }
+}
+
+/**
+ * Posts
+ */
+
+.post-list {
+  > li {
+    margin-bottom: $spacing-unit / 2;
+
+    &:not(:first-child) {
+      border: 0;
+      padding: 0;
+    }
+  }
+}
+
+.post-header {
+  margin-bottom: 0;
+}
+
+.post-title {
+  @include relative-font-size(2);
+  letter-spacing: -1px;
+  line-height: 1;
+
+  @include media-query($on-laptop) {
+    @include relative-font-size(2)
+  }
+}
+
+.post-subtitle {
+  @include relative-font-size(1.2);
+  line-height: 0.5;
+
+  @include media-query($on-laptop) {
+    @include relative-font-size(1.2);
+  }
+}
+
+.footnotes {
+  @include relative-font-size(0.8);
+  color: $grey-color;
+}
+
+// Subscripts and Superscripts should not affect line height
+
+sup, sub {
+  vertical-align: baseline;
+  position: relative;
+  top: -0.4em;
+}
+sub { 
+  top: 0.4em; 
+}
+
+
+/**
+ * Index
+ */
+
+.post-list-meta {
+  display: inline-block;
+  min-width: 120px;
+  vertical-align: top;
+}
+
+.post-list-title {
+  display: inline-block;
+  max-width: calc(100% - 125px);
+  @include relative-font-size(1.1);
+}
+
+.post-list-subtitle {
+  display: inline-block;
+  max-width: calc(100% - 125px);
+  @include relative-font-size(0.9);
+}
+
+.post-list-category,
+.page-heading {
+  @include relative-font-size(1.5);
+}
+
+.post-list-title > a {
+  &,
+  &:visited {
+    color: $text-color;
+  }
+
+  &:hover {
+    color: $brand-color;
+  }  
+}
+
+/**
+ * Display
+ */
+
+.site-header {
+  height: 60px;
+}
+
+.site-footer {
+  height: 40px;
+  padding: 10px 0;
+}
+
+.page-content {
+  // header: 60px
+  // footer: 40px + (10px + 10px)
+  // body: min-height + (30px + 30px)
+  min-height: calc(100vh - 180px);
+}
+
+/**
+ * About
+ */
+
+.profile-image {
+  float: right;
+  margin: 2vw;
+  border-radius: 50%;
+  max-width: 30%;
+  @include media-query($on-palm) {
+    max-width: 70%;
+    margin: auto;
+    display: block;
+    float: none;
+  }
+}
+

@@ -1,9 +1,9 @@
 ---
 layout: post
 title: Visual Cube
-subtitle: A visual explanation to popular algorithms for the rubik's cube
+subtitle: A visual explanation of popular algorithms for the rubik's cube
 tags: [cube, algorithms]
-category: [learn]
+category: Explanations
 published: true
 ---
 
@@ -22,7 +22,7 @@ _All these algorithms can be seen on  [how-to-solve-a-rubix-cube.com](https://ho
 
 This might be the first "difficult" step for many newbies. Pay attention to the highlighted edge. Notice how this algorithm cleverly corrects the orientation of the red-green edge.
 
-<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/resources/cube/algorithms/frdrff"></object>
+<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/assets/cube/algorithms/frdrff"></object>
 
 ## The Top Cross
 
@@ -34,7 +34,7 @@ There are a few interesting observations about this algorithm.
 Notice the "L" and "Rod" shapes on the top edge that are commonly talked about. Also notice how there's a counterclockwise follow up to every move. There's an `R'` for an `R`, an `F'` for an `F`, and a `U'` for a `U`. These are certainly necessary to maintain the bottom two layers. Also notice that the reverse order is  not `U'R'F'` for obvious reasons.
 Notice how six iterations of the same algorithm bring you back to where you started. Also notice the "L" and "Rod" shapes formed on the top face of the cube.
 
-<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/resources/cube/algorithms/fruruf"></object>
+<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/assets/cube/algorithms/fruruf"></object>
 
 ## The Last Layer Edges
 
@@ -42,7 +42,7 @@ Notice how six iterations of the same algorithm bring you back to where you star
 
 Swapping the edges on the last layer can be tricky to understand. Take a look below.
 Notice how the consecutive `UU`s are important to bring the top edges back to position.
-<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/resources/cube/algorithms/rururuuru"></object>
+<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/assets/cube/algorithms/rururuuru"></object>
 
 ## Position the Last Layer Corners
 
@@ -52,7 +52,7 @@ Swapping the edges on the last layer can be tricky to understand. Take a look be
 Corner 1 always stays in the same place, and in the same orientation. Notice how the bottom layers and the top corners are gracefully in place.
 Also note the positions of the four corners at the end of every iteration. The algorithm repeats itself after three iterations. The highlighted corners can only be in one of the three possibilities.
 
-<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/resources/cube/algorithms/urulurul"></object>
+<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/assets/cube/algorithms/urulurul"></object>
 
 ## Orient the Last Layer Corners
 
@@ -60,6 +60,6 @@ Also note the positions of the four corners at the end of every iteration. The a
 
 Swapping the edges on the last layer can be tricky to understand. Take a look below.
 Notice how the orienttion of the four corners is changed after an even iteration.
-<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/resources/cube/algorithms/rdrd"></object>
+<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/assets/cube/algorithms/rdrd"></object>
 
 I hope this visual tour helps improve your understanding of the cube. I'm sure there might be better interpretations. Please feel free to comment!

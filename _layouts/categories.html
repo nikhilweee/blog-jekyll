@@ -1,0 +1,37 @@
+---
+layout: default
+---
+<div class="home">
+  <h1 class="post-list-category">{{ page.title | capitalize }}</h1>
+  <ul class="post-list">
+
+    {%- for post in page.posts -%}
+    <li>
+      <div>
+        {%- assign date_format = site.moving.date_format | default: "%b %-d, %Y" -%}
+        <div class="post-list-meta">
+          <span>
+            {{ post.date | date: date_format }}
+          </span>
+        </div>
+        <div class="post-list-title">
+          <a href="{{ post.url | relative_url }}">
+            {{ post.title | escape }}
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="post-list-meta">
+          &nbsp;
+        </div>
+        <div class="post-list-subtitle">
+          <a href="{{ post.url | relative_url }}">
+            {{ post.subtitle | escape }}
+          </a>
+        </div>
+      </div>
+    </li>
+{%- endfor -%}
+  </ul>
+
+</div>

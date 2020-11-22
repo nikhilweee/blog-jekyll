@@ -1,0 +1,66 @@
+---
+layout: default
+---
+
+<div class="home">
+
+  <h1 class="page-heading"></h1>
+  {{ content }}
+  {%- if site.categories.size > 0 -%}
+
+    <p class="post-list">
+      {%- for category in site.categories -%}
+        <a href="{{ page.url }}#{{ category.first | slugify }}-ref">
+          {{ category.first }}
+        </a>
+        {%- unless forloop.last -%} • {%- endunless -%}
+      {%- endfor -%}
+    </p>
+
+    <ul class="post-list">
+      {%- for category in site.categories -%}
+
+        <h2 id="{{ category.first | downcase }}-ref" class="post-list-category">
+          <a href="{{ site.url }}category/{{ category.first | slugify }}">
+            {{ category.first }}
+          </a>
+        </h2>
+        
+        {%- for post in category.last -%}
+          {%- if forloop.first -%}
+            <ul class="post-list">
+          {%- endif -%}
+          <li>
+            <div>
+              {%- assign date_format = site.moving.date_format | default: "%b %-d, %Y" -%}
+              <div class="post-list-meta">
+                <span>
+                  {{ post.date | date: date_format }}
+                </span>
+              </div>
+              <div class="post-list-title">
+                <a href="{{ post.url | relative_url }}">
+                  {{ post.title | escape }}
+                </a>
+              </div>
+            </div>
+            <div>
+              <div class="post-list-meta">
+                &nbsp;
+              </div>
+              <div class="post-list-subtitle">
+                <a href="{{ post.url | relative_url }}">
+                  {{ post.subtitle | escape }}
+                </a>
+              </div>
+            </div>
+          </li>
+          {%- if forloop.last -%}
+          </ul>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+</div>

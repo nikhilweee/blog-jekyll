@@ -1,101 +1,83 @@
 <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="icon" type="image/svg" href="/img/favicon.png">
+  {% if page.title %}
+    {% assign title = page.title | append: " - " | append: site.title %}
+  {% else %}
+    {% assign title = site.title %}
+  {% endif %}
 
-    <title>
-        {% if page.title %}{{ page.title }}
-            -
-        {% endif %}{{ site.title }}</title>
-
-    <meta name="author" content="{{ site.author.name }}"/>
-
-    {% if page.subtitle %}
-        <meta name="description" content="{{ page.subtitle }}">
-    {% endif %}
-
-    <link rel="alternate" type="application/rss+xml" title="{{ site.title }} - {{ site.description }}" href="{{ site.baseurl }}/feed.xml"/>
-
-    {% if layout.common-ext-css %}
-        {% for css in layout.common-ext-css %}
-            <link rel="stylesheet" href="{{ css }}"/>
-        {% endfor %}
-    {% endif %}
-
-    {% if layout.common-css %}
-        {% for css in layout.common-css %}
-            <link rel="stylesheet" href="{{ css | prepend: site.baseurl | replace: '//', '/' }}"/>
-        {% endfor %}
-    {% endif %}
-
-    {% if layout.common-googlefonts %}
-        {% for font in layout.common-googlefonts %}
-            <link rel="stylesheet" href="//fonts.googleapis.com/css?family={{ font }}"/>
-        {% endfor %}
-    {% endif %}
-
-    {% if page.ext-css %}
-        {% for css in page.ext-css %}
-            <link rel="stylesheet" href="{{ css }}"/>
-        {% endfor %}
-    {% endif %}
-
-    {% if page.css %}
-        {% for css in page.css %}
-            <link rel="stylesheet" href="{{ css | prepend: site.baseurl | replace: '//', '/' }}"/>
-        {% endfor %}
-    {% endif %}
-
-    {% if page.googlefonts %}
-        {% for font in page.googlefonts %}
-            <link rel="stylesheet" href="//fonts.googleapis.com/css?family={{ font }}"/>
-        {% endfor %}
-    {% endif %}
-
-    <!-- Facebook OpenGraph tags -->
-    <meta property="og:type" content="article"/>
-    <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}"/>
-    {% if page.id %}
-        <meta property="og:url" content="{{ site.url }}{{ page.url }}"/>
+  {% assign canonical = page.url | replace:'index.html','' | absolute_url %}
+  {% assign description = page.description | default: page.excerpt | default: site.description | strip_html | normalize_whitespace | escape %}
+  <title>{{ title }}</title>
+  <meta name="description" content="{{ description }}">
+  {% if page.keywords %}
+    {% if page.keywords.first %}
+      {% assign keywords = page.keywords | join: ',' %}
     {% else %}
-        <meta property="og:url" content="{{ site.url }}{{ page.url | remove: '/index.html' | remove: '.html' }}"/>
+      {% assign keywords = page.keywords %}
     {% endif %}
-    <meta property="og:description" content="{{ page.subtitle }}"/>
-    {% if page.share-img %}
-        <meta property="og:image" content="{{ page.share-img }}"/>
+    <meta name="keywords" content="{{ keywords }}">
+  {% endif %}
+
+  <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
+  <link rel="canonical" href="{{ canonical }}">
+  {% assign feed_path = "/feed.xml" %}
+  {% if site.feed and site.feed.path %}
+    {% assign feed_path = site.feed.path %}
+  {% endif %}
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ feed_path | absolute_url }}">
+
+  <!-- MathJax -->
+  {% if page.mathjax %}
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      CommonHTML: { linebreaks: { automatic: true } },
+    });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_CHTML"></script>
+  {% endif %}
+
+  {% if site.facebook_app_id %}<meta property="fb:admins" content="{{ site.facebook_app_id }}">{% endif %}
+  <meta property="og:title" content="{{ title }}">
+  <meta property="og:site_name" content="{{ site.title | escape }}">
+  <meta property="og:url" content="{{ canonical }}">
+  <meta property="og:description" content="{{ description }}">
+  {% if site.facebook_page %}<meta property="article:author" content="{{ site.facebook_page }}">{% endif %}
+  {% if page.facebook.image %}
+    <meta property="og:image" content="{{ page.facebook.image }}">
+  {% elsif site.facebook_image %}
+    <meta property="og:image" content="{{ site.facebook_image }}">
+  {% endif %}
+  <meta name="twitter:card" content="{{ page.twitter_card.type | default: "summary" }}">
+  {% if site.twitter_username %}<meta name="twitter:site" content="{{ site.twitter_username }}">{% endif %}
+  <meta name="twitter:title" content="{{ title | truncate: 70 }}">
+  <meta name="twitter:description" content="{{ description | truncate: 200 }}">
+  {% if page.twitter_card.creator %}
+    <meta name="twitter:creator" content="{{ page.twitter_card.creator }}">
+  {% elsif site.twitter_username %}
+    <meta name="twitter:creator" content="{{ site.twitter_username }}">
+  {% endif %}
+  {% if page.twitter_card.image %}
+    {% if page.twitter_card.type == 'gallery' %}
+      <meta name="twitter:image0" content="{{ page.twitter_card.image }}">
+      <meta name="twitter:image1" content="{{ page.twitter_card.image1 }}">
+      <meta name="twitter:image2" content="{{ page.twitter_card.image2 }}">
+      <meta name="twitter:image3" content="{{ page.twitter_card.image3 }}">
     {% else %}
-        <meta property="og:image" content="{{ site.share-img }}"/>
+      <meta name="twitter:image:src" content="{{ page.twitter_card.image }}">
+      {% if page.twitter_card.type == 'photo' %}
+        {% if page.twitter_card.width %}<meta name="twitter:image:width" content="{{ page.twitter_card.width }}">{% endif %}
+        {% if page.twitter_card.height %}<meta name="twitter:image:height" content="{{ page.twitter_card.height }}">{% endif %}
+      {% endif %}
     {% endif %}
+  {% elsif site.twitter_image %}
+    <meta name="twitter:image:src" content="{{ site.twitter_image }}">
+  {% endif %}
 
-    <!-- Twitter summary cards -->
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:site" content="@{{ site.author.twitter }}"/>
-    <meta name="twitter:creator" content="@{{ site.author.twitter }}"/>
-    <meta name="twitter:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}"/>
-    <meta name="twitter:description" content="{{ page.subtitle }}"/>
-    {% if page.share-img %}
-        <meta name="twitter:image" content="{{ page.share-img }}"/>
-    {% else %}
-        <meta name="twitter:image" content="{{ site.share-img }}"/>
-    {% endif %}
-
-    <!-- MathJax -->
-    {% if page.mathjax %}
-        <script type="text/x-mathjax-config">
-          MathJax.Hub.Config({
-            extensions: ["tex2jax.js"],
-            jax: ["input/TeX", "output/HTML-CSS"],
-            tex2jax: {
-              inlineMath: [ ['$$','$$'], ["\\(","\\)"] ],
-              displayMath: [ ['$$$','$$$'], ["\\[","\\]"] ],
-              processEscapes: true
-            },
-            "HTML-CSS": { fonts: ["TeX"] }
-          });
-        </script>
-        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js"></script>
-    {% endif %}
-
+  {% include fonts.html %}
+  {% include google_analytics.html %}
 </head>

@@ -2,17 +2,22 @@
 layout: page
 title: About Me
 ---
-<ul class="pager main-pager">
-  <li>
-    <a href="/resume">Resume</a>
-  </li>
-</ul>
 
-Hi there!
-I'm Nikhil.
+![Cheese!](https://pbs.twimg.com/profile_images/1280782890444283904/ExaOkjTi_400x400.jpg){:.profile-image}
 
-I'm a student at the Birla Institute of Technology and Science (BITS), Pilani currently in my final year of study. Though I'm pursuing my bachelors degree in Electrical and Electronics Engineering, I have varied interests, mostly apart from my major.
+Hi there! I'm Nikhil.
 
-I'm currently trying to make sense of my life, building the blocks for the future perhaps, so you'll find me engaged in altogether different sorts of stuff like building projects, exploring a new framework, busy debugging stuff to perfection (_read: my way_) reading on different subjects, learning some MOOCs, and sometimes going to classes as well.
+I'm just another brick in the wall who is currently working on helping AI models create fashion models. In a previous life, I was busy finding ways to make machines talk in a more natural manner. Apart from work, you can find me travelling, reading, or sometimes just chilling out at home as well ¯\\\_(ツ)\_/¯ .
 
-You would find me by the alias _nikhilweee_ on all major social platforms. Feel free to get in touch.
+
+### Contact
+
+<p class="post-list">
+  <a href="https://github.com/{{ site.github_username }}">GitHub</a> • 
+  <a href="https://twitter.com/{{ site.twitter_username }}">Twitter</a> • 
+  <a href="https://linkedin.com/in/{{ site.linkedin_username }}">LinkedIn</a> • 
+  <a href="{% link resume.md %}">Resume</a>
+</p>
+
+You should find me by the alias _nikhilweee_ on all major social platforms. Feel free to get in touch! If you're the kind of person who likes the sight of good ol paper, you can also have a look at my resume.
+

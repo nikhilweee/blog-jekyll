@@ -1,10 +1,10 @@
 ---
 layout: post
-title: Evaluating Machine Translation
+title: Evaluating Machine Evaluation Metrics
 subtitle: Automatic evaluation metrics explained
 tags: [cube, algorithms]
-category: [learn]
-published: false
+category: Explanations
+published: true
 mathjax: true
 ---
 
