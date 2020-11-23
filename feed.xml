@@ -1,0 +1,1600 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <generator uri="http://jekyllrb.com" version="4.1.1">Jekyll</generator>
+  
+  
+  <link href="https://nikhilweee.github.io/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://nikhilweee.github.io/" rel="alternate" type="text/html" />
+  <updated>2020-11-23T08:32:35+00:00</updated>
+  <id>https://nikhilweee.github.io//</id>
+
+  
+    <title type="html">Nikhil Verma</title>
+  
+
+  
+    <subtitle></subtitle>
+  
+
+  
+    <author>
+        <name>Nikhil Verma</name>
+      
+      
+    </author>
+  
+
+  
+  
+    <entry>
+      
+      <title type="html">Intro to Style Transfer</title>
+      
+      
+      <link href="https://nikhilweee.github.io/posts/style-transfer/" rel="alternate" type="text/html" title="Intro to Style Transfer" />
+      
+      <published>2020-09-11T00:00:00+00:00</published>
+      <updated>2020-09-11T00:00:00+00:00</updated>
+      <id>https://nikhilweee.github.io/posts/style-transfer</id>
+      <content type="html" xml:base="https://nikhilweee.github.io/posts/style-transfer/">&lt;h2 id=&quot;image-style-transfer-using-convolutional-neural-networks&quot;&gt;Image Style Transfer Using Convolutional Neural Networks&lt;/h2&gt;
+
+&lt;p&gt;This paper introduced neural style transfer. It uses a VGGNet pre-trained on the ImageNet dataset for the purpose. The key idea is to be able to separate content and style from the representations of the network. Once that is done, a new image is synthesized from white noise where two different kind of losses are minimized - a style loss between the style image and the hybrid image, and a content loss between the content image and the hybrid image.&lt;/p&gt;
+
+&lt;h2 id=&quot;intuitions&quot;&gt;Intuitions&lt;/h2&gt;
+
+&lt;p&gt;Since the VGGNet was originally trained for object classification, the layers towards the end of the network should have enough information to be able to recognise the object while still being invariant to its lower level features like position, style, etc. Therefore, we use the higher layers for the purposes of extracting content from the image, and the lower layers for the purposes of capturing the style of the image. This intuition is formalised in the way the losses are calculated.&lt;/p&gt;
+
+&lt;h2 id=&quot;content-loss&quot;&gt;Content Loss&lt;/h2&gt;
+
+&lt;p&gt;The representation of every image $\vec{x}$ in each layer $l$ of a CNN can be encoded by the feature response $F^l$ to the layer. Therefore, for the hybrid image $\vec{x}$ to be able to match the content of the original image $\vec{p}$, their respective feature representations $F^l$ and $P^l$ should be similar. This gives rise to the content loss, which is simply the squared error loss between the two. Note that $F^l \in \mathbb{R}^{N_l \times M_l}$ where $F_{ij}^{l}$ is the activation of the $i$th filter at the $j$th position in layer $l$ with $N_l$ distinct features each of size $M_l$&lt;/p&gt;
+
+\[L_{content} (\vec{p}, \vec{x}, l) = \frac{1}{2} \sum_{i, j} (F_{ij}^l - P_{ij}^l)\]
+
+&lt;h2 id=&quot;style-loss&quot;&gt;Style Loss&lt;/h2&gt;
+
+&lt;p&gt;To capture the style of an image, we might just want to capture the feature responses from the lower layers of the image. But note that those layers also contain spatial information about the content of the image which are later used by the higher layers of the network. Therefore, there is a need to decouple that information from the style of the image. To do so, we use a matrix of feature correlations built on top of the feature responses of each layer in the CNN. The feature correlations are given by something called as the Gram matrix $G^l \in \mathbb{R}^{N_l \times N_l}$, where $G_{ij}^l$ is the inner product between the feature maps $i$ and $j$ in layer $l$.&lt;/p&gt;
+
+\[G_{ij}^l = \sum_k F_{ik}^l F_{jk}^l\]
+
+&lt;p&gt;If $\vec{a}$ and $\vec{x}$ are the style image and the hybrid image respectively, then just like the content loss, we want the gram matrix of the style image $A^l$ to be as close as possible to the gram matrix of the hybrid image $G^l$. The style loss $E_l$ for every layer $l$ of the network is then defined as the squared loss between the two gram matrices. The total style loss is the weighted sum of the individual layer losses $E_l$ where $w_l$ are the weighing factors described separately in the paper.&lt;/p&gt;
+
+\[L_{style} (\vec{a}, \vec{x}) = \sum_{l=0}^{L} w_l E_l
+\hspace{2cm}
+E_l = \frac{1}{4 N_l^2 M_l^2} \sum_{i,j} (G_{ij}^l - A_{ij}^l)^2\]
+
+&lt;p&gt;The total loss $L_{total}$ is the weighted sum of the content and style losses with weights $\alpha$ and $\beta$ respectively.&lt;/p&gt;
+
+\[L_{total} (\vec{p}, \vec{a}, \vec{x}) = \alpha L_{content} (\vec{p}, \vec{x}) + \beta L_{style} (\vec{a}, \vec{x})\]</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Nikhil Verma</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="Papers" />
+      
+
+      
+
+      
+        <summary type="html">Image Style Transfer Using Convolutional Neural Networks</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Building your first RNN</title>
+      
+      
+      <link href="https://nikhilweee.github.io/posts/first-rnn-pytorch/" rel="alternate" type="text/html" title="Building your first RNN" />
+      
+      <published>2018-05-24T00:00:00+00:00</published>
+      <updated>2018-05-24T00:00:00+00:00</updated>
+      <id>https://nikhilweee.github.io/posts/first-rnn-pytorch</id>
+      <content type="html" xml:base="https://nikhilweee.github.io/posts/first-rnn-pytorch/">&lt;p&gt;If you have some understanding of recurrent networks, want to get your hands dirty, but haven’t really tried to do that on your own, then you are certainly at the right place. This tutorial is a practical guide about getting started with recurrent networks using PyTorch. We’ll solve a simple cipher using PyTorch 0.4.0, which is the latest version at the time of this writing.&lt;/p&gt;
+
+&lt;p&gt;You are only expected to have some understanding of recurrent networks. If you don’t, here’s the link to the &lt;a href=&quot;http://colah.github.io/posts/2015-08-Understanding-LSTMs/&quot;&gt;golden resource&lt;/a&gt; - Chris Olah’s post on Understanding LSTMs. We’ll use a single layer LSTM for the task of learning ciphers, which should be a fairly easy exercise.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-problem&quot;&gt;The Problem&lt;/h2&gt;
+
+&lt;p&gt;Before starting off, let’s first define the problem in a concrete manner. We wish to decrypt secret messages using an LSTM. For the sake of simplicity, let’s assume that our messages are encrypted using the &lt;a href=&quot;https://en.wikipedia.org/wiki/Caesar_cipher&quot;&gt;Caesar Cipher&lt;/a&gt;, which is a really simple substitution cipher.&lt;/p&gt;
+
+&lt;p&gt;Caesar cipher works by replacing each letter of the original message by another letter from a given alphabet to form an encrypted message. In this tutorial we’ll use a right shift of 13, which basically means that the encrypted version of each letter in the alphabet is the one which occurs 13 places to the right of it. So &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A&lt;/code&gt;(1) becomes &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;N&lt;/code&gt;(1+13), &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;B&lt;/code&gt;(2) becomes &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;O&lt;/code&gt;(2+13), and so on. Our alphabet will only include uppercase English characters &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A&lt;/code&gt; through &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Z&lt;/code&gt;, and an extra letter, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-&lt;/code&gt;, to represent any foreign character.&lt;/p&gt;
+
+&lt;p&gt;With all of these in mind, here’s the substitution table for your reference.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;A B C D E F G H I J K L M N O P Q R S T U V W X Y Z -
+N O P Q R S T U V W X Y Z - A B C D E F G H I J K L M
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The first row shows all the letters of the alphabet in order. To encrypt a message, each letter of the first row can be substituted by the corresponding letter from the second row. As an example, the message &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;THIS-IS-A-SECRET&lt;/code&gt; becomes &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FUVEMVEMNMERPDRF&lt;/code&gt; when encrypted.&lt;/p&gt;
+
+&lt;p&gt;&lt;sup id=&quot;fnref:why-nn&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:why-nn&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;Aside : but &lt;a href=&quot;#fn:why-nn&quot;&gt;why use neural networks for this problem?&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;the-dataset&quot;&gt;The Dataset&lt;/h2&gt;
+
+&lt;p&gt;Like any other neural network, we’ll need data. Loads of it. We’ll use a parallel dataset of the following form where each tuple represents a pair of (encrypted, decrypted) messages.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;('FUVEMVEMNMERPDRF', 'THIS-IS-A-SECRET')
+('FUVEMVEMN-AFURDMERPDRF', 'THIS-IS-ANOTHER-SECRET')
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Having defined our problem, we’ll feed the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;encrypted&lt;/code&gt; message as the input to our LSTM and expect it to emit the original message as the target. Sounds simple right?&lt;/p&gt;
+
+&lt;p&gt;It does, except that we have a little problem. Neural networks are essentially number crunching machines, and have no idea how to hande our encrypted messages. We’ll somehow have to convert our strings into numbers for the network to make sense of them.&lt;/p&gt;
+
+&lt;h2 id=&quot;word-embeddings&quot;&gt;Word Embeddings&lt;/h2&gt;
+
+&lt;p&gt;The way this is usually done is to use something called as word embeddings. The idea is to represent every character in the alphabet with its own \(D\) dimensional &lt;strong&gt;embedding vector&lt;/strong&gt;, where \(D\) is usually called the embedding dimension. So let’s say if we decide to use an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;embedding_dim&lt;/code&gt; of 5. This basically means that each of the 27 characters of the alphabet, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ-&lt;/code&gt;, will have their own embedding vector of length 5.&lt;/p&gt;
+
+&lt;p&gt;Often, these vectors are stored together as \(V \times D\) dimensional &lt;strong&gt;embedding matrix&lt;/strong&gt;, \(E\), where each row \(E[i]\) of the matrix represents the embedding vector for the character with index \(i\) in the alphabet. Here \(V\) is the length of the vocabulary (alphabet), which is 27 in our case. As an example, the whole embedding matrix \(E\) might look something like the one shown below.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[[-1.4107, -0.8142,  0.8486,  2.8257, -0.7130],
+ [ 0.5434,  3.8553,  2.9420, -2.8364, -4.0077], 
+ [ 1.6781, -0.2496,  2.5569, -0.2952, -2.2911],
+ ...
+ [ 2.7912,  1.3261,  1.7603,  3.3852, -2.1643]]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;\(E[0]\) then represents the word vector for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A&lt;/code&gt;, which is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[-1.4107, -0.8142,  0.8486,  2.8257, -0.7130]&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;sup id=&quot;fnref:char-embedding&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:char-embedding&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;Aside : but &lt;a href=&quot;#fn:char-embedding&quot;&gt;I read something different!&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;P.S. I’ll be using alphabet and vocabulary interchangably throughout this tutorial. Similarly, word embeddings, word vectors, character embeddings, or simply embeddings will mean the same thing.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-cipher&quot;&gt;The Cipher&lt;/h2&gt;
+
+&lt;p&gt;Now that we have enough background, let’s get our hands dirty and finally jump in to writing some code. The first thing we have to do is to create a dataset. And to do that, we first need to implement the cipher. Although we implement it as a simple function, it might be a good idea to implement the cipher as a class in the future.&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/13243631f8ed219167ccd3866ce3204e.js?file=module-cipher.py&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;We create the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;encode&lt;/code&gt; function which uses the parameters &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vocab&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;key&lt;/code&gt; to encrypt each character. Since we’re working with letters, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vocab&lt;/code&gt; in this context simply means the alphabet.  The encryption algorithm should be fairly easy to understand. Notice how we use the modulo operator in line &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;8&lt;/code&gt; to prevent the indexes from overflowing.&lt;/p&gt;
+
+&lt;p&gt;To check the implementation, you can check for some random inputs. For example, ensure that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;encrypt('ABCDEFGHIJKLMNOPQRSTUVWXYZ-')&lt;/code&gt; returns &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;NOPQRSTUVWXYZ-ABCDEFGHIJKLM&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-dataset-finally&quot;&gt;The Dataset (Finally!)&lt;/h2&gt;
+
+&lt;p&gt;Okay, let’s finally build the dataset. For the sake of simplicity, we’ll use a random sequence of characters as a message and encrypt it to create the input to the LSTM. To implement this, we create a simple function called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dataset&lt;/code&gt; which takes in the parameter &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_examples&lt;/code&gt; and returns a list of those many (input, output) pairs.&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/13243631f8ed219167ccd3866ce3204e.js?file=module-batch.py&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;There’s something strange about this function though. Have a look at line 24. We’re not returning a pair of strings. We’re first converting strings into a list of indices which represent their position in the alphabet. If you recall the section on &lt;a href=&quot;#word-embeddings&quot;&gt;word embeddings&lt;/a&gt;, these indices will later be used to extract the corresponding embedding vectors from the embedding matrix \(E\). We’re then converting these lists into a pair of tensors, which is what the function returns.&lt;/p&gt;
+
+&lt;h2 id=&quot;tensors&quot;&gt;Tensors?&lt;/h2&gt;
+
+&lt;p&gt;This brings us to the most fundamental data type in PyTorch - the Tensor. For users familiar with NumPy, a tensor is the PyTorch analogue of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ndarray&lt;/code&gt;. If you’re not, a tensor is essentially a multidimensional matrix which supports optimized implementations of common operations. Have a look at the &lt;a href=&quot;http://pytorch.org/tutorials/beginner/blitz/tensor_tutorial.html&quot;&gt;Tensor Tutorial&lt;/a&gt; on the PyTorch website for more information. The takeaway here is that we’ll use tensors from now on as our go to data structure to handle numbers. Creating a tensor is really easy. Though there are a lot of ways to do so, we’ll just wrap our list of integers with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;torch.tensor()&lt;/code&gt; - which turns out the easiest amongst all.&lt;/p&gt;
+
+&lt;p&gt;You can satisfy yourself by having a look at what this function does. A quick call to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dataset(1)&lt;/code&gt; should return something similar to the following. You can also verify that the numbers in the second tensor are right shifted by 13 from the numbers in the first tensor. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;20 = (7 + 13) % 27&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;3 = (17 + 13) % 27&lt;/code&gt; and so on.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tensor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;21&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;14&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;13&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;23&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+         &lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;17&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;19&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;22&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+         &lt;span class=&quot;mi&quot;&gt;13&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;23&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;19&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt; 
+  &lt;span class=&quot;n&quot;&gt;tensor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;17&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;14&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;18&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;18&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;22&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+         &lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;24&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;17&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+          &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;24&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;18&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])]]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;With this we’re done with the basics. Let’s start building the network. It’s a good idea to first have a general overview of what we aim to achieve. One might think of something along the following lines.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;On a very high level, the first step in a general workflow will be to feed in inputs to an LSTM to get the predictions. Next, we pass on the predictions along with the targets to the loss function to calculate the loss. Finally, we backpropagate through the loss to update our model’s parameters.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Hmm, that sounds easy, right? But how do you actually make it work? Let’s dissect this step by step. We’ll first identify the components needed to build our model, and finally put them to gether as a single piece to make it work.&lt;/p&gt;
+
+&lt;div class=&quot;note&quot;&gt;
+
+  &lt;h3 id=&quot;the-pytorch-paradigm&quot;&gt;The PyTorch paradigm&lt;/h3&gt;
+
+  &lt;p&gt;… before diving in, it’s important to know a couple of things. PyTorch provides implementations for most of the commonly used entities from layers such as LSTMs, CNNs and GRUs to optimizers like SGD, Adam, and what not (Isn’t that the whole point of using PyTorch in the first place?!). The general paradigm to use any of these entities is to first create an instance of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;torch.nn.entity&lt;/code&gt; with some required parameters. As an example, here’s how we instantiate an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;lstm&lt;/code&gt;.&lt;/p&gt;
+
+  &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Step 1
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lstm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;torch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;LSTM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;input_size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hidden_size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;batch_first&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
+
+  &lt;p&gt;Next, we call this object with the inputs as parameters when we actually want to run an LSTM over some inputs. This is shown in the third line below.&lt;/p&gt;
+
+  &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;lstm_in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;torch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;hidden_in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;torch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;torch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# Step 2
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lstm_out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lstm_hidden&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lstm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lstm_in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hidden_in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
+
+  &lt;p&gt;This two-stepped process will be seen all through this tutorial and elsewhere. Below, we’ll go through step 1 of all the modules. We’ll connect the dots at a later stage.&lt;/p&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Getting back to code now, let’s dissect our ‘high level’ understanding again.&lt;/p&gt;
+
+&lt;h2 id=&quot;1-prepare-inputs&quot;&gt;1. Prepare inputs&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;… &lt;strong&gt;feed in inputs&lt;/strong&gt; to an LSTM to get the predictions …&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;To feed in inputs, well, we first need to prepare the inputs. Remember the embedding matrix \(E\) we described &lt;a href=&quot;#the-dataset-finally&quot;&gt;earlier&lt;/a&gt;? we’ll use \(E\) to convert the pair of indices we get from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dataset()&lt;/code&gt; into the corresponding embedding vectors. Following the general paradigm, we create an instance of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;torch.nn.Embedding&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://pytorch.org/docs/stable/nn.html#torch.nn.Embedding&quot;&gt;docs&lt;/a&gt; list two required parameters - &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_embeddings: the size of the dictionary of embeddings&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;embedding_dim: the size of each embedding vector&lt;/code&gt;. In our case, these are &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vocab_size&lt;/code&gt; \(V\) and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;embedding_dim&lt;/code&gt; \(D\) respectively.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Step 1
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;embed&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;torch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Embedding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vocab_size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;embedding_dim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Later on, we could easily convert any input tensor &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecrypted&lt;/code&gt; containing indices of the encrypted input (like the one we get from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dataset()&lt;/code&gt;) into the corresponding embedding vectors by simply calling &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;embed(encrypted)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;As an example, the word &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SECRET&lt;/code&gt; becomes &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ERPDRF&lt;/code&gt; after encryption, and the letters of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ERPDRF&lt;/code&gt; correspond to the indices &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[4, 17, 15, 3, 17, 5]&lt;/code&gt;. If &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;encrypted&lt;/code&gt; is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;torch.tensor([4, 17, 15, 3, 17, 5])&lt;/code&gt;, then &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;embed(encrypted)&lt;/code&gt; would return something similar to the following.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Step 2
+&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;encrypted&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;torch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tensor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;17&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;17&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;embedded&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;embed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;encrypted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;embedded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;tensor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([[&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.2666&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;2.1146&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;1.3225&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;1.3261&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;2.6993&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.5723&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;2.1346&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;2.6892&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;2.7130&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;1.7636&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.9679&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.8601&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;3.0942&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.8810&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;0.6042&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;3.6624&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.3556&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.7088&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;1.4370&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;3.2903&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.5723&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;2.1346&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;2.6892&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;2.7130&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;1.7636&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.8041&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.8606&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;2.5406&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;3.5191&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;1.7761&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]])&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;2-build-an-lstm&quot;&gt;2. Build an LSTM&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;… feed in inputs &lt;strong&gt;to an LSTM&lt;/strong&gt; to get the predictions …&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Next, we need to create an LSTM. We do this in a similar fashion by creating an instance of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;torch.nn.LSTM&lt;/code&gt;. This time, the &lt;a href=&quot;https://pytorch.org/docs/stable/nn.html#torch.nn.LSTM&quot;&gt;docs&lt;/a&gt; list the required parameters as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;input_size: the number of expected features in the input&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hidden_size: the number of features in the hidden state&lt;/code&gt;. Since LSTMs typically operate on variable length sequences, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;input_size&lt;/code&gt; refers to the size of each entity in the input sequence. In our case, this means the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;embedding_dim&lt;/code&gt;. This might sound counter-intuitive, but if you think for a while, it makes sense.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hidden_size&lt;/code&gt;, as the name suggests, is the size of the hidden state of the RNN. In case of an LSTM, this refers to the size of both, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cell_state&lt;/code&gt; and the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hidden_state&lt;/code&gt;. Note that the hidden size is a hyperparameter and &lt;em&gt;can be different&lt;/em&gt; from the input size. &lt;a href=&quot;http://colah.github.io/posts/2015-08-Understanding-LSTMs/&quot;&gt;colah’s blog post&lt;/a&gt; doesn’t explicitly mention this, but the equations on the PyTorch &lt;a href=&quot;https://pytorch.org/docs/stable/nn.html#torch.nn.LSTMCell&quot;&gt;docs on LSTMCell&lt;/a&gt; should make it clear. To summarize the discussion above, here is how we instantiate the LSTM.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Step 1
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lstm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;torch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;LSTM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;embedding_dim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hidden_dim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;note&quot;&gt;
+
+  &lt;h3 id=&quot;a-note-on-dimensionality&quot;&gt;A note on dimensionality&lt;/h3&gt;
+
+  &lt;p&gt;During step 2 of the &lt;a href=&quot;#the-pytorch-paradigm&quot;&gt;general paradigm&lt;/a&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;torch.nn.LSTM&lt;/code&gt; expects the input to be a 3D input tensor of size &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(seq_len, batch, embedding_dim)&lt;/code&gt;, and returns an output tensor of the size &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(seq_len, batch, hidden_dim)&lt;/code&gt;. We’ll only feed in one input at a time, so &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;batch&lt;/code&gt; is always &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt;.&lt;/p&gt;
+
+  &lt;p&gt;As an example, consider the input-output pair &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;('ERPDRF', 'SECRET')&lt;/code&gt;. Using an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;embedding_dim&lt;/code&gt; of 5, the 6 letter long input &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ERPDRF&lt;/code&gt; is transformed into an input tensor of size &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;6 x 1 x 5&lt;/code&gt;. If &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hidden_dim&lt;/code&gt; is 10, the input is processed by the LSTM into an output tensor of size &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;6 x 1 x 10&lt;/code&gt;.&lt;/p&gt;
+
+&lt;/div&gt;
+
+&lt;p&gt;Generally, the LSTM is expected to run over the input sequence character by character to emit a probability distribution over all the letters in the vocabulary. So for every input character, we expect a \(V\) dimensional output tensor where \(V\) is 27 (the size of the vocabulary). The most probable letter is then chosen as the output at every timestep.&lt;/p&gt;
+
+&lt;p&gt;If you have a look at the output of the LSTM on the example pair &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;('ERPDRF', 'SECRET')&lt;/code&gt; &lt;a href=&quot;#a-note-on-dimensionality&quot;&gt;above&lt;/a&gt;, you can instantly make out that the dimensions are not right. The output dimension is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;6 x 1 x 10&lt;/code&gt; - which means that for every character, the output is a \(D\) (10) dimensional tensor instead of the expected 27.&lt;/p&gt;
+
+&lt;p&gt;So how do we solve this?&lt;/p&gt;
+
+&lt;h2 id=&quot;3-transform-the-outputs&quot;&gt;3. Transform the outputs&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;… feed in inputs to an LSTM to &lt;strong&gt;get the predictions&lt;/strong&gt; …&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The general workaround is to transform the \(D\) dimensional tensor into a \(V\) dimensional tensor through what is called an affine (or linear) transform. Sparing the definitions aside, the idea is to use matrix multiplication to get the desired dimensions.&lt;/p&gt;
+
+&lt;p&gt;Let’s say the LSTM produces an output tensor \(O\) of size &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;seq_len x batch x hidden_dim&lt;/code&gt;. Recall that we only feed in one example at a time, so &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;batch&lt;/code&gt; is always &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt;. This essentially gives us an output tensor \(O\) of size &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;seq_len x hidden_dim&lt;/code&gt;. Now if we multiply this output tensor with another tensor \(W\) of size &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hidden_dim x embedding_dim&lt;/code&gt;, the resultant tensor \(R = O \times W\) has a size of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;seq_len x embedding_dim&lt;/code&gt;. Isn’t this exactly what we wanted?&lt;/p&gt;
+
+&lt;p&gt;To implement the linear layer, … you guessed it! We create an instance of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;torch.nn.Linear&lt;/code&gt;. This time, the &lt;a href=&quot;https://pytorch.org/docs/stable/nn.html#torch.nn.Linear&quot;&gt;docs&lt;/a&gt; list the required parameters as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;in_features:  size of each input sample&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;out_features:  size of each output sample&lt;/code&gt;. Note that this only transforms the last dimension of the input tensor. So for example, if we pass in an input tensor of size &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(d1, d2, d3, ..., dn, in_features)&lt;/code&gt;, the output tensor will have the same size for all but the last dimension, and will be a tensor of size &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(d1, d2, d3, ..., dn, out_features)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;With this knowledge in mind, it’s easy to figure out that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;in_features&lt;/code&gt; is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hidden_dim&lt;/code&gt;, and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;out_features&lt;/code&gt; is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vocab_size&lt;/code&gt;. The linear layer is initialised below.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Step 1
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;linear&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;torch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Linear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hidden_dim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vocab_size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;With this we’re preddy much done with the essentials. Time for some learning!&lt;/p&gt;
+
+&lt;h2 id=&quot;4-calculate-the-loss&quot;&gt;4. Calculate the loss&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Next, we pass on the predictions along with the targets to the loss function to calculate the loss.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;If you think about it, the LSTM is essentially performing multi-class classification at every time step by choosing one letter out of the 27 characters of the vocabulary. A common choice in such a case is to use the cross entropy loss function &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;torch.nn.CrossEntropyLoss&lt;/code&gt;. We initialize this in a similar manner.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;loss_fn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;torch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CrossEntropyLoss&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You can read more about cross entropy loss in the excellent &lt;a href=&quot;https://rdipietro.github.io/friendly-intro-to-cross-entropy-loss/&quot;&gt;blog post by Rob DiPietro.&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;5-optimize&quot;&gt;5. Optimize&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Finally, we backpropagate through the loss to update our model’s parameters.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;A popular choice is the Adam optimizer. Here’s how we initialize it. Notice that almost all torch layers have this convenient way of getting all their parameters by calling &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;module.parameters()&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;optimizer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;torch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;optim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Adam&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;embed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parameters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lstm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parameters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+                             &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;linear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parameters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.001&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To summarize, here’s how we initialize the required layers.&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/13243631f8ed219167ccd3866ce3204e.js?file=module-model.py&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;Let’s wrap this up and consolidate the network. Have a look at the training script below. Most of the code should make sense on its own. There are a few helper operations like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;torch.squeeze&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;torch.transpose&lt;/code&gt; whose function can be inferred from the comments. You can also refer to the &lt;a href=&quot;https://pytorch.org/docs/stable/torch.html&quot;&gt;docs&lt;/a&gt; for more information.&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/13243631f8ed219167ccd3866ce3204e.js?file=module-train.py&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;After every training iteration, we need to evaluate the network. Have a look at the validation script below. After calculating the scores as in the training script, we calculate a softmax over the scores to get a probability distribution in line 9. We then aggregate the characters with the maximum probability in line 11. We then compare the predicted output &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;batch_out&lt;/code&gt; with the target output &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;original&lt;/code&gt; in line 15. At the end of the epoch, we calculate the accuracy in line 18.&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/13243631f8ed219167ccd3866ce3204e.js?file=module-valid.py&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;Notice that the predicted outputs are still in the form of indices. Converting them back to characters is left as an exercise.&lt;/p&gt;
+
+&lt;p&gt;But before you go, congratulations! You’ve built your first RNN in PyTorch! The complete code for this post is available as a &lt;a href=&quot;https://gist.github.com/nikhilweee/13243631f8ed219167ccd3866ce3204e&quot;&gt;GitHub gist&lt;/a&gt;. You can test the network by simply running the &lt;a href=&quot;https://gist.github.com/nikhilweee/13243631f8ed219167ccd3866ce3204e#file-train-py&quot;&gt;training script&lt;/a&gt;. Thanks for sticking around.&lt;/p&gt;
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:why-nn&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;&lt;strong&gt;But why Neural Networks?&lt;/strong&gt; You might be wondering why do we use neural networks in the first place. In our use case, it sure makes more sense to decrypt the messages by conventional programming because we &lt;em&gt;know&lt;/em&gt; the encryption function beforehand. &lt;em&gt;This might not be the case everytime&lt;/em&gt;. You might have a situation where you have enough data but still have no idea about the encryption function. Neural networks fit quite well in such a situation. Anyways, keep in mind that this is still a toy problem. One motivation to choose this problem is the ease of generating loads of training examples on the fly. So we don’t really need to procure any dataset. Yay! &lt;a href=&quot;#fnref:why-nn&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:char-embedding&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;&lt;strong&gt;I think I read something different!&lt;/strong&gt; Strictly speaking, what I just described here is called a &lt;em&gt;character embedding&lt;/em&gt;, beacause we have a vector for each &lt;em&gt;character&lt;/em&gt; in the alphabet. In case we had a vector for each &lt;em&gt;word&lt;/em&gt; in a vocabulary, we would be using &lt;em&gt;word embeddings&lt;/em&gt; instead. Notice the analogy here. An alphabet is the set of all the letters in a language. Similarly, a vocabulary is the collection of all the words in a language. &lt;a href=&quot;#fnref:char-embedding&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Nikhil Verma</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="Explanations" />
+      
+
+      
+        <category term="rnn" />
+      
+        <category term="pytorch" />
+      
+
+      
+        <summary type="html">If you have some understanding of recurrent networks, want to get your hands dirty, but haven’t really tried to do that on your own, then you are certainly at the right place. This tutorial is a practical guide about getting started with recurrent networks using PyTorch. We’ll solve a simple cipher using PyTorch 0.4.0, which is the latest version at the time of this writing. You are only expected to have some understanding of recurrent networks. If you don’t, here’s the link to the golden resource - Chris Olah’s post on Understanding LSTMs. We’ll use a single layer LSTM for the task of learning ciphers, which should be a fairly easy exercise. The Problem Before starting off, let’s first define the problem in a concrete manner. We wish to decrypt secret messages using an LSTM. For the sake of simplicity, let’s assume that our messages are encrypted using the Caesar Cipher, which is a really simple substitution cipher. Caesar cipher works by replacing each letter of the original message by another letter from a given alphabet to form an encrypted message. In this tutorial we’ll use a right shift of 13, which basically means that the encrypted version of each letter in the alphabet is the one which occurs 13 places to the right of it. So A(1) becomes N(1+13), B(2) becomes O(2+13), and so on. Our alphabet will only include uppercase English characters A through Z, and an extra letter, -, to represent any foreign character. With all of these in mind, here’s the substitution table for your reference. A B C D E F G H I J K L M N O P Q R S T U V W X Y Z - N O P Q R S T U V W X Y Z - A B C D E F G H I J K L M The first row shows all the letters of the alphabet in order. To encrypt a message, each letter of the first row can be substituted by the corresponding letter from the second row. As an example, the message THIS-IS-A-SECRET becomes FUVEMVEMNMERPDRF when encrypted. 1Aside : but why use neural networks for this problem? The Dataset Like any other neural network, we’ll need data. Loads of it. We’ll use a parallel dataset of the following form where each tuple represents a pair of (encrypted, decrypted) messages. ('FUVEMVEMNMERPDRF', 'THIS-IS-A-SECRET') ('FUVEMVEMN-AFURDMERPDRF', 'THIS-IS-ANOTHER-SECRET') ... Having defined our problem, we’ll feed the encrypted message as the input to our LSTM and expect it to emit the original message as the target. Sounds simple right? It does, except that we have a little problem. Neural networks are essentially number crunching machines, and have no idea how to hande our encrypted messages. We’ll somehow have to convert our strings into numbers for the network to make sense of them. Word Embeddings The way this is usually done is to use something called as word embeddings. The idea is to represent every character in the alphabet with its own \(D\) dimensional embedding vector, where \(D\) is usually called the embedding dimension. So let’s say if we decide to use an embedding_dim of 5. This basically means that each of the 27 characters of the alphabet, ABCDEFGHIJKLMNOPQRSTUVWXYZ-, will have their own embedding vector of length 5. Often, these vectors are stored together as \(V \times D\) dimensional embedding matrix, \(E\), where each row \(E[i]\) of the matrix represents the embedding vector for the character with index \(i\) in the alphabet. Here \(V\) is the length of the vocabulary (alphabet), which is 27 in our case. As an example, the whole embedding matrix \(E\) might look something like the one shown below. [[-1.4107, -0.8142, 0.8486, 2.8257, -0.7130], [ 0.5434, 3.8553, 2.9420, -2.8364, -4.0077], [ 1.6781, -0.2496, 2.5569, -0.2952, -2.2911], ... [ 2.7912, 1.3261, 1.7603, 3.3852, -2.1643]] \(E[0]\) then represents the word vector for A, which is [-1.4107, -0.8142, 0.8486, 2.8257, -0.7130]. 2Aside : but I read something different! P.S. I’ll be using alphabet and vocabulary interchangably throughout this tutorial. Similarly, word embeddings, word vectors, character embeddings, or simply embeddings will mean the same thing. The Cipher Now that we have enough background, let’s get our hands dirty and finally jump in to writing some code. The first thing we have to do is to create a dataset. And to do that, we first need to implement the cipher. Although we implement it as a simple function, it might be a good idea to implement the cipher as a class in the future. We create the encode function which uses the parameters vocab and key to encrypt each character. Since we’re working with letters, vocab in this context simply means the alphabet. The encryption algorithm should be fairly easy to understand. Notice how we use the modulo operator in line 8 to prevent the indexes from overflowing. To check the implementation, you can check for some random inputs. For example, ensure that encrypt('ABCDEFGHIJKLMNOPQRSTUVWXYZ-') returns NOPQRSTUVWXYZ-ABCDEFGHIJKLM. The Dataset (Finally!) Okay, let’s finally build the dataset. For the sake of simplicity, we’ll use a random sequence of characters as a message and encrypt it to create the input to the LSTM. To implement this, we create a simple function called dataset which takes in the parameter num_examples and returns a list of those many (input, output) pairs. There’s something strange about this function though. Have a look at line 24. We’re not returning a pair of strings. We’re first converting strings into a list of indices which represent their position in the alphabet. If you recall the section on word embeddings, these indices will later be used to extract the corresponding embedding vectors from the embedding matrix \(E\). We’re then converting these lists into a pair of tensors, which is what the function returns. Tensors? This brings us to the most fundamental data type in PyTorch - the Tensor. For users familiar with NumPy, a tensor is the PyTorch analogue of ndarray. If you’re not, a tensor is essentially a multidimensional matrix which supports optimized implementations of common operations. Have a look at the Tensor Tutorial on the PyTorch website for more information. The takeaway here is that we’ll use tensors from now on as our go to data structure to handle numbers. Creating a tensor is really easy. Though there are a lot of ways to do so, we’ll just wrap our list of integers with torch.tensor() - which turns out the easiest amongst all. You can satisfy yourself by having a look at what this function does. A quick call to dataset(1) should return something similar to the following. You can also verify that the numbers in the second tensor are right shifted by 13 from the numbers in the first tensor. 20 = (7 + 13) % 27, 3 = (17 + 13) % 27 and so on. [[tensor([ 20, 3, 21, 0, 14, 4, 2, 4, 13, 12, 8, 23, 12, 10, 25, 17, 19, 1, 2, 22, 12, 15, 16, 3, 13, 10, 20, 23, 25, 15, 19, 4]), tensor([ 7, 17, 8, 14, 1, 18, 16, 18, 0, 26, 22, 10, 26, 24, 12, 4, 6, 15, 16, 9, 26, 2, 3, 17, 0, 24, 7, 10, 12, 2, 6, 18])]] With this we’re done with the basics. Let’s start building the network. It’s a good idea to first have a general overview of what we aim to achieve. One might think of something along the following lines. On a very high level, the first step in a general workflow will be to feed in inputs to an LSTM to get the predictions. Next, we pass on the predictions along with the targets to the loss function to calculate the loss. Finally, we backpropagate through the loss to update our model’s parameters. Hmm, that sounds easy, right? But how do you actually make it work? Let’s dissect this step by step. We’ll first identify the components needed to build our model, and finally put them to gether as a single piece to make it work. The PyTorch paradigm … before diving in, it’s important to know a couple of things. PyTorch provides implementations for most of the commonly used entities from layers such as LSTMs, CNNs and GRUs to optimizers like SGD, Adam, and what not (Isn’t that the whole point of using PyTorch in the first place?!). The general paradigm to use any of these entities is to first create an instance of torch.nn.entity with some required parameters. As an example, here’s how we instantiate an lstm. # Step 1 lstm = torch.nn.LSTM(input_size=5, hidden_size=10, batch_first=True) Next, we call this object with the inputs as parameters when we actually want to run an LSTM over some inputs. This is shown in the third line below. lstm_in = torch.rand(40, 20, 5) hidden_in = (torch.zeros(1, 40, 10), torch.zeros(1, 40, 10)) # Step 2 lstm_out, lstm_hidden = lstm(lstm_in, hidden_in) This two-stepped process will be seen all through this tutorial and elsewhere. Below, we’ll go through step 1 of all the modules. We’ll connect the dots at a later stage. Getting back to code now, let’s dissect our ‘high level’ understanding again. 1. Prepare inputs … feed in inputs to an LSTM to get the predictions … To feed in inputs, well, we first need to prepare the inputs. Remember the embedding matrix \(E\) we described earlier? we’ll use \(E\) to convert the pair of indices we get from dataset() into the corresponding embedding vectors. Following the general paradigm, we create an instance of torch.nn.Embedding. The docs list two required parameters - num_embeddings: the size of the dictionary of embeddings and embedding_dim: the size of each embedding vector. In our case, these are vocab_size \(V\) and embedding_dim \(D\) respectively. # Step 1 embed = torch.nn.Embedding(vocab_size, embedding_dim) Later on, we could easily convert any input tensor ecrypted containing indices of the encrypted input (like the one we get from dataset()) into the corresponding embedding vectors by simply calling embed(encrypted). As an example, the word SECRET becomes ERPDRF after encryption, and the letters of ERPDRF correspond to the indices [4, 17, 15, 3, 17, 5]. If encrypted is torch.tensor([4, 17, 15, 3, 17, 5]), then embed(encrypted) would return something similar to the following. # Step 2 &amp;gt;&amp;gt;&amp;gt; encrypted = torch.tensor([4, 17, 15, 3, 17, 5]) &amp;gt;&amp;gt;&amp;gt; embedded = embed(encrypted) &amp;gt;&amp;gt;&amp;gt; print(embedded) tensor([[ 0.2666, 2.1146, 1.3225, 1.3261, -2.6993], [-1.5723, -2.1346, 2.6892, 2.7130, 1.7636], [-1.9679, -0.8601, 3.0942, -0.8810, 0.6042], [ 3.6624, -0.3556, -1.7088, 1.4370, -3.2903], [-1.5723, -2.1346, 2.6892, 2.7130, 1.7636], [-1.8041, -1.8606, 2.5406, -3.5191, 1.7761]]) 2. Build an LSTM … feed in inputs to an LSTM to get the predictions … Next, we need to create an LSTM. We do this in a similar fashion by creating an instance of torch.nn.LSTM. This time, the docs list the required parameters as input_size: the number of expected features in the input and hidden_size: the number of features in the hidden state. Since LSTMs typically operate on variable length sequences, the input_size refers to the size of each entity in the input sequence. In our case, this means the embedding_dim. This might sound counter-intuitive, but if you think for a while, it makes sense. hidden_size, as the name suggests, is the size of the hidden state of the RNN. In case of an LSTM, this refers to the size of both, the cell_state and the hidden_state. Note that the hidden size is a hyperparameter and can be different from the input size. colah’s blog post doesn’t explicitly mention this, but the equations on the PyTorch docs on LSTMCell should make it clear. To summarize the discussion above, here is how we instantiate the LSTM. # Step 1 lstm = torch.nn.LSTM(embedding_dim, hidden_dim) A note on dimensionality During step 2 of the general paradigm, torch.nn.LSTM expects the input to be a 3D input tensor of size (seq_len, batch, embedding_dim), and returns an output tensor of the size (seq_len, batch, hidden_dim). We’ll only feed in one input at a time, so batch is always 1. As an example, consider the input-output pair ('ERPDRF', 'SECRET'). Using an embedding_dim of 5, the 6 letter long input ERPDRF is transformed into an input tensor of size 6 x 1 x 5. If hidden_dim is 10, the input is processed by the LSTM into an output tensor of size 6 x 1 x 10. Generally, the LSTM is expected to run over the input sequence character by character to emit a probability distribution over all the letters in the vocabulary. So for every input character, we expect a \(V\) dimensional output tensor where \(V\) is 27 (the size of the vocabulary). The most probable letter is then chosen as the output at every timestep. If you have a look at the output of the LSTM on the example pair ('ERPDRF', 'SECRET') above, you can instantly make out that the dimensions are not right. The output dimension is 6 x 1 x 10 - which means that for every character, the output is a \(D\) (10) dimensional tensor instead of the expected 27. So how do we solve this? 3. Transform the outputs … feed in inputs to an LSTM to get the predictions … The general workaround is to transform the \(D\) dimensional tensor into a \(V\) dimensional tensor through what is called an affine (or linear) transform. Sparing the definitions aside, the idea is to use matrix multiplication to get the desired dimensions. Let’s say the LSTM produces an output tensor \(O\) of size seq_len x batch x hidden_dim. Recall that we only feed in one example at a time, so batch is always 1. This essentially gives us an output tensor \(O\) of size seq_len x hidden_dim. Now if we multiply this output tensor with another tensor \(W\) of size hidden_dim x embedding_dim, the resultant tensor \(R = O \times W\) has a size of seq_len x embedding_dim. Isn’t this exactly what we wanted? To implement the linear layer, … you guessed it! We create an instance of torch.nn.Linear. This time, the docs list the required parameters as in_features: size of each input sample and out_features: size of each output sample. Note that this only transforms the last dimension of the input tensor. So for example, if we pass in an input tensor of size (d1, d2, d3, ..., dn, in_features), the output tensor will have the same size for all but the last dimension, and will be a tensor of size (d1, d2, d3, ..., dn, out_features). With this knowledge in mind, it’s easy to figure out that in_features is hidden_dim, and out_features is vocab_size. The linear layer is initialised below. # Step 1 linear = torch.nn.Linear(hidden_dim, vocab_size) With this we’re preddy much done with the essentials. Time for some learning! 4. Calculate the loss Next, we pass on the predictions along with the targets to the loss function to calculate the loss. If you think about it, the LSTM is essentially performing multi-class classification at every time step by choosing one letter out of the 27 characters of the vocabulary. A common choice in such a case is to use the cross entropy loss function torch.nn.CrossEntropyLoss. We initialize this in a similar manner. loss_fn = torch.nn.CrossEntropyLoss() You can read more about cross entropy loss in the excellent blog post by Rob DiPietro. 5. Optimize Finally, we backpropagate through the loss to update our model’s parameters. A popular choice is the Adam optimizer. Here’s how we initialize it. Notice that almost all torch layers have this convenient way of getting all their parameters by calling module.parameters(). optimizer = torch.optim.Adam(list(embed.parameters()) + list(lstm.parameters()) + list(linear.parameters()), lr=0.001) To summarize, here’s how we initialize the required layers. Let’s wrap this up and consolidate the network. Have a look at the training script below. Most of the code should make sense on its own. There are a few helper operations like torch.squeeze and torch.transpose whose function can be inferred from the comments. You can also refer to the docs for more information. After every training iteration, we need to evaluate the network. Have a look at the validation script below. After calculating the scores as in the training script, we calculate a softmax over the scores to get a probability distribution in line 9. We then aggregate the characters with the maximum probability in line 11. We then compare the predicted output batch_out with the target output original in line 15. At the end of the epoch, we calculate the accuracy in line 18. Notice that the predicted outputs are still in the form of indices. Converting them back to characters is left as an exercise. But before you go, congratulations! You’ve built your first RNN in PyTorch! The complete code for this post is available as a GitHub gist. You can test the network by simply running the training script. Thanks for sticking around. But why Neural Networks? You might be wondering why do we use neural networks in the first place. In our use case, it sure makes more sense to decrypt the messages by conventional programming because we know the encryption function beforehand. This might not be the case everytime. You might have a situation where you have enough data but still have no idea about the encryption function. Neural networks fit quite well in such a situation. Anyways, keep in mind that this is still a toy problem. One motivation to choose this problem is the ease of generating loads of training examples on the fly. So we don’t really need to procure any dataset. Yay! &amp;#8617; I think I read something different! Strictly speaking, what I just described here is called a character embedding, beacause we have a vector for each character in the alphabet. In case we had a vector for each word in a vocabulary, we would be using word embeddings instead. Notice the analogy here. An alphabet is the set of all the letters in a language. Similarly, a vocabulary is the collection of all the words in a language. &amp;#8617;</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Visual Cube</title>
+      
+      
+      <link href="https://nikhilweee.github.io/posts/rubiks-cube/" rel="alternate" type="text/html" title="Visual Cube" />
+      
+      <published>2017-04-12T00:00:00+00:00</published>
+      <updated>2017-04-12T00:00:00+00:00</updated>
+      <id>https://nikhilweee.github.io/posts/rubiks-cube</id>
+      <content type="html" xml:base="https://nikhilweee.github.io/posts/rubiks-cube/">&lt;p&gt;The rubik’s cube needs no introduction. I’ve personally seen these since my childhood but I was never quite interested in solving the cube. As a kid, I used to play around, knowing that this is impossible for me to solve. I gave up easily. This was nothing more than a fidgeting toy.&lt;/p&gt;
+
+&lt;p&gt;Only recently has this toy caught my interest, and it was a bit too late when I tried to learn how to actually solve a cube. Most of the tutorials on the interweb throw out algorithms at you, but without an intuitive understanding of how they actually work, simply memorizing them does no good.&lt;/p&gt;
+
+&lt;p&gt;Here’s an attempt to simplify all those &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FR'UDD'R&lt;/code&gt;s. Feel free to drag the cube around for a complete view.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;A big thanks to &lt;a href=&quot;https://codepen.io/pixelass&quot;&gt;Gregor Adams&lt;/a&gt; for his beautiful model of the &lt;a href=&quot;https://codepen.io/pixelass/pen/CsItl&quot;&gt;RubiCSS cube&lt;/a&gt;.&lt;/em&gt;&lt;br /&gt;
+&lt;em&gt;All these algorithms can be seen on  &lt;a href=&quot;https://how-to-solve-a-rubix-cube.com/&quot;&gt;how-to-solve-a-rubix-cube.com&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;correcting-the-edges&quot;&gt;Correcting the edges&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F R D' R F F&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This might be the first “difficult” step for many newbies. Pay attention to the highlighted edge. Notice how this algorithm cleverly corrects the orientation of the red-green edge.&lt;/p&gt;
+
+&lt;object id=&quot;base&quot; type=&quot;text/html&quot; style=&quot;width: 100%; height: 500px;&quot; data=&quot;/static/cube/algorithms/frdrff&quot;&gt;&lt;/object&gt;
+
+&lt;h2 id=&quot;the-top-cross&quot;&gt;The Top Cross&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F R U R' U' F&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Once you’ve made the second layer, these algorithms start to get a bit longer. And why not? These algorithms also have the additional responsibility to maintain the bottom two layers. Here’s the popular &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fruruf&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;There are a few interesting observations about this algorithm.&lt;br /&gt;
+Notice the “L” and “Rod” shapes on the top edge that are commonly talked about. Also notice how there’s a counterclockwise follow up to every move. There’s an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;R'&lt;/code&gt; for an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;R&lt;/code&gt;, an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F'&lt;/code&gt; for an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F&lt;/code&gt;, and a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;U'&lt;/code&gt; for a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;U&lt;/code&gt;. These are certainly necessary to maintain the bottom two layers. Also notice that the reverse order is  not &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;U'R'F'&lt;/code&gt; for obvious reasons.
+Notice how six iterations of the same algorithm bring you back to where you started. Also notice the “L” and “Rod” shapes formed on the top face of the cube.&lt;/p&gt;
+
+&lt;object id=&quot;base&quot; type=&quot;text/html&quot; style=&quot;width: 100%; height: 500px;&quot; data=&quot;/static/cube/algorithms/fruruf&quot;&gt;&lt;/object&gt;
+
+&lt;h2 id=&quot;the-last-layer-edges&quot;&gt;The Last Layer Edges&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;R U R' U R U U R' U&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Swapping the edges on the last layer can be tricky to understand. Take a look below.
+Notice how the consecutive &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UU&lt;/code&gt;s are important to bring the top edges back to position.&lt;/p&gt;
+&lt;object id=&quot;base&quot; type=&quot;text/html&quot; style=&quot;width: 100%; height: 500px;&quot; data=&quot;/static/cube/algorithms/rururuuru&quot;&gt;&lt;/object&gt;
+
+&lt;h2 id=&quot;position-the-last-layer-corners&quot;&gt;Position the Last Layer Corners&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;U R U' L' U R' U' L&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Swapping the edges on the last layer can be tricky to understand. Take a look below.
+Corner 1 always stays in the same place, and in the same orientation. Notice how the bottom layers and the top corners are gracefully in place.
+Also note the positions of the four corners at the end of every iteration. The algorithm repeats itself after three iterations. The highlighted corners can only be in one of the three possibilities.&lt;/p&gt;
+
+&lt;object id=&quot;base&quot; type=&quot;text/html&quot; style=&quot;width: 100%; height: 500px;&quot; data=&quot;/static/cube/algorithms/urulurul&quot;&gt;&lt;/object&gt;
+
+&lt;h2 id=&quot;orient-the-last-layer-corners&quot;&gt;Orient the Last Layer Corners&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;R' D' R D&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Swapping the edges on the last layer can be tricky to understand. Take a look below.
+Notice how the orienttion of the four corners is changed after an even iteration.&lt;/p&gt;
+&lt;object id=&quot;base&quot; type=&quot;text/html&quot; style=&quot;width: 100%; height: 500px;&quot; data=&quot;/static/cube/algorithms/rdrd&quot;&gt;&lt;/object&gt;
+
+&lt;p&gt;I hope this visual tour helps improve your understanding of the cube. I’m sure there might be better interpretations. Please feel free to comment!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Nikhil Verma</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="Explanations" />
+      
+
+      
+        <category term="cube" />
+      
+        <category term="algorithms" />
+      
+
+      
+        <summary type="html">The rubik’s cube needs no introduction. I’ve personally seen these since my childhood but I was never quite interested in solving the cube. As a kid, I used to play around, knowing that this is impossible for me to solve. I gave up easily. This was nothing more than a fidgeting toy.</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Triund</title>
+      
+      
+      <link href="https://nikhilweee.github.io/posts/triund/" rel="alternate" type="text/html" title="Triund" />
+      
+      <published>2016-12-18T00:00:00+00:00</published>
+      <updated>2016-12-18T00:00:00+00:00</updated>
+      <id>https://nikhilweee.github.io/posts/triund</id>
+      <content type="html" xml:base="https://nikhilweee.github.io/posts/triund/">&lt;h2 id=&quot;prologue&quot;&gt;Prologue&lt;/h2&gt;
+
+&lt;p&gt;It was early December and for most BITSians this was the compre&lt;sup id=&quot;fnref:compre&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:compre&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; season. For me though, it is usually at this time of the year when weird ideas surface off. They did, this time too. Me and my friend Sameer were long planning to visit McLeodGanj in search of snow, and this was it. This was the long awaited break.&lt;/p&gt;
+
+&lt;p&gt;My previous experiences warned me from planning a trip long before its schedule. No planning until two weeks to liftoff, the bro code said, and I respected the bro. Well, sort of. I couldn’t control the excitement either, so I started planning exactly two weeks before. Later I realised, there actually wasn’t much to plan. Just a brief timeline, a budget and a backpack. That’s it! I was all set!&lt;/p&gt;
+
+&lt;p&gt;During the countdown period we gathered two other friends, Mohit and Rajat, and that made the headcount to four. Four is the perfect number for a getaway, I thought. You could fit in a five seater cab easily, adjust in two hotel rooms (or even one, conditions apply&lt;sup id=&quot;fnref:tnc&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:tnc&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;), split in groups of two, and what not! This was also the point when I felt this is finally going to happen. Getting concrete affirmations from everyone usually make or break a trip, and this time I was fortunate enough.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-adventure&quot;&gt;The Adventure&lt;/h2&gt;
+
+&lt;h3 id=&quot;day-0&quot;&gt;Day 0&lt;/h3&gt;
+
+&lt;p&gt;I set off to Delhi just after my last compre (literally). Like all other expeditions to Himachal that I’ve made, even this was to start from ISBT Kashmere Gate.  We initially planned to take a Volvo but for nearly half the fare and without the air conditioner, a Semi Deluxe didn’t seem to be a bad option either! I met the gang over there, had a little chat, and at 7 PM we were all set for Dharamshala. The four of us hadn’t seen each other for a long time so in-house entertainment was never an issue.&lt;/p&gt;
+
+&lt;p&gt;I’m particularly excited about overnight bus journeys thanks to the roadside food joints, or &lt;em&gt;dhabas&lt;/em&gt; that I get to visit. I’m almost always amazed by the promptness of their service. Whatsoever you order will be at your table within five minutes. No annoying delays. None at all. The bus stopped at one such joint where we refueled ourselves. ₹120 per head for a standard &lt;em&gt;thali&lt;/em&gt;. Not bad! Following a full tummy was a good night’s sleep.&lt;/p&gt;
+
+&lt;h3 id=&quot;day-1&quot;&gt;Day 1&lt;/h3&gt;
+
+&lt;p&gt;We were awaken relatively early at 6 AM by the clamour and it wasn’t long before we found out that this was Dharamshala. As was expected from a cold December night in Himachal, I was shivering and could feel the chatter of my teeth. Fortunately there was a bonfire nearby that helped ease me out. The locals suggested we head straight to McLeodGanj, so we took a shared Jeep that cost ₹25 per head for the nearly 10 KM uphill travel.&lt;/p&gt;
+
+&lt;p&gt;On the way, reality struck hard. There was no sign of snow. sob sob :cry:. Sure it was disappointing, but that couldn’t ruin our adventure. Everyone kept calm. Nobody discussed the issue.&lt;/p&gt;
+
+&lt;p&gt;As soon as we arrived at McLeodGanj main square, we were surrounded by concierges. We followed one of them and found a good enough room for ₹600. Since we planned to trek during the day and spend the night camping, one room was enough for us. We only needed the room to freshen up and prepare our backpacks for the adventure. The receptionist was kind enough to allow 6 extra hours so we had the room until the following noon. ₹150 per head for 30 hours. The trip had been great so far!&lt;/p&gt;
+
+&lt;p&gt;As the day progressed, we set out for our adventure. A modest &lt;em&gt;aloo paratha&lt;/em&gt; was enough to provide for the much needed calories. From McLeodGanj main square, we hired a cab to Gallu Temple for ₹400 which would be the starting point of our purpose: &lt;em&gt;The Triund&lt;sup id=&quot;fnref:triund&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:triund&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; Trek&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;triund&quot;&gt;Triund&lt;/h2&gt;
+
+&lt;p&gt;The trek starts with a mandatory entry at one of the log registers held with the forest department. From there, it’s just a rocky trail for the next 6 kilometers. I may have made it sound monotonous, but trust me, it is not. The trek is full of adventures, which I insist one should discover on his own. Nearly halfway through the trek, there’s Magic View, claimed to be one of the oldest shops out there.&lt;/p&gt;
+
+&lt;figure class=&quot;image&quot;&gt;
+  &lt;img src=&quot;https://i.imgur.com/ZmUtv47.jpg&quot; alt=&quot;The view from Magic View. You could even see the trek on the upper right.&quot; /&gt;
+  &lt;figcaption&gt;The view from Magic View. You could even see the trek on the upper right.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Interestingly, here you can shop for almost anything you could possibly desire for the trek. There’s food, water, drinks, accessories and what not - but for a price significantly above the MRP. You could refill your empty bottles for ₹20, buy new ones for ₹40, Maggi for ₹70 and so on. The next half of the trek gets a bit difficult thanks to the rise in inclination, but one could find a lot of fellow hikers throughout the journey to keep them determined.&lt;/p&gt;
+
+&lt;p&gt;After three and half hours of a wonderful trek, we finally reached the top.&lt;/p&gt;
+
+&lt;figure class=&quot;image&quot;&gt;
+  &lt;img src=&quot;https://i.imgur.com/85DjXkb.jpg&quot; alt=&quot;Triund Hill Top. Behind: The mighty Dhauladhar Ranges&quot; /&gt;
+  &lt;figcaption&gt;Triund Hill Top. Behind: The mighty Dhauladhar Ranges&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Wow! That view! That feeling! This was definitely worth all the hard work. It is this feeling of accomplishment that I came after. This is what drives me through. I took some time to contemplate upon, to admire the beauty of the Himalayas.&lt;/p&gt;
+
+&lt;p&gt;A while after, we arranged for camp and food. Camping can be arranged for ₹1000 for a camp of four. Food costs from ₹70 for Maggi to ₹200 for a Veg &lt;em&gt;Thali&lt;/em&gt;. Sure we were hungry, but everyone of us contented himself with &lt;em&gt;Dal Chawal&lt;/em&gt; for ₹130. Not bad! Our camp was a &lt;a href=&quot;https://www.quechua.co.uk/arpenaz-3-camping-tent-3-people-and-storage-area-id_8347890l&quot;&gt;Quechua Arpenaz 3+&lt;/a&gt; which was ideally meant for three, but we managed (had to) accomodate four.&lt;/p&gt;
+
+&lt;p&gt;The magic began with the inception of dusk. See for yourself!&lt;/p&gt;
+
+&lt;figure class=&quot;image&quot;&gt;
+  &lt;img src=&quot;https://i.imgur.com/dkqD19I.jpg&quot; alt=&quot;Angel Lights&quot; /&gt;
+  &lt;figcaption&gt;Angel Lights&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure class=&quot;image&quot;&gt;
+  &lt;img src=&quot;https://i.imgur.com/YqOzl3k.jpg&quot; alt=&quot;Sunset Clouds&quot; /&gt;
+  &lt;figcaption&gt;Sunset Clouds&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure class=&quot;image&quot;&gt;
+  &lt;img src=&quot;https://i.imgur.com/dKDOJhw.jpg&quot; alt=&quot;Twilight&quot; /&gt;
+  &lt;figcaption&gt;Twilight&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;As the sun receded, the cold surfaced. We desperately needed a campfire. We found a log of wood lying around but it was too dense to burn. A swiss knife would have been handy. &lt;em&gt;Lesson: Always carry a swiss knife outdoors. And a lighter. And a torch.&lt;/em&gt; Somehow we found our own ways around the fire. It was time to enjoy the moment. The next thing I remember was pure bliss.&lt;/p&gt;
+
+&lt;h3 id=&quot;day-2&quot;&gt;Day 2&lt;/h3&gt;
+
+&lt;p&gt;Following a frigid night at the camp, we woke up to the light of the day. After another snap session, we set back towards McLeodGanj. Two hours of a delightful descent landed us back to our rooms. By the time we checked out, the clock hit 12. It was time for lunch.&lt;/p&gt;
+
+&lt;p&gt;There are a lot of restaurants around the main square but I particularly recommend &lt;a href=&quot;https://www.google.co.in/maps/place/Tibet+Kitchen/@32.2387462,76.3216171,17z/&quot;&gt;Tibet Kitchen&lt;/a&gt;. We ordered momos for starters (ob!&lt;sup id=&quot;fnref:ob&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:ob&quot; class=&quot;footnote&quot;&gt;4&lt;/a&gt;&lt;/sup&gt;) and a tibetan cuisine along with different varieties of rice for main course. Reviews? I &lt;em&gt;loved&lt;/em&gt; every bit of it! Especially the simplicity of Tibetan food. It is simple yet so appetizing! A friend of mine also suggested &lt;a href=&quot;https://www.google.co.in/maps/place/Mcllo+Beer+Bar+and+Restaurant/@32.2386475,76.3214971,17z/&quot;&gt;Cafe Mc’Llo&lt;/a&gt; in case you enjoy in house live music.&lt;/p&gt;
+
+&lt;figure class=&quot;image&quot;&gt;
+  &lt;img src=&quot;https://i.imgur.com/mw9ncwR.jpg&quot; alt=&quot;The chicken rice at Tibet Kitchen was absolutely awesome!&quot; /&gt;
+  &lt;figcaption&gt;The chicken rice at Tibet Kitchen was absolutely awesome!&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;After a bit of shopping around, we bought the return tickets. We still had a handful of time before the bus left at 5, and I was in the mood for a coffee. Mohit spotted a local cafe. It was worth a try. We had some coffee and owing to the earlier experience of momos, we wanted to have more of them. We were used to a standard size of 6 momos a plate, so we ordered two plates of tofu momos. Three each would be fine for a snack. The momos showed up, but two plates full. They were thirty of them. full size. Whoa! &lt;em&gt;Lesson: Always ensure what you’re ordering beforehand.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;After another full tummy it was time for farewell. We took the semi deluxe again from McLeodGanj. A three and half hour long debate on demonetization was enough food for thought to make us sleep. By the time I was back to Delhi, Splitwise still read ₹2900. The trip cost us less than ₹3000 per head. Great!&lt;/p&gt;
+
+&lt;p&gt;Tibet (whoops, McLeodGanj) had been a wonderful experience. I’d definitely want to visit sometime later. But this time, when it snows.&lt;/p&gt;
+
+&lt;p&gt;Until next time!&lt;/p&gt;
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:compre&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;comprehensive examinations, the final exams of the semester &lt;a href=&quot;#fnref:compre&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:tnc&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;provided you don’t spend the night in the room. or still want to spend the night together - you get it, right? &lt;a href=&quot;#fnref:tnc&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:triund&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;Hindi: त्रिउण्ड IPA: t̪rɪʊɳɖ &lt;a href=&quot;#fnref:triund&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:ob&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;the BITSian slang for &lt;em&gt;obviously&lt;/em&gt; &lt;a href=&quot;#fnref:ob&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Nikhil Verma</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="Travel" />
+      
+
+      
+        <category term="travelogue" />
+      
+        <category term="triund" />
+      
+        <category term="trek" />
+      
+        <category term="himalayas" />
+      
+
+      
+        <summary type="html">Prologue</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">LSTMs</title>
+      
+      
+      <link href="https://nikhilweee.github.io/posts/lstm/" rel="alternate" type="text/html" title="LSTMs" />
+      
+      <published>2016-11-09T00:00:00+00:00</published>
+      <updated>2016-11-09T00:00:00+00:00</updated>
+      <id>https://nikhilweee.github.io/posts/lstm</id>
+      <content type="html" xml:base="https://nikhilweee.github.io/posts/lstm/">&lt;blockquote&gt;
+  &lt;p&gt;This post explains LSTMs used as a part of &lt;a href=&quot;http://cs231n.github.io/assignment3/&quot;&gt;assignment 3&lt;/a&gt; of Andrej Karpathy’s CS231N course at Stanford. I would highly recommend reading Chris Olah’s &lt;a href=&quot;http://colah.github.io/posts/2015-08-Understanding-LSTMs/&quot;&gt;blog post&lt;/a&gt; about LSTMs before continuing.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Traditional Neural Networks have successfully been used for various purposes that I do not need to reiterate upon. But in applications involving sequential data such as natural language processing, it so happens that the current output (say, the next word in a predicted sentence) very much depends on several previous outputs (the sequence of words predicted so far). In such cases, the network needs to somehow keep a &lt;em&gt;memory&lt;/em&gt; so that it could use them for prediction at each step.&lt;/p&gt;
+
+&lt;p&gt;RNNs help solve this problem. These are just like the regular neuron, except that it has loops, which allows it to have memory. Now RNNs are good when it comes to storing information in the short term, but due to something called the &lt;a href=&quot;http://www.jmlr.org/proceedings/papers/v28/pascanu13.pdf&quot;&gt;vanishing gradient problem&lt;/a&gt;, they cannot store information for long (like learning relation between words that are a several steps apart).&lt;/p&gt;
+
+&lt;h3 id=&quot;enter-lstms&quot;&gt;Enter LSTMs&lt;/h3&gt;
+&lt;p&gt;This is where LSTMs come into the picture. Short for &lt;em&gt;Long Short-Term Memory&lt;/em&gt;, these cells have memory along with mechanisms to control information flow so that relevant information is persisted for long.&lt;/p&gt;
+
+&lt;p&gt;The core idea behind LSTMs is something called a memory cell, \(c_t\) which can maintain its state over time.&lt;/p&gt;
+
+&lt;p&gt;Here’s a simple overview of the LSTM Cell with some of the important parameters.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/lstm/intro.svg&quot; alt=&quot;intro&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The LSTM Cell accepts the input vector, \(x_t\), the previous hidden state, \(h_{t-1}\), and the previous cell state, \(c_{t-1}\) shown in green, such that&lt;/p&gt;
+
+\[input\ vector, x_t \in \mathbb{R}^D\]
+
+\[hidden\ vector, h_{t-1} \in \mathbb{R}^H\]
+
+\[cell\ state\ vector, c_{t-1} \in \mathbb{R}^H\]
+
+&lt;p&gt;It also maintains the matrices \(W_x\), \(W_b\) and the bias vector \(b\) internally.&lt;/p&gt;
+
+\[input\ to\ hidden\ matrix, W_x \in \mathbb{R}^{4H \times D}\]
+
+\[hidden\ to\ hidden\ matrix, W_h \in \mathbb{R}^{4H \times H}\]
+
+\[bias\ vector, b \in \mathbb{R}^{4H}\]
+
+&lt;p&gt;At each timestep, we first calculate something called the activation vector, \(a\), which is simply&lt;/p&gt;
+
+\[a = W_x x_t + W_h h_{t-1} + b\]
+
+&lt;p&gt;Going by the rules of matrix multiplication, \(a \in \mathbb{R}^{4H}\). We then essentially split this activation vector equally in to 4 vectors, which we name \(a_i, a_f, a_o\) and \(a_g\)&lt;/p&gt;
+
+\[\left[ \begin{array}{c} a_i \\ a_f \\ a_o \\ a_g \end{array} \right]
+=
+\left[ \begin{array}{c} a_{1:N} \\ a_{N:2N} \\ a_{2N:3N} \\ a_{3N:4N} \end{array} \right]\]
+
+&lt;p&gt;These vectors are then passed through \(\mathrm{sigmoid}\) and \(\tanh\) functions, to finally get the well known \(i, f, o\) and \(g\) gates.&lt;/p&gt;
+
+\[\left[ \begin{array}{c} i \\ f \\ o \\ g \end{array} \right]
+=
+\left[ \begin{array}{c} \sigma(a_i) \\ \sigma(a_f) \\ \sigma(a_o) \\ \tanh(a_g) \end{array} \right]\]
+
+&lt;p&gt;To summarize until now, here is a computational graph.
+&lt;img src=&quot;/img/lstm/gates.svg&quot; alt=&quot;gates&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Once we get the gate vectors, the cell state, \(c_t\) and the next cell state, \(h_t\) is given by&lt;/p&gt;
+
+\[c_t = f \odot c_{t-1} + i \odot g\]
+
+\[h_t = o \odot \tanh(c_t)\]
+
+&lt;p&gt;where \(\odot\) stands for elementwise multiplication.
+This can also be visualised by the following graph.
+&lt;img src=&quot;/img/lstm/output.svg&quot; alt=&quot;output&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This is how both of them fit together.
+&lt;img src=&quot;/img/lstm/merged.svg&quot; alt=&quot;merged&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Stay tuned for part 2 where I explain the backward pass of the cell.&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Nikhil Verma</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="Explanations" />
+      
+
+      
+        <category term="neural networks" />
+      
+        <category term="rnn" />
+      
+        <category term="lstm" />
+      
+
+      
+        <summary type="html">This post explains LSTMs used as a part of assignment 3 of Andrej Karpathy’s CS231N course at Stanford. I would highly recommend reading Chris Olah’s blog post about LSTMs before continuing.</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Shadowsocks</title>
+      
+      
+      <link href="https://nikhilweee.github.io/posts/shadowsocks/" rel="alternate" type="text/html" title="Shadowsocks" />
+      
+      <published>2016-09-12T00:00:00+00:00</published>
+      <updated>2016-09-12T00:00:00+00:00</updated>
+      <id>https://nikhilweee.github.io/posts/shadowsocks</id>
+      <content type="html" xml:base="https://nikhilweee.github.io/posts/shadowsocks/">&lt;p&gt;&lt;a href=&quot;https://shadowsocks.org/&quot;&gt;Shadowsocks&lt;/a&gt;! Sounds like the new superhero after &lt;em&gt;Deadpool&lt;/em&gt;. Well, in a way it &lt;em&gt;is&lt;/em&gt; a superhero! It let’s you bypass censorship, even the GFW! &lt;sup id=&quot;fnref:gfw&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:gfw&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; Okay, so what’s this fuss about? Before going further, I think it needs some introduction.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Shadowsocks is a SOCKS5 compatible proxy server/client suite which excels at being undetectable. It leaves no fingerprint even when you use deep packet inspection. &lt;sup id=&quot;fnref:quora&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:quora&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Whoa! Wait, What does that mean? In simple terms, this means that shadowsocks lets you access blocked resources and is hard to detect by even the best firewalls.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Seems Interesting. I would definitely want one!&lt;/em&gt;&lt;br /&gt;
+Okay, but before moving further, it’s important to know how this stuff works.&lt;/p&gt;
+
+&lt;h3 id=&quot;working&quot;&gt;Working&lt;/h3&gt;
+
+&lt;p&gt;Shadowsocks is some software that has to be set up individually on two systems. One is your device, or the &lt;em&gt;client&lt;/em&gt;, which wants to bypass firewalls, and the other is a &lt;em&gt;server&lt;/em&gt; - quite simply a device which has unrestricted access to the internet.&lt;br /&gt;
+The client then connects to the server (which isn’t blocked by the firewall), and tunnels all its traffic through the server via shadowsocks. The firewall thinks this is legitimate traffic, and so doesn’t block you.&lt;/p&gt;
+
+&lt;figure class=&quot;image&quot;&gt;
+  &lt;img src=&quot;/static/shadowsocks/arch.svg&quot; alt=&quot;The Big Picture.&quot; /&gt;
+  &lt;figcaption&gt;The Big Picture.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h3 id=&quot;why-shadowsocks&quot;&gt;Why Shadowsocks&lt;/h3&gt;
+&lt;p&gt;Now you might think that if the client is already allowed to connect to the server, then why do we need shadowsocks in the first place?
+There are a couple of reasons why I recommend shadowsocks.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;One, although you may have unrestricted access to the server, the firewall can still find out whether you’re using it to tunnel blocked resources. Shadowsocks excels at deceiving. It fools the firewall into believing that your communication is legitimate. Also, it’s fast. Trust me. You’re not limited by some crappy VPN that only lets through a few kilobits per second.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Two, an interesting advantage with shadowsocks is that it is available for most ecosystems. Ofcourse it’s available on the usual Linux, Mac and Windows, but there’s also android phones and wifi routers! &lt;sup id=&quot;fnref:openwrt&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:openwrt&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; This means you don’t need a PC to tunnel anymore!&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;setup&quot;&gt;Setup&lt;/h3&gt;
+&lt;p&gt;Enough of the talk. Let’s get some hands dirty.&lt;/p&gt;
+
+&lt;p&gt;I’ll be using an android phone as the client and an ubuntu machine as the server. If you cannot arrange for a server, I’d recommend renting one online. DigitalOcean lets you buy a decent server for as low as $5 per month. You can use &lt;a href=&quot;https://m.do.co/c/ad1b7e083b2e&quot;&gt;this link&lt;/a&gt; while signing up to get $10 in free credit.&lt;/p&gt;
+
+&lt;h4 id=&quot;ubuntu&quot;&gt;Ubuntu&lt;/h4&gt;
+&lt;p&gt;I’ll be setting up the server now. &lt;sup id=&quot;fnref:vpndada&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:vpndada&quot; class=&quot;footnote&quot;&gt;4&lt;/a&gt;&lt;/sup&gt; First, a little housekeeping.&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;apt-get update
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;python-pip
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pip &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;shadowsocks
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Next, create a config file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/shadowsocks.json&lt;/code&gt; and paste this&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+ &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;server&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;0.0.0.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+ &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;server_port&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;465&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+ &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;local_port&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1080&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+ &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;password&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;secret&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+ &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;timeout&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+ &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;method&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;aes-256-cfb&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;There are some things worth looking out here.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Setting &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server&lt;/code&gt; to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0.0.0.0&lt;/code&gt; essentially means that you’re making shadowsocks accessible from outside the machine as well. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server_port&lt;/code&gt; simply specifies the port over which shadowsocks would be accessible. So, if the server’s public IP is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;11.22.33.44&lt;/code&gt;, shadowsocks is accessible on &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;11.22.33.44:465&lt;/code&gt; according to the configuration above.&lt;/li&gt;
+  &lt;li&gt;Also, make sure that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server_port&lt;/code&gt;, which is 465 in this case, isn’t blocked on your home network. &lt;sup id=&quot;fnref:testports&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:testports&quot; class=&quot;footnote&quot;&gt;5&lt;/a&gt;&lt;/sup&gt; Else you wouldn’t be able to connect to the server in the first place.&lt;/li&gt;
+  &lt;li&gt;It turns out that you shouldn’t use the common HTTP ports like 80 and 443 for shadowsocks. Atleast they didn’t work out for me.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You don’t need to bother about other options for now. Just keep note of the password, we’ll be using that later. Next, you need to run shadowsocks in the background.&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssserver &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; /etc/shadowsocks.json &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; start
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Once a client is connected, you can check the logs in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/log/shadowsocks.log&lt;/code&gt; to confirm that it’s actually working. There! Halfway done.&lt;/p&gt;
+
+&lt;h4 id=&quot;android&quot;&gt;Android&lt;/h4&gt;
+
+&lt;p&gt;Coming to the client, setting up shadowsocks for android is a piece of cake. Just install the &lt;a href=&quot;https://play.google.com/store/apps/details?id=com.github.shadowsocks&quot;&gt;shadowsocks android app&lt;/a&gt;, and enter the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;remote port&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;local port&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;encryption method&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;password&lt;/code&gt; according to the config file you just created on the server. Enter your server’s public IP &lt;sup id=&quot;fnref:domain&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:domain&quot; class=&quot;footnote&quot;&gt;6&lt;/a&gt;&lt;/sup&gt; in place of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server&lt;/code&gt; option, and you’re ready to hit the connect button.&lt;/p&gt;
+
+&lt;p&gt;An interesting option here is to selectively use shadowsocks for only some applications instead of a global proxy using the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;per app proxy&lt;/code&gt; setting. This works well if you only have a few apps that need tunnelling.&lt;/p&gt;
+
+&lt;p&gt;There! you can now enjoy unrestricted internet, even on your phone!
+Visit the &lt;a href=&quot;https://github.com/shadowsocks/shadowsocks/wiki&quot;&gt;shadowsocks wiki&lt;/a&gt; page to find more about configuration options, optimization, and more advanced features.&lt;/p&gt;
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:gfw&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;The Great Firewall of China &lt;a href=&quot;#fnref:gfw&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:quora&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;Inspired by James Swineson’s &lt;a href=&quot;https://www.quora.com/What-is-shadowsocks/answer/James-Swineson&quot;&gt;answer&lt;/a&gt; on Quora &lt;a href=&quot;#fnref:quora&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:openwrt&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;Shadowsocks is also available for routers running OpenWRT &lt;a href=&quot;#fnref:openwrt&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:vpndada&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;VPNDada has a good &lt;a href=&quot;https://www.vpndada.com/how-to-setup-a-shadowsocks-server-on-digitalocean/&quot;&gt;step by step tutorial&lt;/a&gt; on setting up shadowsocks on a &lt;a href=&quot;https://m.do.co/c/ad1b7e083b2e&quot;&gt;digitalocean droplet&lt;/a&gt; from scratch. &lt;a href=&quot;#fnref:vpndada&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:testports&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;Here’s a nice resource to help you &lt;a href=&quot;http://nikhilweee.me/reference/#test-outgoing-ports&quot;&gt;test open ports&lt;/a&gt;. &lt;a href=&quot;#fnref:testports&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:domain&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;You could also enter a domain instead of an IP if you have one set up. &lt;a href=&quot;#fnref:domain&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Nikhil Verma</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="Tutorials" />
+      
+
+      
+        <category term="shadowsocks" />
+      
+        <category term="tunnel" />
+      
+        <category term="android" />
+      
+        <category term="blocked" />
+      
+        <category term="supervisor" />
+      
+        <category term="linux" />
+      
+        <category term="digitalocean" />
+      
+
+      
+        <summary type="html">Shadowsocks! Sounds like the new superhero after Deadpool. Well, in a way it is a superhero! It let’s you bypass censorship, even the GFW! 1 Okay, so what’s this fuss about? Before going further, I think it needs some introduction. The Great Firewall of China &amp;#8617;</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Persistent Mounts</title>
+      
+      
+      <link href="https://nikhilweee.github.io/posts/persistent-mounts/" rel="alternate" type="text/html" title="Persistent Mounts" />
+      
+      <published>2016-08-11T00:00:00+00:00</published>
+      <updated>2016-08-11T00:00:00+00:00</updated>
+      <id>https://nikhilweee.github.io/posts/persistent-mounts</id>
+      <content type="html" xml:base="https://nikhilweee.github.io/posts/persistent-mounts/">&lt;p&gt;After installing your linux distro, though you’ll be able to access your Windows/NTFS partitions easily, things can get annoying sometimes with you having to mount the partition manually everytime. Here I describe how to get away with this mess by automatically mounting partitions on boot.&lt;/p&gt;
+
+&lt;p&gt;You could also do the same from Unity using the &lt;strong&gt;Disks&lt;/strong&gt; utility, but here I describe the so called &lt;em&gt;hard&lt;/em&gt; way. The way we do it is by editing the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/fstab&lt;/code&gt; file. This file gets executed everytime you boot up your system. We just instruct this file to also mount our desired partitions apart from what it normally does.&lt;/p&gt;
+
+&lt;h3 id=&quot;get-the-uuid&quot;&gt;Get the UUID&lt;/h3&gt;
+
+&lt;p&gt;Before modifying &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fstab&lt;/code&gt;, we need the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UUID&lt;/code&gt; of the partition which acts as a unique identifier for the partition to be mounted. To show a list of available partitions and their UUID, use&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo blkid -o list
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;and you’ll get an output similar to this:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;device       fs_type label      mount point       UUID
+------------------------------------------------------------------
+/dev/sda1    ntfs    WINRE      (not mounted)     ACEAEE02EAEDC8A2
+/dev/sda2    vfat               /boot/efi         6E82-B10E
+/dev/sda4    ntfs    Windows    (not mounted)     00A8EFDAA8EFCBEA
+/dev/sda6    ntfs    Downloads  /media/downloads  5CFA5B52FA5B2792
+/dev/sda10   ntfs    Documents  /media/documents  86585E63585E5253
+/dev/sda11   ntfs    RECOVERY   (not mounted)     3E60EB0960EAC6AD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This should help you in deciding which partition to mount. If you’re still confused, you may use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fdisk -l&lt;/code&gt; instead. This should give you the type of the partition listed as well so that you don’t accidentally damage an important partition.&lt;/p&gt;
+
+&lt;h3 id=&quot;modify-fstab&quot;&gt;Modify fstab&lt;/h3&gt;
+
+&lt;p&gt;Once you get the UUID, you can now modify the fstab file as a root user and add an entry similar to the following at the end, ensuring that you change the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UUID&lt;/code&gt; accordingly.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo nano /etc/fstab
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;UUID&amp;gt;                  &amp;lt;mount point&amp;gt;           &amp;lt;type&amp;gt;  &amp;lt;options&amp;gt;   &amp;lt;dump&amp;gt;  &amp;lt;pass&amp;gt;
+
+UUID=5CFA5B52FA5B2792	/media/downloads	ntfs-3g	rw,auto,user,exec,uid=1000         0	0
+
+UUID=86585E63585E5253	/media/documents	ntfs-3g	rw,auto,user,exec,uid=1000         0	0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Once modified, save the file and run the mount command to re-execute the fstab file:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo mount -a
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This should mount your new partition which would also be mounted automatically every time you boot up. Enjoy!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Nikhil Verma</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="Tutorials" />
+      
+
+      
+        <category term="linux" />
+      
+
+      
+        <summary type="html">After installing your linux distro, though you’ll be able to access your Windows/NTFS partitions easily, things can get annoying sometimes with you having to mount the partition manually everytime. Here I describe how to get away with this mess by automatically mounting partitions on boot.</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Shout IRC!</title>
+      
+      
+      <link href="https://nikhilweee.github.io/posts/shout-irc/" rel="alternate" type="text/html" title="Shout IRC!" />
+      
+      <published>2016-01-28T00:00:00+00:00</published>
+      <updated>2016-01-28T00:00:00+00:00</updated>
+      <id>https://nikhilweee.github.io/posts/shout-irc</id>
+      <content type="html" xml:base="https://nikhilweee.github.io/posts/shout-irc/">&lt;p&gt;If you’re reading this, there are high chances that you are under internet surveillance and your IT admin has blocked access to IRC. God! Why do they do this? IRC isn’t bad at all, you may argue. But unfortunately there’s no one to listen. Hush. You’ll have to find a way out, and here’s exactly how you can do it!&lt;/p&gt;
+
+&lt;p&gt;I’ll be using one of the many benefits of &lt;a href=&quot;https://www.digitalocean.com/?refcode=ad1b7e083b2e&quot;&gt;having your own server&lt;/a&gt; in the cloud. Sure it costs you, but $5 a month won’t hurt your pockets! Added to this, the open source community is just awesome! It has tools for almost all your needs. Yes, it can help you get over IRC, and this blog is one of their many freebies. Thank you Open Source!&lt;/p&gt;
+
+&lt;p&gt;So let’s talk business. There’s this tool called &lt;a href=&quot;http://shout-irc.com/&quot;&gt;&lt;strong&gt;Shout IRC&lt;/strong&gt;&lt;/a&gt; which has all what you need to get over your IRC block. And using it is as simple as logging in to your account! Exactly what you needed? Perfect!&lt;/p&gt;
+
+&lt;p&gt;Although you can find instructions on how to use on their &lt;a href=&quot;http://shout-irc.com/&quot;&gt;website&lt;/a&gt;, I’ll cut it short. All you have to do is install a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;node&lt;/code&gt; module, and edit some configuration files. Simple.&lt;/p&gt;
+
+&lt;h3 id=&quot;1-installing&quot;&gt;1. Installing&lt;/h3&gt;
+&lt;p&gt;After you’ve logged in to your server,&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install -g shout
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;is what you do to install shout. That’s it.
+However, if you don’t have &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;node&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;npm&lt;/code&gt; installed on your Ubuntu based server, just run this&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo apt-get install nodejs npm
+$ sudo npm install -g npm
+$ sudo ln -s &quot;$(which nodejs)&quot; /usr/bin/node
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;2-configuring-shout&quot;&gt;2. Configuring Shout&lt;/h3&gt;
+&lt;p&gt;Doing it the easy way, just open up the configuration file. All you have to do is&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ shout config
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;public&lt;/code&gt; setting gives you the option of allowing public access or restricted access using a username and password. Set it to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;false&lt;/code&gt; if you want user based access.&lt;/li&gt;
+  &lt;li&gt;Next, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;host&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;port&lt;/code&gt; settings are pretty much self explanatory. I’ll be using shout behind an nginx proxy, so set the host to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;127.0.0.1&lt;/code&gt; and the port to whatever you like, say &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;7468&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You may change additional settings, but that is not required for now.&lt;/p&gt;
+
+&lt;h4 id=&quot;adding-users&quot;&gt;Adding users&lt;/h4&gt;
+&lt;p&gt;If you’ve set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;public&lt;/code&gt; to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;false&lt;/code&gt;, you are required to add users to shout. To create a user named ‘Nikhil’, just run&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ shout add nikhil password
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;With of course, your desired password, and the user with username &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nikhil&lt;/code&gt; is created.&lt;/p&gt;
+
+&lt;h3 id=&quot;3-configuring-nginx&quot;&gt;3. Configuring Nginx&lt;/h3&gt;
+&lt;p&gt;It’s pretty likely that you also have other sites hosted on your server and so I’ll be using nginx which is pretty robust for this task. If you’re familiar with this, you know what to do.
+Create a new configuration for your site.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo nano /etc/nginx/sites-available/irc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;And run Shout IRC behind a proxy&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
+    listen 80;
+    server_name &amp;lt;YOUR SITE ADDRESS&amp;gt;;
+    location / {
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   Host      $http_host;
+        proxy_pass         http://127.0.0.1:7468;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Replace &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;YOUR SITE ADDRESS&lt;/code&gt; with the url you intend to use.
+Then, enable the site by creating a symlink&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo ln -s /etc/nginx/sites-available/irc /etc/nginx/sites-enabled/irc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Now, just restart your server&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo service nginx restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;No. Shout isn’t live yet, in case you were exited.&lt;/p&gt;
+
+&lt;h3 id=&quot;4-withstanding-restarts&quot;&gt;4. Withstanding restarts&lt;/h3&gt;
+&lt;p&gt;It may happen that for some reason your shout service gets stopped, such as in a server restart. That’s bad. So, I’ll use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;supervisor&lt;/code&gt; to manage Shout on my server. It’ll start shout automatically in case it gets shut down on the server. That way it’ll even withstand server restarts. If you have more than one service set up on your server, such as another blog or website, supervisor makes managing all of them pretty easy.&lt;/p&gt;
+
+&lt;p&gt;First, install supervisor in case you haven’t.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo apt-get install supervisor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Next, create a config file for shout, just as you did for nginx&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo nano /etc/supervisor/conf.d/ghost.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Now edit the file to create an autostart process so that your blog remains stable.
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;user&lt;/code&gt; should be an existing user on the system. Better to use a dedicated user with restricted access as a safety measure&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[program:shout]
+command = shout start
+user = server
+autostart = true
+autorestart = true
+stdout_logfile = /var/log/supervisor/shout.log
+stderr_logfile = /var/log/supervisor/shout_err.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Save it, and you’re just a restart away!&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo supervisorctl reread
+$ sudo supervisorctl update
+$ sudo supervisorctl restart shout
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;And you should have your own personal web IRC client ready! No more restrictions! Yay!&lt;/p&gt;
+
+&lt;p&gt;Queries? Suggestions? Feedback? Feel free to comment below!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Nikhil Verma</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="Tutorials" />
+      
+
+      
+        <category term="irc" />
+      
+        <category term="web" />
+      
+
+      
+        <summary type="html">If you’re reading this, there are high chances that you are under internet surveillance and your IT admin has blocked access to IRC. God! Why do they do this? IRC isn’t bad at all, you may argue. But unfortunately there’s no one to listen. Hush. You’ll have to find a way out, and here’s exactly how you can do it!</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Set up a Ghost blog</title>
+      
+      
+      <link href="https://nikhilweee.github.io/posts/ghost-blog/" rel="alternate" type="text/html" title="Set up a Ghost blog" />
+      
+      <published>2016-01-08T00:00:00+00:00</published>
+      <updated>2016-01-08T00:00:00+00:00</updated>
+      <id>https://nikhilweee.github.io/posts/ghost-blog</id>
+      <content type="html" xml:base="https://nikhilweee.github.io/posts/ghost-blog/">&lt;h4 id=&quot;before-you-read&quot;&gt;Before you read&lt;/h4&gt;
+&lt;p&gt;This is &lt;em&gt;not&lt;/em&gt; an in-depth tutorial for a total newbie. Something like that would make this a really long post. Though I’ve given one-liners explaining each command,
+It would be better if you had some experience working with the linux terminal and a basic understanding of how web content is served.&lt;/p&gt;
+
+&lt;h3 id=&quot;things-youll-need&quot;&gt;Things you’ll need&lt;/h3&gt;
+&lt;p&gt;Just the two of them will do&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;dl&gt;
+      &lt;dt&gt;A &lt;strong&gt;Server&lt;/strong&gt;&lt;/dt&gt;
+      &lt;dd&gt;This is where your site contents will be stored. It’s just an internet connected computer that’ll stay awake 24x7 for your blog and will serve users with your blog as and when asked to so.&lt;/dd&gt;
+    &lt;/dl&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;dl&gt;
+      &lt;dt&gt;A &lt;strong&gt;domain&lt;/strong&gt;&lt;/dt&gt;
+      &lt;dd&gt;No one likes remembering IP addresses. You’ll need this to give your blog a name.&lt;/dd&gt;
+    &lt;/dl&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;1-buy-a-server&quot;&gt;1. Buy a server&lt;/h3&gt;
+&lt;p&gt;You can buy a server online from your favourite provider. I suggest using &lt;a href=&quot;https://www.digitalocean.com/?refcode=ad1b7e083b2e&quot;&gt;DigitalOcean&lt;/a&gt;, where you can spin up a server for just $5 per month.
+To get $10 in free credits, use &lt;a href=&quot;https://www.digitalocean.com/?refcode=ad1b7e083b2e&quot;&gt;this link&lt;/a&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;https://www.digitalocean.com/?refcode=ad1b7e083b2e
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.digitalocean.com/?refcode=ad1b7e083b2e&quot;&gt;Sign up&lt;/a&gt; for an account and enter your credit card details or pay via PayPal.&lt;/li&gt;
+  &lt;li&gt;A &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$5&lt;/code&gt; droplet with an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ubuntu&lt;/code&gt; image at your nearest datacenter would be enough for a blog. No need for any &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;additional options&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SSH Keys&lt;/code&gt; for now.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;2-set-up-your-server&quot;&gt;2. Set up your server&lt;/h3&gt;
+&lt;p&gt;Now that you’ve bought your own server, its time to set it up. Use the following commands from your terminal.
+Consult these &lt;a href=&quot;https://www.digitalocean.com/community/tutorial_series/new-ubuntu-14-04-server-checklist&quot;&gt;community tutorials&lt;/a&gt; for more details.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.digitalocean.com/community/tutorials/how-to-connect-to-your-droplet-with-ssh&quot;&gt;&lt;strong&gt;Connect to your server via ssh&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The server IP and root password can be found in your email when you set up your droplet.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ssh root@&amp;lt;server IP&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;3-secure-your-server&quot;&gt;3. Secure your server&lt;/h3&gt;
+&lt;p&gt;These steps are not necessary, but &lt;em&gt;strictly recommended&lt;/em&gt;.
+I have skipped explaining them for brevity. Consult the DigitalOcean &lt;a href=&quot;https://www.digitalocean.com/community/tutorial_series/new-ubuntu-14-04-server-checklist&quot;&gt;community tutorials&lt;/a&gt; which explains all these steps in detail.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Create a new user and restrict it&lt;/strong&gt;. Why risk root access in case your server gets hacked?&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Configure passwordless ssh&lt;/strong&gt;. So that only your computer can login to your server.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Disable root login&lt;/strong&gt;. You wouldn’t want someone gaining root access to your server. Why not disable it in the first place?&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Set up firewall&lt;/strong&gt; so that only specified ports remain open.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;4-set-up-your-domain&quot;&gt;4. Set up your domain&lt;/h3&gt;
+&lt;p&gt;I’ll cover how to buy and point your domain to your server here.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Buy a domain&lt;/strong&gt;. You can use the &lt;a href=&quot;http://freenom.com/&quot;&gt;free ones&lt;/a&gt;, or spend money for the popular ones. GoDaddy and NameCheap are reliable providers.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Use DigitalOcean nameservers&lt;/strong&gt;. This is optional, but lets you manage your server and domain from the same place. Edit your domain details to configure the nameservers to the following&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ns1.digitalocean.com
+ns2.digitalocean.com
+ns3.digitalocean.com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Connect domain to droplet&lt;/strong&gt;. Go to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Networking &amp;gt; Domains&lt;/code&gt; tab in DigitalOcean settings. Connect your domain with the droplet by entering your domain, say &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nikhilweee.me&lt;/code&gt;, selecting your droplet from the dropdown and hitting &lt;em&gt;Create Record&lt;/em&gt;. Your domain should now point to your droplet IP.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;5-set-up-ghost&quot;&gt;5. Set up Ghost&lt;/h3&gt;
+&lt;p&gt;Now that we’ve connected the domain and the droplet, it’s time to set up your Ghost blog.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Install and update &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;npm&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;node&lt;/code&gt;&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Ghost is written in javascript and needs node and npm to build and run on the server.&lt;/p&gt;
+
+&lt;p&gt;The first command installs node and npm, the second one upgrades npm, and the third one is required for ubuntu, so that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;node&lt;/code&gt; is equivalent to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nodejs&lt;/code&gt; in the terminal.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ apt-get install nodejs npm
+$ npm install -g npm
+$ ln -s &quot;$(which nodejs)&quot; /usr/bin/node
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Install Ghost&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We’ll download the latest version, extract and then install it to the recommended install directory.&lt;/p&gt;
+
+&lt;p&gt;We’ll first install the tools &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;zip&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wget&lt;/code&gt; needed to download and extract the archive, then create the recommended directory &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/www/&lt;/code&gt;, and then download and extract the latest version of ghost. The following commands do just that.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo apt-get update
+$ sudo apt-get install zip wget
+$ sudo mkdir -p /var/www/
+$ cd /var/www
+$ sudo wget https://ghost.org/zip/ghost-latest.zip
+$ sudo unzip -d ghost ghost-latest.zip
+$ cd ghost/
+$ sudo npm install --production
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Configure Ghost&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Ghost stores your blog url in a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;config.js&lt;/code&gt; file. We’ll first create the file using a default template and then set the appropriate url. Open the config file  by using the following commands, and then under &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;config &amp;gt; production&lt;/code&gt;, change the url to your new domain.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo cp config.example.js config.js
+$ sudo nano config.js
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;6-set-up-nginx&quot;&gt;6. Set up Nginx&lt;/h3&gt;
+&lt;p&gt;Nginx (read Engine-X) is the server software (that technically makes your droplet a server) that we’ll use to serve our blog. We won’t use the ghost development server as that isn’t a good practice.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Install nginx&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It’s our favourite &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;apt-get&lt;/code&gt; command again.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo apt-get install nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Configure nginx&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We’ll create a configuration file for your site in the  &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sites-available&lt;/code&gt; directory.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd /etc/nginx/
+$ sudo touch /etc/nginx/sites-available/ghost
+$ sudo nano /etc/nginx/sites-available/ghost
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Now edit the config file. The following snippet is the simplest configuration for a working ghost blog. We are simply running your blog behind a proxy server. This way we get the robustness of nginx along with a simple config.
+Paste this code into the editor. Replace &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;domain.tld&amp;gt;&lt;/code&gt; with your actual domain.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
+    listen 80;
+    server_name &amp;lt;domain.tld&amp;gt;;
+    location / {
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   Host      $http_host;
+        proxy_pass         http://127.0.0.1:2368;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Enable your site&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Simply symlink the file you just created to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sites-enabled&lt;/code&gt; directory and restart nginx.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo ln -s /etc/nginx/sites-available/ghost /etc/nginx/sites-enabled/ghost
+$ sudo service nginx restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;At this stage, test your config&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd /var/www/ghost
+$ sudo npm start --production
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;You should be able to access your new ghost blog on your new domain. If not, there’s been a mistake. C’mon. Get working. Fix that crap!&lt;/p&gt;
+
+&lt;h3 id=&quot;7-set-up-autostart&quot;&gt;7. Set up autostart&lt;/h3&gt;
+
+&lt;p&gt;Now that your blog is set up, we just finally need to ensure that the blog doesn’t stop for any reason and even autostarts on droplet restart. I’ll do this using supervisor.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Install supervisor&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Again, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;apt-get&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo apt-get install supervisor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Configure your blog for supervisor&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We’ll again create a config file as we did for nginx.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo nano /etc/supervisor/conf.d/ghost.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Now edit the file to create an autostart process so that your blog remains stable.
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;user&lt;/code&gt; should be an existing user on the system. Better to use a dedicated user as a safety measure as described in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;4. Secure your server&lt;/code&gt; above.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[program:ghost]
+command = node /var/www/ghost/index.js
+directory = /var/www/ghost
+user = ghost
+autostart = true
+autorestart = true
+stdout_logfile = /var/log/supervisor/ghost.log
+stderr_logfile = /var/log/supervisor/ghost_err.log
+environment = NODE_ENV=&quot;production&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Restart&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo supervisorctl reread
+$ sudo supervisorctl update
+$ sudo supervisorctl restart ghost
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Now your blog is all set and would even withstand restarts. Cheers!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Nikhil Verma</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="Tutorials" />
+      
+
+      
+        <category term="supervisor" />
+      
+        <category term="nginx" />
+      
+        <category term="node" />
+      
+        <category term="digitalocean" />
+      
+        <category term="linux" />
+      
+
+      
+        <summary type="html">Before you read This is not an in-depth tutorial for a total newbie. Something like that would make this a really long post. Though I’ve given one-liners explaining each command, It would be better if you had some experience working with the linux terminal and a basic understanding of how web content is served.</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Sticky Notes</title>
+      
+      
+      <link href="https://nikhilweee.github.io/posts/notes/" rel="alternate" type="text/html" title="Sticky Notes" />
+      
+      <published>2016-01-01T00:00:00+00:00</published>
+      <updated>2016-01-01T00:00:00+00:00</updated>
+      <id>https://nikhilweee.github.io/posts/notes</id>
+      <content type="html" xml:base="https://nikhilweee.github.io/posts/notes/">&lt;p&gt;This page hosts little ideas, solutions to problems I’ve faced in the past or mistakes that I don’t want to repeat again - stored here as a reference in case they bother me again. Read on, maybe even you might find something relevant!&lt;/p&gt;
+
+&lt;h2 id=&quot;contents&quot;&gt;Contents&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#contents&quot;&gt;Contents&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#some-useful-aliases&quot;&gt;Some useful aliases&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#docker-and-dc&quot;&gt;Docker and DC++&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#test-outgoing-ports&quot;&gt;Test outgoing ports&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#use-google-fonts-offline&quot;&gt;Use Google Fonts offline&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#installing-node&quot;&gt;Installing Node&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#installing-opencv&quot;&gt;Installing OpenCV&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#raspberry-pi&quot;&gt;Raspberry Pi&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#configure-mutt-with-gmail&quot;&gt;Configure Mutt with Gmail&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#remove-python-package-with-dependencies&quot;&gt;Remove Python Package with Dependencies&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#academic-writing-with-pandoc&quot;&gt;Academic writing with Pandoc&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#pudb-custom-stringifier&quot;&gt;PuDB Custom Stringifier&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#interesting-jekyll-themes&quot;&gt;Interesting Jekyll Themes&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;some-useful-aliases&quot;&gt;Some useful aliases&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Timesync!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;alias timesync='sudo /etc/cron.daily/timesync'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# /etc/cron.daily/timesync
+sudo date -s &quot;$(wget -qSO- --max-redirect=0 google.com \
+              2&amp;gt;&amp;amp;1 | grep Date: | cut -d' ' -f5-8)Z&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Short for activating virtual environments&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;alias sv='source venv/bin/activate; \
+          export PS1=&quot;(${PWD##*/}-venv)$_OLD_VIRTUAL_PS1&quot;'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;I use these all the time&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;alias log='tail -f /var/log/syslog'
+alias nmr='sudo service network-manager restart; \
+           sudo service networking restart; log'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Show folder sizes in descending order&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;alias duinfo='sudo du --all --block-size=MB \
+              --max-depth=1 | sort -n'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;I always forget the color scheme of my terminal. It’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;base16_isotope&lt;/code&gt;. Oh! &lt;a href=&quot;https://chriskempson.github.io/base16/&quot;&gt;base16&lt;/a&gt;!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;docker-and-dc&quot;&gt;Docker and DC++&lt;/h3&gt;
+&lt;p&gt;Docker and DC++ don’t go hand in hand. Docker creates &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iptables&lt;/code&gt; routes for private ip addresses like 172.17.x.x and DC++ uses the same. You may keep on getting &lt;em&gt;No route to host&lt;/em&gt; when you try to connect to a hub, which is really annoying!
+&lt;a href=&quot;https://github.com/kamermans&quot;&gt;@kamermans&lt;/a&gt; has a gist &lt;a href=&quot;https://gist.github.com/kamermans/94b1c41086de0204750b&quot;&gt;here&lt;/a&gt; that helped me out.&lt;/p&gt;
+
+&lt;h3 id=&quot;test-outgoing-ports&quot;&gt;Test outgoing ports&lt;/h3&gt;
+&lt;p&gt;At times you may be behind a restricted network. Here is a &lt;a href=&quot;http://superuser.com/a/815481/537144&quot;&gt;bash script&lt;/a&gt; to check all outgoing ports that aren’t blocked by your firewall.&lt;/p&gt;
+
+&lt;p&gt;I tested the open ports (upto 4000) in my university and here is the list as of October 2016:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;22   SSH
+53   DNS
+80   C'mon!
+143  IMAP
+443  HTTPS
+465  SMTP
+993  IMAPS
+2082 cPanel. Strange!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;use-google-fonts-offline&quot;&gt;Use Google Fonts offline&lt;/h3&gt;
+&lt;p&gt;Sounds simple, but no easy way to do it. I found this &lt;a href=&quot;https://google-webfonts-helper.herokuapp.com/fonts&quot;&gt;tool&lt;/a&gt; by  &lt;a href=&quot;http://twitter.com/majodev&quot;&gt;@majodev&lt;/a&gt; to be really helpful.&lt;/p&gt;
+
+&lt;h3 id=&quot;installing-node&quot;&gt;Installing Node&lt;/h3&gt;
+&lt;p&gt;Again, there is an overload of methods used to install node and npm. Here is what works for me - the easy way.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo apt-get install nodejs npm
+$ sudo npm install -g n npm
+$ sudo ln -s &quot;$(which nodejs)&quot; /usr/bin/node
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;installing-opencv&quot;&gt;Installing OpenCV&lt;/h3&gt;
+
+&lt;p&gt;Installing OpenCV has always been a mammoth task. I seriously hate the whole process of downloading a bulky git repository and building it from the source.  And also the fact that there’s no easy &lt;em&gt;pip install opencv&lt;/em&gt; way out.
+But as long as you don’t have any constraints like using it on an embedded device, the folks at menpo have an easy way out using anaconda.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda install -c menpo opencv
+conda install -c menpo opencv3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Of course, if you have specific requirements, it’s better to build from source.&lt;/p&gt;
+
+&lt;h3 id=&quot;raspberry-pi&quot;&gt;Raspberry Pi&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://twitter.com/peterlegierski&quot;&gt;Peter Legierski&lt;/a&gt;’s &lt;a href=&quot;http://blog.self.li/post/63281257339/raspberry-pi-part-1-basic-setup-without-cables&quot;&gt;blog post&lt;/a&gt; helped me out with a headless start when I had no idea how to start my &lt;em&gt;pi&lt;/em&gt;!&lt;/li&gt;
+  &lt;li&gt;Setting up a VNC Server was easy too, thanks to the &lt;a href=&quot;https://www.raspberrypi.org/documentation/remote-access/vnc/README.md&quot;&gt;official docs&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;The forums have a good &lt;a href=&quot;https://www.raspberrypi.org/forums/viewtopic.php?t=133691&amp;amp;p=1025366&quot;&gt;article&lt;/a&gt; in case you are interested to install a GUI.&lt;/li&gt;
+  &lt;li&gt;Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh -Y pi@raspberry&lt;/code&gt; to view GUI outputs from the &lt;em&gt;pi&lt;/em&gt; to the host machine.&lt;/li&gt;
+  &lt;li&gt;In case you want to access the webcam and view images, use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fswebcam image.jpg&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;feh image.jpg&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Install OpenCV for raspberry with this &lt;a href=&quot;https://gist.github.com/willprice/c216fcbeba8d14ad1138&quot;&gt;gist&lt;/a&gt;. This can make your day indeed!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;configure-mutt-with-gmail&quot;&gt;Configure Mutt with Gmail&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;http://nickdesaulniers.github.io/blog/2016/06/18/mutt-gmail-ubuntu/&quot;&gt;Nick’s post&lt;/a&gt; describes how to use your own gmail account in case you want to set up something like automated email alerts or regular database backups.&lt;/p&gt;
+
+&lt;h3 id=&quot;remove-python-package-with-dependencies&quot;&gt;Remove Python Package with Dependencies&lt;/h3&gt;
+&lt;p&gt;Thanks to &lt;a href=&quot;https://gagor.pl/&quot;&gt;Tomasz Gągor&lt;/a&gt;. You can find his script &lt;a href=&quot;https://gagor.pl/2016/04/pip-uninstall-package-with-dependencies/&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;academic-writing-with-pandoc&quot;&gt;Academic writing with Pandoc&lt;/h3&gt;
+&lt;p&gt;Mort Yao’s &lt;a href=&quot;https://www.soimort.org/notes/161117/&quot;&gt;post&lt;/a&gt; at &lt;a href=&quot;https://www.soimort.org&quot;&gt;soimort.org&lt;/a&gt; is a useful resource on using Pandoc for academic writing.&lt;/p&gt;
+
+&lt;h3 id=&quot;pudb-custom-stringifier&quot;&gt;PuDB Custom Stringifier&lt;/h3&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# see https://github.com/inducer/pudb/blob/master/example-stringifier.py
+&lt;/span&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;torch&lt;/span&gt;
+
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;pudb_stringifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;
+    Returns different representations based on the type
+    &quot;&quot;&quot;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;isinstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;complex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)):&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'{}: {}'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;isinstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;torch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Tensor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'{}: {}'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()),&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())))&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;isinstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;dict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;tuple&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)):&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'{}: {}'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;interesting-jekyll-themes&quot;&gt;Interesting Jekyll Themes&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;https://github.com/yous/whiteglass&lt;/li&gt;
+  &lt;li&gt;http://immaculate.siawyoung.com/&lt;/li&gt;
+  &lt;li&gt;https://github.com/LeNPaul/Lagrange&lt;/li&gt;
+  &lt;li&gt;https://minimal-blog.lekoarts.de/&lt;/li&gt;
+  &lt;li&gt;https://github.com/chesterhow/tale&lt;/li&gt;
+  &lt;li&gt;https://github.com/artemsheludko/reked&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Nikhil Verma</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="References" />
+      
+
+      
+        <category term="hacks" />
+      
+        <category term="tutorial" />
+      
+        <category term="linux" />
+      
+
+      
+        <summary type="html">This page hosts little ideas, solutions to problems I’ve faced in the past or mistakes that I don’t want to repeat again - stored here as a reference in case they bother me again. Read on, maybe even you might find something relevant!</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+</feed>

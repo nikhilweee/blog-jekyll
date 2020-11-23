@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  
+  
+  <title>Sticky Notes - Nikhil Verma</title>
+  <meta name="description" content="This page hosts little ideas, solutions to problems I’ve faced in the past or mistakes that I don’t want to repeat again - stored here as a reference in case they bother me again. Read on, maybe even you might find something relevant!">
+  
+
+  <link rel="icon" type="image/svg" href="/static/favicon.png">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://nikhilweee.github.io/posts/notes/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Nikhil Verma" href="https://nikhilweee.github.io/feed.xml">
+
+  <!-- MathJax -->
+  
+
+  
+  <meta property="og:title" content="Sticky Notes - Nikhil Verma">
+  <meta property="og:site_name" content="Nikhil Verma">
+  <meta property="og:url" content="https://nikhilweee.github.io/posts/notes/">
+  <meta property="og:description" content="This page hosts little ideas, solutions to problems I’ve faced in the past or mistakes that I don’t want to repeat again - stored here as a reference in case they bother me again. Read on, maybe even you might find something relevant!">
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="nikhilweee">
+  <meta name="twitter:title" content="Sticky Notes - Nikhil Verma">
+  <meta name="twitter:description" content="This page hosts little ideas, solutions to problems I’ve faced in the past or mistakes that I don’t want to repeat again - stored here as a reference in case they bother me again. Read on, maybe ev...">
+  
+    <meta name="twitter:creator" content="nikhilweee">
+  
+  
+
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Bitter:400,400i,700&amp;display=swap" rel="stylesheet">
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-72048305-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://nikhilweee.github.io">Nikhil Verma</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Sticky Notes</h1>
+    <h2 class="post-subtitle" itemprop="abstract description">Stuff I&#39;d like to keep note of</h2>
+    <p class="post-meta">
+      <time datetime="2016-01-01T00:00:00+00:00" itemprop="datePublished">Jan 1, 2016</time> • <a href="https://nikhilweee.github.iocategory/references">References</a></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>This page hosts little ideas, solutions to problems I’ve faced in the past or mistakes that I don’t want to repeat again - stored here as a reference in case they bother me again. Read on, maybe even you might find something relevant!</p>
+
+<h2 id="contents">Contents</h2>
+
+<ul>
+  <li><a href="#contents">Contents</a>
+    <ul>
+      <li><a href="#some-useful-aliases">Some useful aliases</a></li>
+      <li><a href="#docker-and-dc">Docker and DC++</a></li>
+      <li><a href="#test-outgoing-ports">Test outgoing ports</a></li>
+      <li><a href="#use-google-fonts-offline">Use Google Fonts offline</a></li>
+      <li><a href="#installing-node">Installing Node</a></li>
+      <li><a href="#installing-opencv">Installing OpenCV</a></li>
+      <li><a href="#raspberry-pi">Raspberry Pi</a></li>
+      <li><a href="#configure-mutt-with-gmail">Configure Mutt with Gmail</a></li>
+      <li><a href="#remove-python-package-with-dependencies">Remove Python Package with Dependencies</a></li>
+      <li><a href="#academic-writing-with-pandoc">Academic writing with Pandoc</a></li>
+      <li><a href="#pudb-custom-stringifier">PuDB Custom Stringifier</a></li>
+      <li><a href="#interesting-jekyll-themes">Interesting Jekyll Themes</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="some-useful-aliases">Some useful aliases</h3>
+<ul>
+  <li>Timesync!</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>alias timesync='sudo /etc/cron.daily/timesync'
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/cron.daily/timesync
+sudo date -s "$(wget -qSO- --max-redirect=0 google.com \
+              2&gt;&amp;1 | grep Date: | cut -d' ' -f5-8)Z"
+</code></pre></div></div>
+
+<ul>
+  <li>Short for activating virtual environments</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>alias sv='source venv/bin/activate; \
+          export PS1="(${PWD##*/}-venv)$_OLD_VIRTUAL_PS1"'
+</code></pre></div></div>
+
+<ul>
+  <li>I use these all the time</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>alias log='tail -f /var/log/syslog'
+alias nmr='sudo service network-manager restart; \
+           sudo service networking restart; log'
+</code></pre></div></div>
+
+<ul>
+  <li>Show folder sizes in descending order</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>alias duinfo='sudo du --all --block-size=MB \
+              --max-depth=1 | sort -n'
+</code></pre></div></div>
+
+<ul>
+  <li>I always forget the color scheme of my terminal. It’s <code class="language-plaintext highlighter-rouge">base16_isotope</code>. Oh! <a href="https://chriskempson.github.io/base16/">base16</a>!</li>
+</ul>
+
+<h3 id="docker-and-dc">Docker and DC++</h3>
+<p>Docker and DC++ don’t go hand in hand. Docker creates <code class="language-plaintext highlighter-rouge">iptables</code> routes for private ip addresses like 172.17.x.x and DC++ uses the same. You may keep on getting <em>No route to host</em> when you try to connect to a hub, which is really annoying!
+<a href="https://github.com/kamermans">@kamermans</a> has a gist <a href="https://gist.github.com/kamermans/94b1c41086de0204750b">here</a> that helped me out.</p>
+
+<h3 id="test-outgoing-ports">Test outgoing ports</h3>
+<p>At times you may be behind a restricted network. Here is a <a href="http://superuser.com/a/815481/537144">bash script</a> to check all outgoing ports that aren’t blocked by your firewall.</p>
+
+<p>I tested the open ports (upto 4000) in my university and here is the list as of October 2016:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>22   SSH
+53   DNS
+80   C'mon!
+143  IMAP
+443  HTTPS
+465  SMTP
+993  IMAPS
+2082 cPanel. Strange!
+</code></pre></div></div>
+
+<h3 id="use-google-fonts-offline">Use Google Fonts offline</h3>
+<p>Sounds simple, but no easy way to do it. I found this <a href="https://google-webfonts-helper.herokuapp.com/fonts">tool</a> by  <a href="http://twitter.com/majodev">@majodev</a> to be really helpful.</p>
+
+<h3 id="installing-node">Installing Node</h3>
+<p>Again, there is an overload of methods used to install node and npm. Here is what works for me - the easy way.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo apt-get install nodejs npm
+$ sudo npm install -g n npm
+$ sudo ln -s "$(which nodejs)" /usr/bin/node
+</code></pre></div></div>
+
+<h3 id="installing-opencv">Installing OpenCV</h3>
+
+<p>Installing OpenCV has always been a mammoth task. I seriously hate the whole process of downloading a bulky git repository and building it from the source.  And also the fact that there’s no easy <em>pip install opencv</em> way out.
+But as long as you don’t have any constraints like using it on an embedded device, the folks at menpo have an easy way out using anaconda.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda install -c menpo opencv
+conda install -c menpo opencv3
+</code></pre></div></div>
+
+<p>Of course, if you have specific requirements, it’s better to build from source.</p>
+
+<h3 id="raspberry-pi">Raspberry Pi</h3>
+<ul>
+  <li><a href="https://twitter.com/peterlegierski">Peter Legierski</a>’s <a href="http://blog.self.li/post/63281257339/raspberry-pi-part-1-basic-setup-without-cables">blog post</a> helped me out with a headless start when I had no idea how to start my <em>pi</em>!</li>
+  <li>Setting up a VNC Server was easy too, thanks to the <a href="https://www.raspberrypi.org/documentation/remote-access/vnc/README.md">official docs</a>.</li>
+  <li>The forums have a good <a href="https://www.raspberrypi.org/forums/viewtopic.php?t=133691&amp;p=1025366">article</a> in case you are interested to install a GUI.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">ssh -Y pi@raspberry</code> to view GUI outputs from the <em>pi</em> to the host machine.</li>
+  <li>In case you want to access the webcam and view images, use <code class="language-plaintext highlighter-rouge">fswebcam image.jpg</code> and <code class="language-plaintext highlighter-rouge">feh image.jpg</code>.</li>
+  <li>Install OpenCV for raspberry with this <a href="https://gist.github.com/willprice/c216fcbeba8d14ad1138">gist</a>. This can make your day indeed!</li>
+</ul>
+
+<h3 id="configure-mutt-with-gmail">Configure Mutt with Gmail</h3>
+<p><a href="http://nickdesaulniers.github.io/blog/2016/06/18/mutt-gmail-ubuntu/">Nick’s post</a> describes how to use your own gmail account in case you want to set up something like automated email alerts or regular database backups.</p>
+
+<h3 id="remove-python-package-with-dependencies">Remove Python Package with Dependencies</h3>
+<p>Thanks to <a href="https://gagor.pl/">Tomasz Gągor</a>. You can find his script <a href="https://gagor.pl/2016/04/pip-uninstall-package-with-dependencies/">here</a></p>
+
+<h3 id="academic-writing-with-pandoc">Academic writing with Pandoc</h3>
+<p>Mort Yao’s <a href="https://www.soimort.org/notes/161117/">post</a> at <a href="https://www.soimort.org">soimort.org</a> is a useful resource on using Pandoc for academic writing.</p>
+
+<h3 id="pudb-custom-stringifier">PuDB Custom Stringifier</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># see https://github.com/inducer/pudb/blob/master/example-stringifier.py
+</span><span class="kn">import</span> <span class="nn">torch</span>
+
+
+<span class="k">def</span> <span class="nf">pudb_stringifier</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="s">"""
+    Returns different representations based on the type
+    """</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="s">'{}: {}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">).</span><span class="n">__name__</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">torch</span><span class="p">.</span><span class="n">Tensor</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">'{}: {}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="nb">type</span><span class="p">()),</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">size</span><span class="p">())))</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="s">'{}: {}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">).</span><span class="n">__name__</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">obj</span><span class="p">)))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">).</span><span class="n">__name__</span>
+</code></pre></div></div>
+
+<h3 id="interesting-jekyll-themes">Interesting Jekyll Themes</h3>
+<ul>
+  <li>https://github.com/yous/whiteglass</li>
+  <li>http://immaculate.siawyoung.com/</li>
+  <li>https://github.com/LeNPaul/Lagrange</li>
+  <li>https://minimal-blog.lekoarts.de/</li>
+  <li>https://github.com/chesterhow/tale</li>
+  <li>https://github.com/artemsheludko/reked</li>
+</ul>
+
+  </div><div class="post-comments" itemprop="comment"><hr />
+<h1>Comments</h1>
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+	    var disqus_shortname = 'nikhilweee';
+	    // ensure that pages with query string get the same discussion
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];	    
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div></div></article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+      
+      &copy; Nikhil Verma 2020 - Subscribe via <a href="https://nikhilweee.github.io/feed.xml">RSS</a>
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

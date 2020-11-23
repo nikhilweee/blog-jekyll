@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  
+  
+  <title>Persistent Mounts - Nikhil Verma</title>
+  <meta name="description" content="After installing your linux distro, though you’ll be able to access your Windows/NTFS partitions easily, things can get annoying sometimes with you having to mount the partition manually everytime. Here I describe how to get away with this mess by automatically mounting partitions on boot.">
+  
+
+  <link rel="icon" type="image/svg" href="/static/favicon.png">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://nikhilweee.github.io/posts/persistent-mounts/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Nikhil Verma" href="https://nikhilweee.github.io/feed.xml">
+
+  <!-- MathJax -->
+  
+
+  
+  <meta property="og:title" content="Persistent Mounts - Nikhil Verma">
+  <meta property="og:site_name" content="Nikhil Verma">
+  <meta property="og:url" content="https://nikhilweee.github.io/posts/persistent-mounts/">
+  <meta property="og:description" content="After installing your linux distro, though you’ll be able to access your Windows/NTFS partitions easily, things can get annoying sometimes with you having to mount the partition manually everytime. Here I describe how to get away with this mess by automatically mounting partitions on boot.">
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="nikhilweee">
+  <meta name="twitter:title" content="Persistent Mounts - Nikhil Verma">
+  <meta name="twitter:description" content="After installing your linux distro, though you’ll be able to access your Windows/NTFS partitions easily, things can get annoying sometimes with you having to mount the partition manually everytime....">
+  
+    <meta name="twitter:creator" content="nikhilweee">
+  
+  
+
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Bitter:400,400i,700&amp;display=swap" rel="stylesheet">
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-72048305-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://nikhilweee.github.io">Nikhil Verma</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Persistent Mounts</h1>
+    <h2 class="post-subtitle" itemprop="abstract description">Automatically mount partitions in linux via the terminal</h2>
+    <p class="post-meta">
+      <time datetime="2016-08-11T00:00:00+00:00" itemprop="datePublished">Aug 11, 2016</time> • <a href="https://nikhilweee.github.iocategory/tutorials">Tutorials</a></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>After installing your linux distro, though you’ll be able to access your Windows/NTFS partitions easily, things can get annoying sometimes with you having to mount the partition manually everytime. Here I describe how to get away with this mess by automatically mounting partitions on boot.</p>
+
+<p>You could also do the same from Unity using the <strong>Disks</strong> utility, but here I describe the so called <em>hard</em> way. The way we do it is by editing the <code class="language-plaintext highlighter-rouge">/etc/fstab</code> file. This file gets executed everytime you boot up your system. We just instruct this file to also mount our desired partitions apart from what it normally does.</p>
+
+<h3 id="get-the-uuid">Get the UUID</h3>
+
+<p>Before modifying <code class="language-plaintext highlighter-rouge">fstab</code>, we need the <code class="language-plaintext highlighter-rouge">UUID</code> of the partition which acts as a unique identifier for the partition to be mounted. To show a list of available partitions and their UUID, use</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo blkid -o list
+</code></pre></div></div>
+
+<p>and you’ll get an output similar to this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>device       fs_type label      mount point       UUID
+------------------------------------------------------------------
+/dev/sda1    ntfs    WINRE      (not mounted)     ACEAEE02EAEDC8A2
+/dev/sda2    vfat               /boot/efi         6E82-B10E
+/dev/sda4    ntfs    Windows    (not mounted)     00A8EFDAA8EFCBEA
+/dev/sda6    ntfs    Downloads  /media/downloads  5CFA5B52FA5B2792
+/dev/sda10   ntfs    Documents  /media/documents  86585E63585E5253
+/dev/sda11   ntfs    RECOVERY   (not mounted)     3E60EB0960EAC6AD
+</code></pre></div></div>
+<p>This should help you in deciding which partition to mount. If you’re still confused, you may use <code class="language-plaintext highlighter-rouge">fdisk -l</code> instead. This should give you the type of the partition listed as well so that you don’t accidentally damage an important partition.</p>
+
+<h3 id="modify-fstab">Modify fstab</h3>
+
+<p>Once you get the UUID, you can now modify the fstab file as a root user and add an entry similar to the following at the end, ensuring that you change the <code class="language-plaintext highlighter-rouge">UUID</code> accordingly.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo nano /etc/fstab
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;UUID&gt;                  &lt;mount point&gt;           &lt;type&gt;  &lt;options&gt;   &lt;dump&gt;  &lt;pass&gt;
+
+UUID=5CFA5B52FA5B2792	/media/downloads	ntfs-3g	rw,auto,user,exec,uid=1000         0	0
+
+UUID=86585E63585E5253	/media/documents	ntfs-3g	rw,auto,user,exec,uid=1000         0	0
+</code></pre></div></div>
+<p>Once modified, save the file and run the mount command to re-execute the fstab file:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo mount -a
+</code></pre></div></div>
+<p>This should mount your new partition which would also be mounted automatically every time you boot up. Enjoy!</p>
+
+  </div><div class="post-comments" itemprop="comment"><hr />
+<h1>Comments</h1>
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+	    var disqus_shortname = 'nikhilweee';
+	    // ensure that pages with query string get the same discussion
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];	    
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div></div></article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+      
+      &copy; Nikhil Verma 2020 - Subscribe via <a href="https://nikhilweee.github.io/feed.xml">RSS</a>
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

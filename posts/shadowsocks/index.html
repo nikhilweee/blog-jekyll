@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  
+  
+  <title>Shadowsocks - Nikhil Verma</title>
+  <meta name="description" content="Shadowsocks! Sounds like the new superhero after Deadpool. Well, in a way it is a superhero! It let’s you bypass censorship, even the GFW! 1 Okay, so what’s this fuss about? Before going further, I think it needs some introduction. The Great Firewall of China &amp;#8617;">
+  
+
+  <link rel="icon" type="image/svg" href="/static/favicon.png">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://nikhilweee.github.io/posts/shadowsocks/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Nikhil Verma" href="https://nikhilweee.github.io/feed.xml">
+
+  <!-- MathJax -->
+  
+
+  
+  <meta property="og:title" content="Shadowsocks - Nikhil Verma">
+  <meta property="og:site_name" content="Nikhil Verma">
+  <meta property="og:url" content="https://nikhilweee.github.io/posts/shadowsocks/">
+  <meta property="og:description" content="Shadowsocks! Sounds like the new superhero after Deadpool. Well, in a way it is a superhero! It let’s you bypass censorship, even the GFW! 1 Okay, so what’s this fuss about? Before going further, I think it needs some introduction. The Great Firewall of China &amp;#8617;">
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="nikhilweee">
+  <meta name="twitter:title" content="Shadowsocks - Nikhil Verma">
+  <meta name="twitter:description" content="Shadowsocks! Sounds like the new superhero after Deadpool. Well, in a way it is a superhero! It let’s you bypass censorship, even the GFW! 1 Okay, so what’s this fuss about? Before going further, I...">
+  
+    <meta name="twitter:creator" content="nikhilweee">
+  
+  
+
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Bitter:400,400i,700&amp;display=swap" rel="stylesheet">
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-72048305-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://nikhilweee.github.io">Nikhil Verma</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Shadowsocks</h1>
+    <h2 class="post-subtitle" itemprop="abstract description">Dont let your ISP block you</h2>
+    <p class="post-meta">
+      <time datetime="2016-09-12T00:00:00+00:00" itemprop="datePublished">Sep 12, 2016</time> • <a href="https://nikhilweee.github.iocategory/tutorials">Tutorials</a></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p><a href="https://shadowsocks.org/">Shadowsocks</a>! Sounds like the new superhero after <em>Deadpool</em>. Well, in a way it <em>is</em> a superhero! It let’s you bypass censorship, even the GFW! <sup id="fnref:gfw" role="doc-noteref"><a href="#fn:gfw" class="footnote">1</a></sup> Okay, so what’s this fuss about? Before going further, I think it needs some introduction.</p>
+
+<blockquote>
+  <p>Shadowsocks is a SOCKS5 compatible proxy server/client suite which excels at being undetectable. It leaves no fingerprint even when you use deep packet inspection. <sup id="fnref:quora" role="doc-noteref"><a href="#fn:quora" class="footnote">2</a></sup></p>
+</blockquote>
+
+<p>Whoa! Wait, What does that mean? In simple terms, this means that shadowsocks lets you access blocked resources and is hard to detect by even the best firewalls.</p>
+
+<p><em>Seems Interesting. I would definitely want one!</em><br />
+Okay, but before moving further, it’s important to know how this stuff works.</p>
+
+<h3 id="working">Working</h3>
+
+<p>Shadowsocks is some software that has to be set up individually on two systems. One is your device, or the <em>client</em>, which wants to bypass firewalls, and the other is a <em>server</em> - quite simply a device which has unrestricted access to the internet.<br />
+The client then connects to the server (which isn’t blocked by the firewall), and tunnels all its traffic through the server via shadowsocks. The firewall thinks this is legitimate traffic, and so doesn’t block you.</p>
+
+<figure class="image">
+  <img src="/static/shadowsocks/arch.svg" alt="The Big Picture." />
+  <figcaption>The Big Picture.</figcaption>
+</figure>
+
+<h3 id="why-shadowsocks">Why Shadowsocks</h3>
+<p>Now you might think that if the client is already allowed to connect to the server, then why do we need shadowsocks in the first place?
+There are a couple of reasons why I recommend shadowsocks.</p>
+
+<ul>
+  <li>
+    <p>One, although you may have unrestricted access to the server, the firewall can still find out whether you’re using it to tunnel blocked resources. Shadowsocks excels at deceiving. It fools the firewall into believing that your communication is legitimate. Also, it’s fast. Trust me. You’re not limited by some crappy VPN that only lets through a few kilobits per second.</p>
+  </li>
+  <li>
+    <p>Two, an interesting advantage with shadowsocks is that it is available for most ecosystems. Ofcourse it’s available on the usual Linux, Mac and Windows, but there’s also android phones and wifi routers! <sup id="fnref:openwrt" role="doc-noteref"><a href="#fn:openwrt" class="footnote">3</a></sup> This means you don’t need a PC to tunnel anymore!</p>
+  </li>
+</ul>
+
+<h3 id="setup">Setup</h3>
+<p>Enough of the talk. Let’s get some hands dirty.</p>
+
+<p>I’ll be using an android phone as the client and an ubuntu machine as the server. If you cannot arrange for a server, I’d recommend renting one online. DigitalOcean lets you buy a decent server for as low as $5 per month. You can use <a href="https://m.do.co/c/ad1b7e083b2e">this link</a> while signing up to get $10 in free credit.</p>
+
+<h4 id="ubuntu">Ubuntu</h4>
+<p>I’ll be setting up the server now. <sup id="fnref:vpndada" role="doc-noteref"><a href="#fn:vpndada" class="footnote">4</a></sup> First, a little housekeeping.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>apt-get update
+<span class="nv">$ </span>apt-get <span class="nb">install </span>python-pip
+<span class="nv">$ </span>pip <span class="nb">install </span>shadowsocks
+</code></pre></div></div>
+
+<p>Next, create a config file <code class="language-plaintext highlighter-rouge">/etc/shadowsocks.json</code> and paste this</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+ </span><span class="nl">"server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span><span class="w">
+ </span><span class="nl">"server_port"</span><span class="p">:</span><span class="w"> </span><span class="mi">465</span><span class="p">,</span><span class="w">
+ </span><span class="nl">"local_port"</span><span class="p">:</span><span class="w"> </span><span class="mi">1080</span><span class="p">,</span><span class="w">
+ </span><span class="nl">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"secret"</span><span class="p">,</span><span class="w">
+ </span><span class="nl">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span><span class="w">
+ </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aes-256-cfb"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>There are some things worth looking out here.</p>
+
+<ul>
+  <li>Setting <code class="language-plaintext highlighter-rouge">server</code> to <code class="language-plaintext highlighter-rouge">0.0.0.0</code> essentially means that you’re making shadowsocks accessible from outside the machine as well. <code class="language-plaintext highlighter-rouge">server_port</code> simply specifies the port over which shadowsocks would be accessible. So, if the server’s public IP is <code class="language-plaintext highlighter-rouge">11.22.33.44</code>, shadowsocks is accessible on <code class="language-plaintext highlighter-rouge">11.22.33.44:465</code> according to the configuration above.</li>
+  <li>Also, make sure that <code class="language-plaintext highlighter-rouge">server_port</code>, which is 465 in this case, isn’t blocked on your home network. <sup id="fnref:testports" role="doc-noteref"><a href="#fn:testports" class="footnote">5</a></sup> Else you wouldn’t be able to connect to the server in the first place.</li>
+  <li>It turns out that you shouldn’t use the common HTTP ports like 80 and 443 for shadowsocks. Atleast they didn’t work out for me.</li>
+</ul>
+
+<p>You don’t need to bother about other options for now. Just keep note of the password, we’ll be using that later. Next, you need to run shadowsocks in the background.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssserver <span class="nt">-c</span> /etc/shadowsocks.json <span class="nt">-d</span> start
+</code></pre></div></div>
+
+<p>Once a client is connected, you can check the logs in <code class="language-plaintext highlighter-rouge">/var/log/shadowsocks.log</code> to confirm that it’s actually working. There! Halfway done.</p>
+
+<h4 id="android">Android</h4>
+
+<p>Coming to the client, setting up shadowsocks for android is a piece of cake. Just install the <a href="https://play.google.com/store/apps/details?id=com.github.shadowsocks">shadowsocks android app</a>, and enter the <code class="language-plaintext highlighter-rouge">remote port</code>, <code class="language-plaintext highlighter-rouge">local port</code>, <code class="language-plaintext highlighter-rouge">encryption method</code> and <code class="language-plaintext highlighter-rouge">password</code> according to the config file you just created on the server. Enter your server’s public IP <sup id="fnref:domain" role="doc-noteref"><a href="#fn:domain" class="footnote">6</a></sup> in place of the <code class="language-plaintext highlighter-rouge">server</code> option, and you’re ready to hit the connect button.</p>
+
+<p>An interesting option here is to selectively use shadowsocks for only some applications instead of a global proxy using the <code class="language-plaintext highlighter-rouge">per app proxy</code> setting. This works well if you only have a few apps that need tunnelling.</p>
+
+<p>There! you can now enjoy unrestricted internet, even on your phone!
+Visit the <a href="https://github.com/shadowsocks/shadowsocks/wiki">shadowsocks wiki</a> page to find more about configuration options, optimization, and more advanced features.</p>
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:gfw" role="doc-endnote">
+      <p>The Great Firewall of China <a href="#fnref:gfw" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:quora" role="doc-endnote">
+      <p>Inspired by James Swineson’s <a href="https://www.quora.com/What-is-shadowsocks/answer/James-Swineson">answer</a> on Quora <a href="#fnref:quora" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:openwrt" role="doc-endnote">
+      <p>Shadowsocks is also available for routers running OpenWRT <a href="#fnref:openwrt" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:vpndada" role="doc-endnote">
+      <p>VPNDada has a good <a href="https://www.vpndada.com/how-to-setup-a-shadowsocks-server-on-digitalocean/">step by step tutorial</a> on setting up shadowsocks on a <a href="https://m.do.co/c/ad1b7e083b2e">digitalocean droplet</a> from scratch. <a href="#fnref:vpndada" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:testports" role="doc-endnote">
+      <p>Here’s a nice resource to help you <a href="http://nikhilweee.me/reference/#test-outgoing-ports">test open ports</a>. <a href="#fnref:testports" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:domain" role="doc-endnote">
+      <p>You could also enter a domain instead of an IP if you have one set up. <a href="#fnref:domain" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </div><div class="post-comments" itemprop="comment"><hr />
+<h1>Comments</h1>
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+	    var disqus_shortname = 'nikhilweee';
+	    // ensure that pages with query string get the same discussion
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];	    
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div></div></article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+      
+      &copy; Nikhil Verma 2020 - Subscribe via <a href="https://nikhilweee.github.io/feed.xml">RSS</a>
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
