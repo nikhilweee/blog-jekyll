@@ -11,7 +11,7 @@ layout: default
     {{ content }}
   </div>
 
-  {% if site.comments == true and page.comments != false %}
+  {% if site.comments == true and page.comments == true %}
     <div class="post-comments">
       {% include comments.html %}
     </div>

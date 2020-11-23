@@ -1,5 +1,5 @@
 ---
-# // Only the main Sass file needs front matter (the dashes are enough)
+# Only the main Sass file needs front matter (the dashes are enough)
 ---
 @charset "utf-8";
 
@@ -12,6 +12,7 @@ $base-font-size:   18px;
   }
 }
 
+// Font size mixin
 @mixin relative-font-size($ratio) {
   font-size: $base-font-size * $ratio;
 }
@@ -23,6 +24,8 @@ $base-font-size:   18px;
 /**
  * Home Page
  */
+
+//  Support for dark theme
 @media (prefers-color-scheme: dark) {
   html {
     background-color: invert($background-color);
@@ -55,8 +58,6 @@ $base-font-size:   18px;
 
 .post-title {
   @include relative-font-size(2);
-  letter-spacing: -1px;
-  line-height: 1;
 
   @include media-query($on-laptop) {
     @include relative-font-size(2)
@@ -65,7 +66,6 @@ $base-font-size:   18px;
 
 .post-subtitle {
   @include relative-font-size(1.2);
-  line-height: 0.5;
 
   @include media-query($on-laptop) {
     @include relative-font-size(1.2);
@@ -77,15 +77,20 @@ $base-font-size:   18px;
   color: $grey-color;
 }
 
-// Subscripts and Superscripts should not affect line height
+figcaption {
+  font-size: $small-font-size;
+  font-style: italic;
+  text-align: center;
+}
 
+// Subscripts and Superscripts should not affect line height
 sup, sub {
   vertical-align: baseline;
   position: relative;
   top: -0.4em;
 }
-sub { 
-  top: 0.4em; 
+sub {
+  top: 0.4em;
 }
 
 
@@ -124,7 +129,7 @@ sub {
 
   &:hover {
     color: $brand-color;
-  }  
+  }
 }
 
 /**
@@ -164,3 +169,17 @@ sub {
   }
 }
 
+// Correct position of pagination markers
+.pagination {
+  .previous {
+    float: right;
+  }
+  .next {
+    float: left;
+  }
+}
+
+// Standardize line heights
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.1;
+}

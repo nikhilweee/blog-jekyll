@@ -38,6 +38,8 @@ gist:
 pagination:
   enabled: true
   per_page: 20
+  permalink: /page/:num/
+  sort_reverse: true
 
 
 # Excludes
