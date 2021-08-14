@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  
+  
+  <title>Shout IRC! - Nikhil Verma</title>
+  <meta name="description" content="If you’re reading this, there are high chances that you are under internet surveillance and your IT admin has blocked access to IRC. God! Why do they do this? IRC isn’t bad at all, you may argue. But unfortunately there’s no one to listen. Hush. You’ll have to find a way out, and here’s exactly how you can do it!">
+  
+
+  <link rel="icon" type="image/svg" href="/static/favicon.png">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://nikhilweee.github.io/posts/shout-irc/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Nikhil Verma" href="https://nikhilweee.github.io/feed.xml">
+
+  <!-- MathJax -->
+  
+
+  
+  <meta property="og:title" content="Shout IRC! - Nikhil Verma">
+  <meta property="og:site_name" content="Nikhil Verma">
+  <meta property="og:url" content="https://nikhilweee.github.io/posts/shout-irc/">
+  <meta property="og:description" content="If you’re reading this, there are high chances that you are under internet surveillance and your IT admin has blocked access to IRC. God! Why do they do this? IRC isn’t bad at all, you may argue. But unfortunately there’s no one to listen. Hush. You’ll have to find a way out, and here’s exactly how you can do it!">
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="nikhilweee">
+  <meta name="twitter:title" content="Shout IRC! - Nikhil Verma">
+  <meta name="twitter:description" content="If you’re reading this, there are high chances that you are under internet surveillance and your IT admin has blocked access to IRC. God! Why do they do this? IRC isn’t bad at all, you may argue. B...">
+  
+    <meta name="twitter:creator" content="nikhilweee">
+  
+  
+
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Bitter:400,400i,700&amp;display=swap" rel="stylesheet">
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-72048305-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://nikhilweee.github.io">Nikhil Verma</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Shout IRC!</h1>
+    <h2 class="post-subtitle" itemprop="abstract description">Set up IRC on a blocked connection</h2>
+    <p class="post-meta">
+      <time datetime="2016-01-28T00:00:00+00:00" itemprop="datePublished">Jan 28, 2016</time> • <a href="https://nikhilweee.github.iocategory/tutorials">Tutorials</a></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>If you’re reading this, there are high chances that you are under internet surveillance and your IT admin has blocked access to IRC. God! Why do they do this? IRC isn’t bad at all, you may argue. But unfortunately there’s no one to listen. Hush. You’ll have to find a way out, and here’s exactly how you can do it!</p>
+
+<p>I’ll be using one of the many benefits of <a href="https://www.digitalocean.com/?refcode=ad1b7e083b2e">having your own server</a> in the cloud. Sure it costs you, but $5 a month won’t hurt your pockets! Added to this, the open source community is just awesome! It has tools for almost all your needs. Yes, it can help you get over IRC, and this blog is one of their many freebies. Thank you Open Source!</p>
+
+<p>So let’s talk business. There’s this tool called <a href="http://shout-irc.com/"><strong>Shout IRC</strong></a> which has all what you need to get over your IRC block. And using it is as simple as logging in to your account! Exactly what you needed? Perfect!</p>
+
+<p>Although you can find instructions on how to use on their <a href="http://shout-irc.com/">website</a>, I’ll cut it short. All you have to do is install a <code class="language-plaintext highlighter-rouge">node</code> module, and edit some configuration files. Simple.</p>
+
+<h3 id="1-installing">1. Installing</h3>
+<p>After you’ve logged in to your server,</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install -g shout
+</code></pre></div></div>
+<p>is what you do to install shout. That’s it.
+However, if you don’t have <code class="language-plaintext highlighter-rouge">node</code> or <code class="language-plaintext highlighter-rouge">npm</code> installed on your Ubuntu based server, just run this</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo apt-get install nodejs npm
+$ sudo npm install -g npm
+$ sudo ln -s "$(which nodejs)" /usr/bin/node
+</code></pre></div></div>
+
+<h3 id="2-configuring-shout">2. Configuring Shout</h3>
+<p>Doing it the easy way, just open up the configuration file. All you have to do is</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ shout config
+</code></pre></div></div>
+<ul>
+  <li>The <code class="language-plaintext highlighter-rouge">public</code> setting gives you the option of allowing public access or restricted access using a username and password. Set it to <code class="language-plaintext highlighter-rouge">false</code> if you want user based access.</li>
+  <li>Next, the <code class="language-plaintext highlighter-rouge">host</code> and <code class="language-plaintext highlighter-rouge">port</code> settings are pretty much self explanatory. I’ll be using shout behind an nginx proxy, so set the host to <code class="language-plaintext highlighter-rouge">127.0.0.1</code> and the port to whatever you like, say <code class="language-plaintext highlighter-rouge">7468</code>.</li>
+</ul>
+
+<p>You may change additional settings, but that is not required for now.</p>
+
+<h4 id="adding-users">Adding users</h4>
+<p>If you’ve set <code class="language-plaintext highlighter-rouge">public</code> to <code class="language-plaintext highlighter-rouge">false</code>, you are required to add users to shout. To create a user named ‘Nikhil’, just run</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ shout add nikhil password
+</code></pre></div></div>
+<p>With of course, your desired password, and the user with username <code class="language-plaintext highlighter-rouge">nikhil</code> is created.</p>
+
+<h3 id="3-configuring-nginx">3. Configuring Nginx</h3>
+<p>It’s pretty likely that you also have other sites hosted on your server and so I’ll be using nginx which is pretty robust for this task. If you’re familiar with this, you know what to do.
+Create a new configuration for your site.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo nano /etc/nginx/sites-available/irc
+</code></pre></div></div>
+<p>And run Shout IRC behind a proxy</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+    listen 80;
+    server_name &lt;YOUR SITE ADDRESS&gt;;
+    location / {
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   Host      $http_host;
+        proxy_pass         http://127.0.0.1:7468;
+    }
+}
+</code></pre></div></div>
+<p>Replace <code class="language-plaintext highlighter-rouge">YOUR SITE ADDRESS</code> with the url you intend to use.
+Then, enable the site by creating a symlink</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo ln -s /etc/nginx/sites-available/irc /etc/nginx/sites-enabled/irc
+</code></pre></div></div>
+<p>Now, just restart your server</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo service nginx restart
+</code></pre></div></div>
+<p>No. Shout isn’t live yet, in case you were exited.</p>
+
+<h3 id="4-withstanding-restarts">4. Withstanding restarts</h3>
+<p>It may happen that for some reason your shout service gets stopped, such as in a server restart. That’s bad. So, I’ll use <code class="language-plaintext highlighter-rouge">supervisor</code> to manage Shout on my server. It’ll start shout automatically in case it gets shut down on the server. That way it’ll even withstand server restarts. If you have more than one service set up on your server, such as another blog or website, supervisor makes managing all of them pretty easy.</p>
+
+<p>First, install supervisor in case you haven’t.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo apt-get install supervisor
+</code></pre></div></div>
+<p>Next, create a config file for shout, just as you did for nginx</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo nano /etc/supervisor/conf.d/ghost.conf
+</code></pre></div></div>
+<p>Now edit the file to create an autostart process so that your blog remains stable.
+<code class="language-plaintext highlighter-rouge">user</code> should be an existing user on the system. Better to use a dedicated user with restricted access as a safety measure</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[program:shout]
+command = shout start
+user = server
+autostart = true
+autorestart = true
+stdout_logfile = /var/log/supervisor/shout.log
+stderr_logfile = /var/log/supervisor/shout_err.log
+</code></pre></div></div>
+<p>Save it, and you’re just a restart away!</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo supervisorctl reread
+$ sudo supervisorctl update
+$ sudo supervisorctl restart shout
+</code></pre></div></div>
+<p>And you should have your own personal web IRC client ready! No more restrictions! Yay!</p>
+
+<p>Queries? Suggestions? Feedback? Feel free to comment below!</p>
+
+  </div><div class="post-comments" itemprop="comment"><hr />
+<h1>Comments</h1>
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+	    var disqus_shortname = 'nikhilweee';
+	    // ensure that pages with query string get the same discussion
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];	    
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div></div></article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+      
+      &copy; Nikhil Verma 2021 - Subscribe via <a href="https://nikhilweee.github.io/feed.xml">RSS</a>
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

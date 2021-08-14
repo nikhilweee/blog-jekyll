@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  
+  
+  <title>Intro to Style Transfer - Nikhil Verma</title>
+  <meta name="description" content="Image Style Transfer Using Convolutional Neural Networks">
+  
+
+  <link rel="icon" type="image/svg" href="/static/favicon.png">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://nikhilweee.github.io/posts/style-transfer/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Nikhil Verma" href="https://nikhilweee.github.io/feed.xml">
+
+  <!-- MathJax -->
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      CommonHTML: { linebreaks: { automatic: true } },
+    });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_CHTML"></script>
+  
+
+  
+  <meta property="og:title" content="Intro to Style Transfer - Nikhil Verma">
+  <meta property="og:site_name" content="Nikhil Verma">
+  <meta property="og:url" content="https://nikhilweee.github.io/posts/style-transfer/">
+  <meta property="og:description" content="Image Style Transfer Using Convolutional Neural Networks">
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="nikhilweee">
+  <meta name="twitter:title" content="Intro to Style Transfer - Nikhil Verma">
+  <meta name="twitter:description" content="Image Style Transfer Using Convolutional Neural Networks">
+  
+    <meta name="twitter:creator" content="nikhilweee">
+  
+  
+
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Bitter:400,400i,700&amp;display=swap" rel="stylesheet">
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-72048305-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://nikhilweee.github.io">Nikhil Verma</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Intro to Style Transfer</h1>
+    <h2 class="post-subtitle" itemprop="abstract description">Image Style Transfer Using Convolutional Neural Networks</h2>
+    <p class="post-meta">
+      <time datetime="2020-09-11T00:00:00+00:00" itemprop="datePublished">Sep 11, 2020</time> • <a href="https://nikhilweee.github.iocategory/papers">Papers</a></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <h2 id="image-style-transfer-using-convolutional-neural-networks">Image Style Transfer Using Convolutional Neural Networks</h2>
+
+<p>This paper introduced neural style transfer. It uses a VGGNet pre-trained on the ImageNet dataset for the purpose. The key idea is to be able to separate content and style from the representations of the network. Once that is done, a new image is synthesized from white noise where two different kind of losses are minimized - a style loss between the style image and the hybrid image, and a content loss between the content image and the hybrid image.</p>
+
+<h2 id="intuitions">Intuitions</h2>
+
+<p>Since the VGGNet was originally trained for object classification, the layers towards the end of the network should have enough information to be able to recognise the object while still being invariant to its lower level features like position, style, etc. Therefore, we use the higher layers for the purposes of extracting content from the image, and the lower layers for the purposes of capturing the style of the image. This intuition is formalised in the way the losses are calculated.</p>
+
+<h2 id="content-loss">Content Loss</h2>
+
+<p>The representation of every image $\vec{x}$ in each layer $l$ of a CNN can be encoded by the feature response $F^l$ to the layer. Therefore, for the hybrid image $\vec{x}$ to be able to match the content of the original image $\vec{p}$, their respective feature representations $F^l$ and $P^l$ should be similar. This gives rise to the content loss, which is simply the squared error loss between the two. Note that $F^l \in \mathbb{R}^{N_l \times M_l}$ where $F_{ij}^{l}$ is the activation of the $i$th filter at the $j$th position in layer $l$ with $N_l$ distinct features each of size $M_l$</p>
+
+\[L_{content} (\vec{p}, \vec{x}, l) = \frac{1}{2} \sum_{i, j} (F_{ij}^l - P_{ij}^l)\]
+
+<h2 id="style-loss">Style Loss</h2>
+
+<p>To capture the style of an image, we might just want to capture the feature responses from the lower layers of the image. But note that those layers also contain spatial information about the content of the image which are later used by the higher layers of the network. Therefore, there is a need to decouple that information from the style of the image. To do so, we use a matrix of feature correlations built on top of the feature responses of each layer in the CNN. The feature correlations are given by something called as the Gram matrix $G^l \in \mathbb{R}^{N_l \times N_l}$, where $G_{ij}^l$ is the inner product between the feature maps $i$ and $j$ in layer $l$.</p>
+
+\[G_{ij}^l = \sum_k F_{ik}^l F_{jk}^l\]
+
+<p>If $\vec{a}$ and $\vec{x}$ are the style image and the hybrid image respectively, then just like the content loss, we want the gram matrix of the style image $A^l$ to be as close as possible to the gram matrix of the hybrid image $G^l$. The style loss $E_l$ for every layer $l$ of the network is then defined as the squared loss between the two gram matrices. The total style loss is the weighted sum of the individual layer losses $E_l$ where $w_l$ are the weighing factors described separately in the paper.</p>
+
+\[L_{style} (\vec{a}, \vec{x}) = \sum_{l=0}^{L} w_l E_l
+\hspace{2cm}
+E_l = \frac{1}{4 N_l^2 M_l^2} \sum_{i,j} (G_{ij}^l - A_{ij}^l)^2\]
+
+<p>The total loss $L_{total}$ is the weighted sum of the content and style losses with weights $\alpha$ and $\beta$ respectively.</p>
+
+\[L_{total} (\vec{p}, \vec{a}, \vec{x}) = \alpha L_{content} (\vec{p}, \vec{x}) + \beta L_{style} (\vec{a}, \vec{x})\]
+
+  </div><div class="post-comments" itemprop="comment"><hr />
+<h1>Comments</h1>
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+	    var disqus_shortname = 'nikhilweee';
+	    // ensure that pages with query string get the same discussion
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];	    
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div></div></article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+      
+      &copy; Nikhil Verma 2021 - Subscribe via <a href="https://nikhilweee.github.io/feed.xml">RSS</a>
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

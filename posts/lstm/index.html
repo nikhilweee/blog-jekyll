@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  
+  
+  <title>LSTMs - Nikhil Verma</title>
+  <meta name="description" content="This post explains LSTMs used as a part of assignment 3 of Andrej Karpathy’s CS231N course at Stanford. I would highly recommend reading Chris Olah’s blog post about LSTMs before continuing.">
+  
+
+  <link rel="icon" type="image/svg" href="/static/favicon.png">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://nikhilweee.github.io/posts/lstm/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Nikhil Verma" href="https://nikhilweee.github.io/feed.xml">
+
+  <!-- MathJax -->
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      CommonHTML: { linebreaks: { automatic: true } },
+    });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_CHTML"></script>
+  
+
+  
+  <meta property="og:title" content="LSTMs - Nikhil Verma">
+  <meta property="og:site_name" content="Nikhil Verma">
+  <meta property="og:url" content="https://nikhilweee.github.io/posts/lstm/">
+  <meta property="og:description" content="This post explains LSTMs used as a part of assignment 3 of Andrej Karpathy’s CS231N course at Stanford. I would highly recommend reading Chris Olah’s blog post about LSTMs before continuing.">
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="nikhilweee">
+  <meta name="twitter:title" content="LSTMs - Nikhil Verma">
+  <meta name="twitter:description" content="This post explains LSTMs used as a part of assignment 3 of Andrej Karpathy’s CS231N course at Stanford. I would highly recommend reading Chris Olah’s blog post about LSTMs before continuing.">
+  
+    <meta name="twitter:creator" content="nikhilweee">
+  
+  
+
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Bitter:400,400i,700&amp;display=swap" rel="stylesheet">
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-72048305-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://nikhilweee.github.io">Nikhil Verma</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">LSTMs</h1>
+    <h2 class="post-subtitle" itemprop="abstract description">the name says it all!</h2>
+    <p class="post-meta">
+      <time datetime="2016-11-09T00:00:00+00:00" itemprop="datePublished">Nov 9, 2016</time> • <a href="https://nikhilweee.github.iocategory/explanations">Explanations</a></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>This post explains LSTMs used as a part of <a href="http://cs231n.github.io/assignment3/">assignment 3</a> of Andrej Karpathy’s CS231N course at Stanford. I would highly recommend reading Chris Olah’s <a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/">blog post</a> about LSTMs before continuing.</p>
+</blockquote>
+
+<p>Traditional Neural Networks have successfully been used for various purposes that I do not need to reiterate upon. But in applications involving sequential data such as natural language processing, it so happens that the current output (say, the next word in a predicted sentence) very much depends on several previous outputs (the sequence of words predicted so far). In such cases, the network needs to somehow keep a <em>memory</em> so that it could use them for prediction at each step.</p>
+
+<p>RNNs help solve this problem. These are just like the regular neuron, except that it has loops, which allows it to have memory. Now RNNs are good when it comes to storing information in the short term, but due to something called the <a href="http://www.jmlr.org/proceedings/papers/v28/pascanu13.pdf">vanishing gradient problem</a>, they cannot store information for long (like learning relation between words that are a several steps apart).</p>
+
+<h3 id="enter-lstms">Enter LSTMs</h3>
+<p>This is where LSTMs come into the picture. Short for <em>Long Short-Term Memory</em>, these cells have memory along with mechanisms to control information flow so that relevant information is persisted for long.</p>
+
+<p>The core idea behind LSTMs is something called a memory cell, \(c_t\) which can maintain its state over time.</p>
+
+<p>Here’s a simple overview of the LSTM Cell with some of the important parameters.</p>
+
+<p><img src="/img/lstm/intro.svg" alt="intro" /></p>
+
+<p>The LSTM Cell accepts the input vector, \(x_t\), the previous hidden state, \(h_{t-1}\), and the previous cell state, \(c_{t-1}\) shown in green, such that</p>
+
+\[input\ vector, x_t \in \mathbb{R}^D\]
+
+\[hidden\ vector, h_{t-1} \in \mathbb{R}^H\]
+
+\[cell\ state\ vector, c_{t-1} \in \mathbb{R}^H\]
+
+<p>It also maintains the matrices \(W_x\), \(W_b\) and the bias vector \(b\) internally.</p>
+
+\[input\ to\ hidden\ matrix, W_x \in \mathbb{R}^{4H \times D}\]
+
+\[hidden\ to\ hidden\ matrix, W_h \in \mathbb{R}^{4H \times H}\]
+
+\[bias\ vector, b \in \mathbb{R}^{4H}\]
+
+<p>At each timestep, we first calculate something called the activation vector, \(a\), which is simply</p>
+
+\[a = W_x x_t + W_h h_{t-1} + b\]
+
+<p>Going by the rules of matrix multiplication, \(a \in \mathbb{R}^{4H}\). We then essentially split this activation vector equally in to 4 vectors, which we name \(a_i, a_f, a_o\) and \(a_g\)</p>
+
+\[\left[ \begin{array}{c} a_i \\ a_f \\ a_o \\ a_g \end{array} \right]
+=
+\left[ \begin{array}{c} a_{1:N} \\ a_{N:2N} \\ a_{2N:3N} \\ a_{3N:4N} \end{array} \right]\]
+
+<p>These vectors are then passed through \(\mathrm{sigmoid}\) and \(\tanh\) functions, to finally get the well known \(i, f, o\) and \(g\) gates.</p>
+
+\[\left[ \begin{array}{c} i \\ f \\ o \\ g \end{array} \right]
+=
+\left[ \begin{array}{c} \sigma(a_i) \\ \sigma(a_f) \\ \sigma(a_o) \\ \tanh(a_g) \end{array} \right]\]
+
+<p>To summarize until now, here is a computational graph.
+<img src="/img/lstm/gates.svg" alt="gates" /></p>
+
+<p>Once we get the gate vectors, the cell state, \(c_t\) and the next cell state, \(h_t\) is given by</p>
+
+\[c_t = f \odot c_{t-1} + i \odot g\]
+
+\[h_t = o \odot \tanh(c_t)\]
+
+<p>where \(\odot\) stands for elementwise multiplication.
+This can also be visualised by the following graph.
+<img src="/img/lstm/output.svg" alt="output" /></p>
+
+<p>This is how both of them fit together.
+<img src="/img/lstm/merged.svg" alt="merged" /></p>
+
+<p>Stay tuned for part 2 where I explain the backward pass of the cell.</p>
+
+  </div><div class="post-comments" itemprop="comment"><hr />
+<h1>Comments</h1>
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+	    var disqus_shortname = 'nikhilweee';
+	    // ensure that pages with query string get the same discussion
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];	    
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div></div></article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+      
+      &copy; Nikhil Verma 2021 - Subscribe via <a href="https://nikhilweee.github.io/feed.xml">RSS</a>
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

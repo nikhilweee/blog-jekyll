@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  
+  
+  <title>Building your first RNN - Nikhil Verma</title>
+  <meta name="description" content="If you have some understanding of recurrent networks, want to get your hands dirty, but haven’t really tried to do that on your own, then you are certainly at the right place. This tutorial is a practical guide about getting started with recurrent networks using PyTorch. We’ll solve a simple cipher using PyTorch 0.4.0, which is the latest version at the time of this writing. You are only expected to have some understanding of recurrent networks. If you don’t, here’s the link to the golden resource - Chris Olah’s post on Understanding LSTMs. We’ll use a single layer LSTM for the task of learning ciphers, which should be a fairly easy exercise. The Problem Before starting off, let’s first define the problem in a concrete manner. We wish to decrypt secret messages using an LSTM. For the sake of simplicity, let’s assume that our messages are encrypted using the Caesar Cipher, which is a really simple substitution cipher. Caesar cipher works by replacing each letter of the original message by another letter from a given alphabet to form an encrypted message. In this tutorial we’ll use a right shift of 13, which basically means that the encrypted version of each letter in the alphabet is the one which occurs 13 places to the right of it. So A(1) becomes N(1+13), B(2) becomes O(2+13), and so on. Our alphabet will only include uppercase English characters A through Z, and an extra letter, -, to represent any foreign character. With all of these in mind, here’s the substitution table for your reference. A B C D E F G H I J K L M N O P Q R S T U V W X Y Z - N O P Q R S T U V W X Y Z - A B C D E F G H I J K L M The first row shows all the letters of the alphabet in order. To encrypt a message, each letter of the first row can be substituted by the corresponding letter from the second row. As an example, the message THIS-IS-A-SECRET becomes FUVEMVEMNMERPDRF when encrypted. 1Aside : but why use neural networks for this problem? The Dataset Like any other neural network, we’ll need data. Loads of it. We’ll use a parallel dataset of the following form where each tuple represents a pair of (encrypted, decrypted) messages. (&#39;FUVEMVEMNMERPDRF&#39;, &#39;THIS-IS-A-SECRET&#39;) (&#39;FUVEMVEMN-AFURDMERPDRF&#39;, &#39;THIS-IS-ANOTHER-SECRET&#39;) ... Having defined our problem, we’ll feed the encrypted message as the input to our LSTM and expect it to emit the original message as the target. Sounds simple right? It does, except that we have a little problem. Neural networks are essentially number crunching machines, and have no idea how to hande our encrypted messages. We’ll somehow have to convert our strings into numbers for the network to make sense of them. Word Embeddings The way this is usually done is to use something called as word embeddings. The idea is to represent every character in the alphabet with its own \(D\) dimensional embedding vector, where \(D\) is usually called the embedding dimension. So let’s say if we decide to use an embedding_dim of 5. This basically means that each of the 27 characters of the alphabet, ABCDEFGHIJKLMNOPQRSTUVWXYZ-, will have their own embedding vector of length 5. Often, these vectors are stored together as \(V \times D\) dimensional embedding matrix, \(E\), where each row \(E[i]\) of the matrix represents the embedding vector for the character with index \(i\) in the alphabet. Here \(V\) is the length of the vocabulary (alphabet), which is 27 in our case. As an example, the whole embedding matrix \(E\) might look something like the one shown below. [[-1.4107, -0.8142, 0.8486, 2.8257, -0.7130], [ 0.5434, 3.8553, 2.9420, -2.8364, -4.0077], [ 1.6781, -0.2496, 2.5569, -0.2952, -2.2911], ... [ 2.7912, 1.3261, 1.7603, 3.3852, -2.1643]] \(E[0]\) then represents the word vector for A, which is [-1.4107, -0.8142, 0.8486, 2.8257, -0.7130]. 2Aside : but I read something different! P.S. I’ll be using alphabet and vocabulary interchangably throughout this tutorial. Similarly, word embeddings, word vectors, character embeddings, or simply embeddings will mean the same thing. The Cipher Now that we have enough background, let’s get our hands dirty and finally jump in to writing some code. The first thing we have to do is to create a dataset. And to do that, we first need to implement the cipher. Although we implement it as a simple function, it might be a good idea to implement the cipher as a class in the future. We create the encode function which uses the parameters vocab and key to encrypt each character. Since we’re working with letters, vocab in this context simply means the alphabet. The encryption algorithm should be fairly easy to understand. Notice how we use the modulo operator in line 8 to prevent the indexes from overflowing. To check the implementation, you can check for some random inputs. For example, ensure that encrypt(&#39;ABCDEFGHIJKLMNOPQRSTUVWXYZ-&#39;) returns NOPQRSTUVWXYZ-ABCDEFGHIJKLM. The Dataset (Finally!) Okay, let’s finally build the dataset. For the sake of simplicity, we’ll use a random sequence of characters as a message and encrypt it to create the input to the LSTM. To implement this, we create a simple function called dataset which takes in the parameter num_examples and returns a list of those many (input, output) pairs. There’s something strange about this function though. Have a look at line 24. We’re not returning a pair of strings. We’re first converting strings into a list of indices which represent their position in the alphabet. If you recall the section on word embeddings, these indices will later be used to extract the corresponding embedding vectors from the embedding matrix \(E\). We’re then converting these lists into a pair of tensors, which is what the function returns. Tensors? This brings us to the most fundamental data type in PyTorch - the Tensor. For users familiar with NumPy, a tensor is the PyTorch analogue of ndarray. If you’re not, a tensor is essentially a multidimensional matrix which supports optimized implementations of common operations. Have a look at the Tensor Tutorial on the PyTorch website for more information. The takeaway here is that we’ll use tensors from now on as our go to data structure to handle numbers. Creating a tensor is really easy. Though there are a lot of ways to do so, we’ll just wrap our list of integers with torch.tensor() - which turns out the easiest amongst all. You can satisfy yourself by having a look at what this function does. A quick call to dataset(1) should return something similar to the following. You can also verify that the numbers in the second tensor are right shifted by 13 from the numbers in the first tensor. 20 = (7 + 13) % 27, 3 = (17 + 13) % 27 and so on. [[tensor([ 20, 3, 21, 0, 14, 4, 2, 4, 13, 12, 8, 23, 12, 10, 25, 17, 19, 1, 2, 22, 12, 15, 16, 3, 13, 10, 20, 23, 25, 15, 19, 4]), tensor([ 7, 17, 8, 14, 1, 18, 16, 18, 0, 26, 22, 10, 26, 24, 12, 4, 6, 15, 16, 9, 26, 2, 3, 17, 0, 24, 7, 10, 12, 2, 6, 18])]] With this we’re done with the basics. Let’s start building the network. It’s a good idea to first have a general overview of what we aim to achieve. One might think of something along the following lines. On a very high level, the first step in a general workflow will be to feed in inputs to an LSTM to get the predictions. Next, we pass on the predictions along with the targets to the loss function to calculate the loss. Finally, we backpropagate through the loss to update our model’s parameters. Hmm, that sounds easy, right? But how do you actually make it work? Let’s dissect this step by step. We’ll first identify the components needed to build our model, and finally put them to gether as a single piece to make it work. The PyTorch paradigm … before diving in, it’s important to know a couple of things. PyTorch provides implementations for most of the commonly used entities from layers such as LSTMs, CNNs and GRUs to optimizers like SGD, Adam, and what not (Isn’t that the whole point of using PyTorch in the first place?!). The general paradigm to use any of these entities is to first create an instance of torch.nn.entity with some required parameters. As an example, here’s how we instantiate an lstm. # Step 1 lstm = torch.nn.LSTM(input_size=5, hidden_size=10, batch_first=True) Next, we call this object with the inputs as parameters when we actually want to run an LSTM over some inputs. This is shown in the third line below. lstm_in = torch.rand(40, 20, 5) hidden_in = (torch.zeros(1, 40, 10), torch.zeros(1, 40, 10)) # Step 2 lstm_out, lstm_hidden = lstm(lstm_in, hidden_in) This two-stepped process will be seen all through this tutorial and elsewhere. Below, we’ll go through step 1 of all the modules. We’ll connect the dots at a later stage. Getting back to code now, let’s dissect our ‘high level’ understanding again. 1. Prepare inputs … feed in inputs to an LSTM to get the predictions … To feed in inputs, well, we first need to prepare the inputs. Remember the embedding matrix \(E\) we described earlier? we’ll use \(E\) to convert the pair of indices we get from dataset() into the corresponding embedding vectors. Following the general paradigm, we create an instance of torch.nn.Embedding. The docs list two required parameters - num_embeddings: the size of the dictionary of embeddings and embedding_dim: the size of each embedding vector. In our case, these are vocab_size \(V\) and embedding_dim \(D\) respectively. # Step 1 embed = torch.nn.Embedding(vocab_size, embedding_dim) Later on, we could easily convert any input tensor ecrypted containing indices of the encrypted input (like the one we get from dataset()) into the corresponding embedding vectors by simply calling embed(encrypted). As an example, the word SECRET becomes ERPDRF after encryption, and the letters of ERPDRF correspond to the indices [4, 17, 15, 3, 17, 5]. If encrypted is torch.tensor([4, 17, 15, 3, 17, 5]), then embed(encrypted) would return something similar to the following. # Step 2 &amp;gt;&amp;gt;&amp;gt; encrypted = torch.tensor([4, 17, 15, 3, 17, 5]) &amp;gt;&amp;gt;&amp;gt; embedded = embed(encrypted) &amp;gt;&amp;gt;&amp;gt; print(embedded) tensor([[ 0.2666, 2.1146, 1.3225, 1.3261, -2.6993], [-1.5723, -2.1346, 2.6892, 2.7130, 1.7636], [-1.9679, -0.8601, 3.0942, -0.8810, 0.6042], [ 3.6624, -0.3556, -1.7088, 1.4370, -3.2903], [-1.5723, -2.1346, 2.6892, 2.7130, 1.7636], [-1.8041, -1.8606, 2.5406, -3.5191, 1.7761]]) 2. Build an LSTM … feed in inputs to an LSTM to get the predictions … Next, we need to create an LSTM. We do this in a similar fashion by creating an instance of torch.nn.LSTM. This time, the docs list the required parameters as input_size: the number of expected features in the input and hidden_size: the number of features in the hidden state. Since LSTMs typically operate on variable length sequences, the input_size refers to the size of each entity in the input sequence. In our case, this means the embedding_dim. This might sound counter-intuitive, but if you think for a while, it makes sense. hidden_size, as the name suggests, is the size of the hidden state of the RNN. In case of an LSTM, this refers to the size of both, the cell_state and the hidden_state. Note that the hidden size is a hyperparameter and can be different from the input size. colah’s blog post doesn’t explicitly mention this, but the equations on the PyTorch docs on LSTMCell should make it clear. To summarize the discussion above, here is how we instantiate the LSTM. # Step 1 lstm = torch.nn.LSTM(embedding_dim, hidden_dim) A note on dimensionality During step 2 of the general paradigm, torch.nn.LSTM expects the input to be a 3D input tensor of size (seq_len, batch, embedding_dim), and returns an output tensor of the size (seq_len, batch, hidden_dim). We’ll only feed in one input at a time, so batch is always 1. As an example, consider the input-output pair (&#39;ERPDRF&#39;, &#39;SECRET&#39;). Using an embedding_dim of 5, the 6 letter long input ERPDRF is transformed into an input tensor of size 6 x 1 x 5. If hidden_dim is 10, the input is processed by the LSTM into an output tensor of size 6 x 1 x 10. Generally, the LSTM is expected to run over the input sequence character by character to emit a probability distribution over all the letters in the vocabulary. So for every input character, we expect a \(V\) dimensional output tensor where \(V\) is 27 (the size of the vocabulary). The most probable letter is then chosen as the output at every timestep. If you have a look at the output of the LSTM on the example pair (&#39;ERPDRF&#39;, &#39;SECRET&#39;) above, you can instantly make out that the dimensions are not right. The output dimension is 6 x 1 x 10 - which means that for every character, the output is a \(D\) (10) dimensional tensor instead of the expected 27. So how do we solve this? 3. Transform the outputs … feed in inputs to an LSTM to get the predictions … The general workaround is to transform the \(D\) dimensional tensor into a \(V\) dimensional tensor through what is called an affine (or linear) transform. Sparing the definitions aside, the idea is to use matrix multiplication to get the desired dimensions. Let’s say the LSTM produces an output tensor \(O\) of size seq_len x batch x hidden_dim. Recall that we only feed in one example at a time, so batch is always 1. This essentially gives us an output tensor \(O\) of size seq_len x hidden_dim. Now if we multiply this output tensor with another tensor \(W\) of size hidden_dim x embedding_dim, the resultant tensor \(R = O \times W\) has a size of seq_len x embedding_dim. Isn’t this exactly what we wanted? To implement the linear layer, … you guessed it! We create an instance of torch.nn.Linear. This time, the docs list the required parameters as in_features: size of each input sample and out_features: size of each output sample. Note that this only transforms the last dimension of the input tensor. So for example, if we pass in an input tensor of size (d1, d2, d3, ..., dn, in_features), the output tensor will have the same size for all but the last dimension, and will be a tensor of size (d1, d2, d3, ..., dn, out_features). With this knowledge in mind, it’s easy to figure out that in_features is hidden_dim, and out_features is vocab_size. The linear layer is initialised below. # Step 1 linear = torch.nn.Linear(hidden_dim, vocab_size) With this we’re preddy much done with the essentials. Time for some learning! 4. Calculate the loss Next, we pass on the predictions along with the targets to the loss function to calculate the loss. If you think about it, the LSTM is essentially performing multi-class classification at every time step by choosing one letter out of the 27 characters of the vocabulary. A common choice in such a case is to use the cross entropy loss function torch.nn.CrossEntropyLoss. We initialize this in a similar manner. loss_fn = torch.nn.CrossEntropyLoss() You can read more about cross entropy loss in the excellent blog post by Rob DiPietro. 5. Optimize Finally, we backpropagate through the loss to update our model’s parameters. A popular choice is the Adam optimizer. Here’s how we initialize it. Notice that almost all torch layers have this convenient way of getting all their parameters by calling module.parameters(). optimizer = torch.optim.Adam(list(embed.parameters()) + list(lstm.parameters()) + list(linear.parameters()), lr=0.001) To summarize, here’s how we initialize the required layers. Let’s wrap this up and consolidate the network. Have a look at the training script below. Most of the code should make sense on its own. There are a few helper operations like torch.squeeze and torch.transpose whose function can be inferred from the comments. You can also refer to the docs for more information. After every training iteration, we need to evaluate the network. Have a look at the validation script below. After calculating the scores as in the training script, we calculate a softmax over the scores to get a probability distribution in line 9. We then aggregate the characters with the maximum probability in line 11. We then compare the predicted output batch_out with the target output original in line 15. At the end of the epoch, we calculate the accuracy in line 18. Notice that the predicted outputs are still in the form of indices. Converting them back to characters is left as an exercise. But before you go, congratulations! You’ve built your first RNN in PyTorch! The complete code for this post is available as a GitHub gist. You can test the network by simply running the training script. Thanks for sticking around. But why Neural Networks? You might be wondering why do we use neural networks in the first place. In our use case, it sure makes more sense to decrypt the messages by conventional programming because we know the encryption function beforehand. This might not be the case everytime. You might have a situation where you have enough data but still have no idea about the encryption function. Neural networks fit quite well in such a situation. Anyways, keep in mind that this is still a toy problem. One motivation to choose this problem is the ease of generating loads of training examples on the fly. So we don’t really need to procure any dataset. Yay! &amp;#8617; I think I read something different! Strictly speaking, what I just described here is called a character embedding, beacause we have a vector for each character in the alphabet. In case we had a vector for each word in a vocabulary, we would be using word embeddings instead. Notice the analogy here. An alphabet is the set of all the letters in a language. Similarly, a vocabulary is the collection of all the words in a language. &amp;#8617;">
+  
+
+  <link rel="icon" type="image/svg" href="/static/favicon.png">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://nikhilweee.github.io/posts/first-rnn-pytorch/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Nikhil Verma" href="https://nikhilweee.github.io/feed.xml">
+
+  <!-- MathJax -->
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      CommonHTML: { linebreaks: { automatic: true } },
+    });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_CHTML"></script>
+  
+
+  
+  <meta property="og:title" content="Building your first RNN - Nikhil Verma">
+  <meta property="og:site_name" content="Nikhil Verma">
+  <meta property="og:url" content="https://nikhilweee.github.io/posts/first-rnn-pytorch/">
+  <meta property="og:description" content="If you have some understanding of recurrent networks, want to get your hands dirty, but haven’t really tried to do that on your own, then you are certainly at the right place. This tutorial is a practical guide about getting started with recurrent networks using PyTorch. We’ll solve a simple cipher using PyTorch 0.4.0, which is the latest version at the time of this writing. You are only expected to have some understanding of recurrent networks. If you don’t, here’s the link to the golden resource - Chris Olah’s post on Understanding LSTMs. We’ll use a single layer LSTM for the task of learning ciphers, which should be a fairly easy exercise. The Problem Before starting off, let’s first define the problem in a concrete manner. We wish to decrypt secret messages using an LSTM. For the sake of simplicity, let’s assume that our messages are encrypted using the Caesar Cipher, which is a really simple substitution cipher. Caesar cipher works by replacing each letter of the original message by another letter from a given alphabet to form an encrypted message. In this tutorial we’ll use a right shift of 13, which basically means that the encrypted version of each letter in the alphabet is the one which occurs 13 places to the right of it. So A(1) becomes N(1+13), B(2) becomes O(2+13), and so on. Our alphabet will only include uppercase English characters A through Z, and an extra letter, -, to represent any foreign character. With all of these in mind, here’s the substitution table for your reference. A B C D E F G H I J K L M N O P Q R S T U V W X Y Z - N O P Q R S T U V W X Y Z - A B C D E F G H I J K L M The first row shows all the letters of the alphabet in order. To encrypt a message, each letter of the first row can be substituted by the corresponding letter from the second row. As an example, the message THIS-IS-A-SECRET becomes FUVEMVEMNMERPDRF when encrypted. 1Aside : but why use neural networks for this problem? The Dataset Like any other neural network, we’ll need data. Loads of it. We’ll use a parallel dataset of the following form where each tuple represents a pair of (encrypted, decrypted) messages. (&#39;FUVEMVEMNMERPDRF&#39;, &#39;THIS-IS-A-SECRET&#39;) (&#39;FUVEMVEMN-AFURDMERPDRF&#39;, &#39;THIS-IS-ANOTHER-SECRET&#39;) ... Having defined our problem, we’ll feed the encrypted message as the input to our LSTM and expect it to emit the original message as the target. Sounds simple right? It does, except that we have a little problem. Neural networks are essentially number crunching machines, and have no idea how to hande our encrypted messages. We’ll somehow have to convert our strings into numbers for the network to make sense of them. Word Embeddings The way this is usually done is to use something called as word embeddings. The idea is to represent every character in the alphabet with its own \(D\) dimensional embedding vector, where \(D\) is usually called the embedding dimension. So let’s say if we decide to use an embedding_dim of 5. This basically means that each of the 27 characters of the alphabet, ABCDEFGHIJKLMNOPQRSTUVWXYZ-, will have their own embedding vector of length 5. Often, these vectors are stored together as \(V \times D\) dimensional embedding matrix, \(E\), where each row \(E[i]\) of the matrix represents the embedding vector for the character with index \(i\) in the alphabet. Here \(V\) is the length of the vocabulary (alphabet), which is 27 in our case. As an example, the whole embedding matrix \(E\) might look something like the one shown below. [[-1.4107, -0.8142, 0.8486, 2.8257, -0.7130], [ 0.5434, 3.8553, 2.9420, -2.8364, -4.0077], [ 1.6781, -0.2496, 2.5569, -0.2952, -2.2911], ... [ 2.7912, 1.3261, 1.7603, 3.3852, -2.1643]] \(E[0]\) then represents the word vector for A, which is [-1.4107, -0.8142, 0.8486, 2.8257, -0.7130]. 2Aside : but I read something different! P.S. I’ll be using alphabet and vocabulary interchangably throughout this tutorial. Similarly, word embeddings, word vectors, character embeddings, or simply embeddings will mean the same thing. The Cipher Now that we have enough background, let’s get our hands dirty and finally jump in to writing some code. The first thing we have to do is to create a dataset. And to do that, we first need to implement the cipher. Although we implement it as a simple function, it might be a good idea to implement the cipher as a class in the future. We create the encode function which uses the parameters vocab and key to encrypt each character. Since we’re working with letters, vocab in this context simply means the alphabet. The encryption algorithm should be fairly easy to understand. Notice how we use the modulo operator in line 8 to prevent the indexes from overflowing. To check the implementation, you can check for some random inputs. For example, ensure that encrypt(&#39;ABCDEFGHIJKLMNOPQRSTUVWXYZ-&#39;) returns NOPQRSTUVWXYZ-ABCDEFGHIJKLM. The Dataset (Finally!) Okay, let’s finally build the dataset. For the sake of simplicity, we’ll use a random sequence of characters as a message and encrypt it to create the input to the LSTM. To implement this, we create a simple function called dataset which takes in the parameter num_examples and returns a list of those many (input, output) pairs. There’s something strange about this function though. Have a look at line 24. We’re not returning a pair of strings. We’re first converting strings into a list of indices which represent their position in the alphabet. If you recall the section on word embeddings, these indices will later be used to extract the corresponding embedding vectors from the embedding matrix \(E\). We’re then converting these lists into a pair of tensors, which is what the function returns. Tensors? This brings us to the most fundamental data type in PyTorch - the Tensor. For users familiar with NumPy, a tensor is the PyTorch analogue of ndarray. If you’re not, a tensor is essentially a multidimensional matrix which supports optimized implementations of common operations. Have a look at the Tensor Tutorial on the PyTorch website for more information. The takeaway here is that we’ll use tensors from now on as our go to data structure to handle numbers. Creating a tensor is really easy. Though there are a lot of ways to do so, we’ll just wrap our list of integers with torch.tensor() - which turns out the easiest amongst all. You can satisfy yourself by having a look at what this function does. A quick call to dataset(1) should return something similar to the following. You can also verify that the numbers in the second tensor are right shifted by 13 from the numbers in the first tensor. 20 = (7 + 13) % 27, 3 = (17 + 13) % 27 and so on. [[tensor([ 20, 3, 21, 0, 14, 4, 2, 4, 13, 12, 8, 23, 12, 10, 25, 17, 19, 1, 2, 22, 12, 15, 16, 3, 13, 10, 20, 23, 25, 15, 19, 4]), tensor([ 7, 17, 8, 14, 1, 18, 16, 18, 0, 26, 22, 10, 26, 24, 12, 4, 6, 15, 16, 9, 26, 2, 3, 17, 0, 24, 7, 10, 12, 2, 6, 18])]] With this we’re done with the basics. Let’s start building the network. It’s a good idea to first have a general overview of what we aim to achieve. One might think of something along the following lines. On a very high level, the first step in a general workflow will be to feed in inputs to an LSTM to get the predictions. Next, we pass on the predictions along with the targets to the loss function to calculate the loss. Finally, we backpropagate through the loss to update our model’s parameters. Hmm, that sounds easy, right? But how do you actually make it work? Let’s dissect this step by step. We’ll first identify the components needed to build our model, and finally put them to gether as a single piece to make it work. The PyTorch paradigm … before diving in, it’s important to know a couple of things. PyTorch provides implementations for most of the commonly used entities from layers such as LSTMs, CNNs and GRUs to optimizers like SGD, Adam, and what not (Isn’t that the whole point of using PyTorch in the first place?!). The general paradigm to use any of these entities is to first create an instance of torch.nn.entity with some required parameters. As an example, here’s how we instantiate an lstm. # Step 1 lstm = torch.nn.LSTM(input_size=5, hidden_size=10, batch_first=True) Next, we call this object with the inputs as parameters when we actually want to run an LSTM over some inputs. This is shown in the third line below. lstm_in = torch.rand(40, 20, 5) hidden_in = (torch.zeros(1, 40, 10), torch.zeros(1, 40, 10)) # Step 2 lstm_out, lstm_hidden = lstm(lstm_in, hidden_in) This two-stepped process will be seen all through this tutorial and elsewhere. Below, we’ll go through step 1 of all the modules. We’ll connect the dots at a later stage. Getting back to code now, let’s dissect our ‘high level’ understanding again. 1. Prepare inputs … feed in inputs to an LSTM to get the predictions … To feed in inputs, well, we first need to prepare the inputs. Remember the embedding matrix \(E\) we described earlier? we’ll use \(E\) to convert the pair of indices we get from dataset() into the corresponding embedding vectors. Following the general paradigm, we create an instance of torch.nn.Embedding. The docs list two required parameters - num_embeddings: the size of the dictionary of embeddings and embedding_dim: the size of each embedding vector. In our case, these are vocab_size \(V\) and embedding_dim \(D\) respectively. # Step 1 embed = torch.nn.Embedding(vocab_size, embedding_dim) Later on, we could easily convert any input tensor ecrypted containing indices of the encrypted input (like the one we get from dataset()) into the corresponding embedding vectors by simply calling embed(encrypted). As an example, the word SECRET becomes ERPDRF after encryption, and the letters of ERPDRF correspond to the indices [4, 17, 15, 3, 17, 5]. If encrypted is torch.tensor([4, 17, 15, 3, 17, 5]), then embed(encrypted) would return something similar to the following. # Step 2 &amp;gt;&amp;gt;&amp;gt; encrypted = torch.tensor([4, 17, 15, 3, 17, 5]) &amp;gt;&amp;gt;&amp;gt; embedded = embed(encrypted) &amp;gt;&amp;gt;&amp;gt; print(embedded) tensor([[ 0.2666, 2.1146, 1.3225, 1.3261, -2.6993], [-1.5723, -2.1346, 2.6892, 2.7130, 1.7636], [-1.9679, -0.8601, 3.0942, -0.8810, 0.6042], [ 3.6624, -0.3556, -1.7088, 1.4370, -3.2903], [-1.5723, -2.1346, 2.6892, 2.7130, 1.7636], [-1.8041, -1.8606, 2.5406, -3.5191, 1.7761]]) 2. Build an LSTM … feed in inputs to an LSTM to get the predictions … Next, we need to create an LSTM. We do this in a similar fashion by creating an instance of torch.nn.LSTM. This time, the docs list the required parameters as input_size: the number of expected features in the input and hidden_size: the number of features in the hidden state. Since LSTMs typically operate on variable length sequences, the input_size refers to the size of each entity in the input sequence. In our case, this means the embedding_dim. This might sound counter-intuitive, but if you think for a while, it makes sense. hidden_size, as the name suggests, is the size of the hidden state of the RNN. In case of an LSTM, this refers to the size of both, the cell_state and the hidden_state. Note that the hidden size is a hyperparameter and can be different from the input size. colah’s blog post doesn’t explicitly mention this, but the equations on the PyTorch docs on LSTMCell should make it clear. To summarize the discussion above, here is how we instantiate the LSTM. # Step 1 lstm = torch.nn.LSTM(embedding_dim, hidden_dim) A note on dimensionality During step 2 of the general paradigm, torch.nn.LSTM expects the input to be a 3D input tensor of size (seq_len, batch, embedding_dim), and returns an output tensor of the size (seq_len, batch, hidden_dim). We’ll only feed in one input at a time, so batch is always 1. As an example, consider the input-output pair (&#39;ERPDRF&#39;, &#39;SECRET&#39;). Using an embedding_dim of 5, the 6 letter long input ERPDRF is transformed into an input tensor of size 6 x 1 x 5. If hidden_dim is 10, the input is processed by the LSTM into an output tensor of size 6 x 1 x 10. Generally, the LSTM is expected to run over the input sequence character by character to emit a probability distribution over all the letters in the vocabulary. So for every input character, we expect a \(V\) dimensional output tensor where \(V\) is 27 (the size of the vocabulary). The most probable letter is then chosen as the output at every timestep. If you have a look at the output of the LSTM on the example pair (&#39;ERPDRF&#39;, &#39;SECRET&#39;) above, you can instantly make out that the dimensions are not right. The output dimension is 6 x 1 x 10 - which means that for every character, the output is a \(D\) (10) dimensional tensor instead of the expected 27. So how do we solve this? 3. Transform the outputs … feed in inputs to an LSTM to get the predictions … The general workaround is to transform the \(D\) dimensional tensor into a \(V\) dimensional tensor through what is called an affine (or linear) transform. Sparing the definitions aside, the idea is to use matrix multiplication to get the desired dimensions. Let’s say the LSTM produces an output tensor \(O\) of size seq_len x batch x hidden_dim. Recall that we only feed in one example at a time, so batch is always 1. This essentially gives us an output tensor \(O\) of size seq_len x hidden_dim. Now if we multiply this output tensor with another tensor \(W\) of size hidden_dim x embedding_dim, the resultant tensor \(R = O \times W\) has a size of seq_len x embedding_dim. Isn’t this exactly what we wanted? To implement the linear layer, … you guessed it! We create an instance of torch.nn.Linear. This time, the docs list the required parameters as in_features: size of each input sample and out_features: size of each output sample. Note that this only transforms the last dimension of the input tensor. So for example, if we pass in an input tensor of size (d1, d2, d3, ..., dn, in_features), the output tensor will have the same size for all but the last dimension, and will be a tensor of size (d1, d2, d3, ..., dn, out_features). With this knowledge in mind, it’s easy to figure out that in_features is hidden_dim, and out_features is vocab_size. The linear layer is initialised below. # Step 1 linear = torch.nn.Linear(hidden_dim, vocab_size) With this we’re preddy much done with the essentials. Time for some learning! 4. Calculate the loss Next, we pass on the predictions along with the targets to the loss function to calculate the loss. If you think about it, the LSTM is essentially performing multi-class classification at every time step by choosing one letter out of the 27 characters of the vocabulary. A common choice in such a case is to use the cross entropy loss function torch.nn.CrossEntropyLoss. We initialize this in a similar manner. loss_fn = torch.nn.CrossEntropyLoss() You can read more about cross entropy loss in the excellent blog post by Rob DiPietro. 5. Optimize Finally, we backpropagate through the loss to update our model’s parameters. A popular choice is the Adam optimizer. Here’s how we initialize it. Notice that almost all torch layers have this convenient way of getting all their parameters by calling module.parameters(). optimizer = torch.optim.Adam(list(embed.parameters()) + list(lstm.parameters()) + list(linear.parameters()), lr=0.001) To summarize, here’s how we initialize the required layers. Let’s wrap this up and consolidate the network. Have a look at the training script below. Most of the code should make sense on its own. There are a few helper operations like torch.squeeze and torch.transpose whose function can be inferred from the comments. You can also refer to the docs for more information. After every training iteration, we need to evaluate the network. Have a look at the validation script below. After calculating the scores as in the training script, we calculate a softmax over the scores to get a probability distribution in line 9. We then aggregate the characters with the maximum probability in line 11. We then compare the predicted output batch_out with the target output original in line 15. At the end of the epoch, we calculate the accuracy in line 18. Notice that the predicted outputs are still in the form of indices. Converting them back to characters is left as an exercise. But before you go, congratulations! You’ve built your first RNN in PyTorch! The complete code for this post is available as a GitHub gist. You can test the network by simply running the training script. Thanks for sticking around. But why Neural Networks? You might be wondering why do we use neural networks in the first place. In our use case, it sure makes more sense to decrypt the messages by conventional programming because we know the encryption function beforehand. This might not be the case everytime. You might have a situation where you have enough data but still have no idea about the encryption function. Neural networks fit quite well in such a situation. Anyways, keep in mind that this is still a toy problem. One motivation to choose this problem is the ease of generating loads of training examples on the fly. So we don’t really need to procure any dataset. Yay! &amp;#8617; I think I read something different! Strictly speaking, what I just described here is called a character embedding, beacause we have a vector for each character in the alphabet. In case we had a vector for each word in a vocabulary, we would be using word embeddings instead. Notice the analogy here. An alphabet is the set of all the letters in a language. Similarly, a vocabulary is the collection of all the words in a language. &amp;#8617;">
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="nikhilweee">
+  <meta name="twitter:title" content="Building your first RNN - Nikhil Verma">
+  <meta name="twitter:description" content="If you have some understanding of recurrent networks, want to get your hands dirty, but haven’t really tried to do that on your own, then you are certainly at the right place. This tutorial is a pr...">
+  
+    <meta name="twitter:creator" content="nikhilweee">
+  
+  
+
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Bitter:400,400i,700&amp;display=swap" rel="stylesheet">
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-72048305-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://nikhilweee.github.io">Nikhil Verma</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Building your first RNN</h1>
+    <h2 class="post-subtitle" itemprop="abstract description">with PyTorch 0.4!</h2>
+    <p class="post-meta">
+      <time datetime="2018-05-24T00:00:00+00:00" itemprop="datePublished">May 24, 2018</time> • <a href="https://nikhilweee.github.iocategory/explanations">Explanations</a></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>If you have some understanding of recurrent networks, want to get your hands dirty, but haven’t really tried to do that on your own, then you are certainly at the right place. This tutorial is a practical guide about getting started with recurrent networks using PyTorch. We’ll solve a simple cipher using PyTorch 0.4.0, which is the latest version at the time of this writing.</p>
+
+<p>You are only expected to have some understanding of recurrent networks. If you don’t, here’s the link to the <a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/">golden resource</a> - Chris Olah’s post on Understanding LSTMs. We’ll use a single layer LSTM for the task of learning ciphers, which should be a fairly easy exercise.</p>
+
+<h2 id="the-problem">The Problem</h2>
+
+<p>Before starting off, let’s first define the problem in a concrete manner. We wish to decrypt secret messages using an LSTM. For the sake of simplicity, let’s assume that our messages are encrypted using the <a href="https://en.wikipedia.org/wiki/Caesar_cipher">Caesar Cipher</a>, which is a really simple substitution cipher.</p>
+
+<p>Caesar cipher works by replacing each letter of the original message by another letter from a given alphabet to form an encrypted message. In this tutorial we’ll use a right shift of 13, which basically means that the encrypted version of each letter in the alphabet is the one which occurs 13 places to the right of it. So <code class="language-plaintext highlighter-rouge">A</code>(1) becomes <code class="language-plaintext highlighter-rouge">N</code>(1+13), <code class="language-plaintext highlighter-rouge">B</code>(2) becomes <code class="language-plaintext highlighter-rouge">O</code>(2+13), and so on. Our alphabet will only include uppercase English characters <code class="language-plaintext highlighter-rouge">A</code> through <code class="language-plaintext highlighter-rouge">Z</code>, and an extra letter, <code class="language-plaintext highlighter-rouge">-</code>, to represent any foreign character.</p>
+
+<p>With all of these in mind, here’s the substitution table for your reference.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A B C D E F G H I J K L M N O P Q R S T U V W X Y Z -
+N O P Q R S T U V W X Y Z - A B C D E F G H I J K L M
+</code></pre></div></div>
+
+<p>The first row shows all the letters of the alphabet in order. To encrypt a message, each letter of the first row can be substituted by the corresponding letter from the second row. As an example, the message <code class="language-plaintext highlighter-rouge">THIS-IS-A-SECRET</code> becomes <code class="language-plaintext highlighter-rouge">FUVEMVEMNMERPDRF</code> when encrypted.</p>
+
+<p><sup id="fnref:why-nn" role="doc-noteref"><a href="#fn:why-nn" class="footnote">1</a></sup>Aside : but <a href="#fn:why-nn">why use neural networks for this problem?</a></p>
+
+<h2 id="the-dataset">The Dataset</h2>
+
+<p>Like any other neural network, we’ll need data. Loads of it. We’ll use a parallel dataset of the following form where each tuple represents a pair of (encrypted, decrypted) messages.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>('FUVEMVEMNMERPDRF', 'THIS-IS-A-SECRET')
+('FUVEMVEMN-AFURDMERPDRF', 'THIS-IS-ANOTHER-SECRET')
+...
+</code></pre></div></div>
+<p>Having defined our problem, we’ll feed the <code class="language-plaintext highlighter-rouge">encrypted</code> message as the input to our LSTM and expect it to emit the original message as the target. Sounds simple right?</p>
+
+<p>It does, except that we have a little problem. Neural networks are essentially number crunching machines, and have no idea how to hande our encrypted messages. We’ll somehow have to convert our strings into numbers for the network to make sense of them.</p>
+
+<h2 id="word-embeddings">Word Embeddings</h2>
+
+<p>The way this is usually done is to use something called as word embeddings. The idea is to represent every character in the alphabet with its own \(D\) dimensional <strong>embedding vector</strong>, where \(D\) is usually called the embedding dimension. So let’s say if we decide to use an <code class="language-plaintext highlighter-rouge">embedding_dim</code> of 5. This basically means that each of the 27 characters of the alphabet, <code class="language-plaintext highlighter-rouge">ABCDEFGHIJKLMNOPQRSTUVWXYZ-</code>, will have their own embedding vector of length 5.</p>
+
+<p>Often, these vectors are stored together as \(V \times D\) dimensional <strong>embedding matrix</strong>, \(E\), where each row \(E[i]\) of the matrix represents the embedding vector for the character with index \(i\) in the alphabet. Here \(V\) is the length of the vocabulary (alphabet), which is 27 in our case. As an example, the whole embedding matrix \(E\) might look something like the one shown below.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[[-1.4107, -0.8142,  0.8486,  2.8257, -0.7130],
+ [ 0.5434,  3.8553,  2.9420, -2.8364, -4.0077], 
+ [ 1.6781, -0.2496,  2.5569, -0.2952, -2.2911],
+ ...
+ [ 2.7912,  1.3261,  1.7603,  3.3852, -2.1643]]
+</code></pre></div></div>
+<p>\(E[0]\) then represents the word vector for <code class="language-plaintext highlighter-rouge">A</code>, which is <code class="language-plaintext highlighter-rouge">[-1.4107, -0.8142,  0.8486,  2.8257, -0.7130]</code>.</p>
+
+<p><sup id="fnref:char-embedding" role="doc-noteref"><a href="#fn:char-embedding" class="footnote">2</a></sup>Aside : but <a href="#fn:char-embedding">I read something different!</a></p>
+
+<p>P.S. I’ll be using alphabet and vocabulary interchangably throughout this tutorial. Similarly, word embeddings, word vectors, character embeddings, or simply embeddings will mean the same thing.</p>
+
+<h2 id="the-cipher">The Cipher</h2>
+
+<p>Now that we have enough background, let’s get our hands dirty and finally jump in to writing some code. The first thing we have to do is to create a dataset. And to do that, we first need to implement the cipher. Although we implement it as a simple function, it might be a good idea to implement the cipher as a class in the future.</p>
+
+<script src="https://gist.github.com/13243631f8ed219167ccd3866ce3204e.js?file=module-cipher.py"> </script>
+
+<p>We create the <code class="language-plaintext highlighter-rouge">encode</code> function which uses the parameters <code class="language-plaintext highlighter-rouge">vocab</code> and <code class="language-plaintext highlighter-rouge">key</code> to encrypt each character. Since we’re working with letters, <code class="language-plaintext highlighter-rouge">vocab</code> in this context simply means the alphabet.  The encryption algorithm should be fairly easy to understand. Notice how we use the modulo operator in line <code class="language-plaintext highlighter-rouge">8</code> to prevent the indexes from overflowing.</p>
+
+<p>To check the implementation, you can check for some random inputs. For example, ensure that <code class="language-plaintext highlighter-rouge">encrypt('ABCDEFGHIJKLMNOPQRSTUVWXYZ-')</code> returns <code class="language-plaintext highlighter-rouge">NOPQRSTUVWXYZ-ABCDEFGHIJKLM</code>.</p>
+
+<h2 id="the-dataset-finally">The Dataset (Finally!)</h2>
+
+<p>Okay, let’s finally build the dataset. For the sake of simplicity, we’ll use a random sequence of characters as a message and encrypt it to create the input to the LSTM. To implement this, we create a simple function called <code class="language-plaintext highlighter-rouge">dataset</code> which takes in the parameter <code class="language-plaintext highlighter-rouge">num_examples</code> and returns a list of those many (input, output) pairs.</p>
+
+<script src="https://gist.github.com/13243631f8ed219167ccd3866ce3204e.js?file=module-batch.py"> </script>
+
+<p>There’s something strange about this function though. Have a look at line 24. We’re not returning a pair of strings. We’re first converting strings into a list of indices which represent their position in the alphabet. If you recall the section on <a href="#word-embeddings">word embeddings</a>, these indices will later be used to extract the corresponding embedding vectors from the embedding matrix \(E\). We’re then converting these lists into a pair of tensors, which is what the function returns.</p>
+
+<h2 id="tensors">Tensors?</h2>
+
+<p>This brings us to the most fundamental data type in PyTorch - the Tensor. For users familiar with NumPy, a tensor is the PyTorch analogue of <code class="language-plaintext highlighter-rouge">ndarray</code>. If you’re not, a tensor is essentially a multidimensional matrix which supports optimized implementations of common operations. Have a look at the <a href="http://pytorch.org/tutorials/beginner/blitz/tensor_tutorial.html">Tensor Tutorial</a> on the PyTorch website for more information. The takeaway here is that we’ll use tensors from now on as our go to data structure to handle numbers. Creating a tensor is really easy. Though there are a lot of ways to do so, we’ll just wrap our list of integers with <code class="language-plaintext highlighter-rouge">torch.tensor()</code> - which turns out the easiest amongst all.</p>
+
+<p>You can satisfy yourself by having a look at what this function does. A quick call to <code class="language-plaintext highlighter-rouge">dataset(1)</code> should return something similar to the following. You can also verify that the numbers in the second tensor are right shifted by 13 from the numbers in the first tensor. <code class="language-plaintext highlighter-rouge">20 = (7 + 13) % 27</code>, <code class="language-plaintext highlighter-rouge">3 = (17 + 13) % 27</code> and so on.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[[</span><span class="n">tensor</span><span class="p">([</span> <span class="mi">20</span><span class="p">,</span>   <span class="mi">3</span><span class="p">,</span>  <span class="mi">21</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>  <span class="mi">14</span><span class="p">,</span>   <span class="mi">4</span><span class="p">,</span>   <span class="mi">2</span><span class="p">,</span>   <span class="mi">4</span><span class="p">,</span>  <span class="mi">13</span><span class="p">,</span>  <span class="mi">12</span><span class="p">,</span>   <span class="mi">8</span><span class="p">,</span>  <span class="mi">23</span><span class="p">,</span>
+         <span class="mi">12</span><span class="p">,</span>  <span class="mi">10</span><span class="p">,</span>  <span class="mi">25</span><span class="p">,</span>  <span class="mi">17</span><span class="p">,</span>  <span class="mi">19</span><span class="p">,</span>   <span class="mi">1</span><span class="p">,</span>   <span class="mi">2</span><span class="p">,</span>  <span class="mi">22</span><span class="p">,</span>  <span class="mi">12</span><span class="p">,</span>  <span class="mi">15</span><span class="p">,</span>  <span class="mi">16</span><span class="p">,</span>   <span class="mi">3</span><span class="p">,</span>
+         <span class="mi">13</span><span class="p">,</span>  <span class="mi">10</span><span class="p">,</span>  <span class="mi">20</span><span class="p">,</span>  <span class="mi">23</span><span class="p">,</span>  <span class="mi">25</span><span class="p">,</span>  <span class="mi">15</span><span class="p">,</span>  <span class="mi">19</span><span class="p">,</span>   <span class="mi">4</span><span class="p">]),</span> 
+  <span class="n">tensor</span><span class="p">([</span>  <span class="mi">7</span><span class="p">,</span>  <span class="mi">17</span><span class="p">,</span>   <span class="mi">8</span><span class="p">,</span>  <span class="mi">14</span><span class="p">,</span>   <span class="mi">1</span><span class="p">,</span>  <span class="mi">18</span><span class="p">,</span>  <span class="mi">16</span><span class="p">,</span>  <span class="mi">18</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>  <span class="mi">26</span><span class="p">,</span>  <span class="mi">22</span><span class="p">,</span>  <span class="mi">10</span><span class="p">,</span>
+         <span class="mi">26</span><span class="p">,</span>  <span class="mi">24</span><span class="p">,</span>  <span class="mi">12</span><span class="p">,</span>   <span class="mi">4</span><span class="p">,</span>   <span class="mi">6</span><span class="p">,</span>  <span class="mi">15</span><span class="p">,</span>  <span class="mi">16</span><span class="p">,</span>   <span class="mi">9</span><span class="p">,</span>  <span class="mi">26</span><span class="p">,</span>   <span class="mi">2</span><span class="p">,</span>   <span class="mi">3</span><span class="p">,</span>  <span class="mi">17</span><span class="p">,</span>
+          <span class="mi">0</span><span class="p">,</span>  <span class="mi">24</span><span class="p">,</span>   <span class="mi">7</span><span class="p">,</span>  <span class="mi">10</span><span class="p">,</span>  <span class="mi">12</span><span class="p">,</span>   <span class="mi">2</span><span class="p">,</span>   <span class="mi">6</span><span class="p">,</span>  <span class="mi">18</span><span class="p">])]]</span>
+</code></pre></div></div>
+
+<p>With this we’re done with the basics. Let’s start building the network. It’s a good idea to first have a general overview of what we aim to achieve. One might think of something along the following lines.</p>
+
+<blockquote>
+  <p>On a very high level, the first step in a general workflow will be to feed in inputs to an LSTM to get the predictions. Next, we pass on the predictions along with the targets to the loss function to calculate the loss. Finally, we backpropagate through the loss to update our model’s parameters.</p>
+</blockquote>
+
+<p>Hmm, that sounds easy, right? But how do you actually make it work? Let’s dissect this step by step. We’ll first identify the components needed to build our model, and finally put them to gether as a single piece to make it work.</p>
+
+<div class="note">
+
+  <h3 id="the-pytorch-paradigm">The PyTorch paradigm</h3>
+
+  <p>… before diving in, it’s important to know a couple of things. PyTorch provides implementations for most of the commonly used entities from layers such as LSTMs, CNNs and GRUs to optimizers like SGD, Adam, and what not (Isn’t that the whole point of using PyTorch in the first place?!). The general paradigm to use any of these entities is to first create an instance of <code class="language-plaintext highlighter-rouge">torch.nn.entity</code> with some required parameters. As an example, here’s how we instantiate an <code class="language-plaintext highlighter-rouge">lstm</code>.</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Step 1
+</span><span class="n">lstm</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">LSTM</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">hidden_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">batch_first</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div>  </div>
+
+  <p>Next, we call this object with the inputs as parameters when we actually want to run an LSTM over some inputs. This is shown in the third line below.</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">lstm_in</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">hidden_in</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">torch</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="c1"># Step 2
+</span><span class="n">lstm_out</span><span class="p">,</span> <span class="n">lstm_hidden</span> <span class="o">=</span> <span class="n">lstm</span><span class="p">(</span><span class="n">lstm_in</span><span class="p">,</span> <span class="n">hidden_in</span><span class="p">)</span>
+</code></pre></div>  </div>
+
+  <p>This two-stepped process will be seen all through this tutorial and elsewhere. Below, we’ll go through step 1 of all the modules. We’ll connect the dots at a later stage.</p>
+
+</div>
+
+<p>Getting back to code now, let’s dissect our ‘high level’ understanding again.</p>
+
+<h2 id="1-prepare-inputs">1. Prepare inputs</h2>
+
+<blockquote>
+  <p>… <strong>feed in inputs</strong> to an LSTM to get the predictions …</p>
+</blockquote>
+
+<p>To feed in inputs, well, we first need to prepare the inputs. Remember the embedding matrix \(E\) we described <a href="#the-dataset-finally">earlier</a>? we’ll use \(E\) to convert the pair of indices we get from <code class="language-plaintext highlighter-rouge">dataset()</code> into the corresponding embedding vectors. Following the general paradigm, we create an instance of <code class="language-plaintext highlighter-rouge">torch.nn.Embedding</code>.</p>
+
+<p>The <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Embedding">docs</a> list two required parameters - <code class="language-plaintext highlighter-rouge">num_embeddings: the size of the dictionary of embeddings</code> and <code class="language-plaintext highlighter-rouge">embedding_dim: the size of each embedding vector</code>. In our case, these are <code class="language-plaintext highlighter-rouge">vocab_size</code> \(V\) and <code class="language-plaintext highlighter-rouge">embedding_dim</code> \(D\) respectively.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Step 1
+</span><span class="n">embed</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Later on, we could easily convert any input tensor <code class="language-plaintext highlighter-rouge">ecrypted</code> containing indices of the encrypted input (like the one we get from <code class="language-plaintext highlighter-rouge">dataset()</code>) into the corresponding embedding vectors by simply calling <code class="language-plaintext highlighter-rouge">embed(encrypted)</code>.</p>
+
+<p>As an example, the word <code class="language-plaintext highlighter-rouge">SECRET</code> becomes <code class="language-plaintext highlighter-rouge">ERPDRF</code> after encryption, and the letters of <code class="language-plaintext highlighter-rouge">ERPDRF</code> correspond to the indices <code class="language-plaintext highlighter-rouge">[4, 17, 15, 3, 17, 5]</code>. If <code class="language-plaintext highlighter-rouge">encrypted</code> is <code class="language-plaintext highlighter-rouge">torch.tensor([4, 17, 15, 3, 17, 5])</code>, then <code class="language-plaintext highlighter-rouge">embed(encrypted)</code> would return something similar to the following.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Step 2
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">encrypted</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">embedded</span> <span class="o">=</span> <span class="n">embed</span><span class="p">(</span><span class="n">encrypted</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">embedded</span><span class="p">)</span>
+<span class="n">tensor</span><span class="p">([[</span> <span class="mf">0.2666</span><span class="p">,</span>  <span class="mf">2.1146</span><span class="p">,</span>  <span class="mf">1.3225</span><span class="p">,</span>  <span class="mf">1.3261</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.6993</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mf">1.5723</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.1346</span><span class="p">,</span>  <span class="mf">2.6892</span><span class="p">,</span>  <span class="mf">2.7130</span><span class="p">,</span>  <span class="mf">1.7636</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mf">1.9679</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8601</span><span class="p">,</span>  <span class="mf">3.0942</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8810</span><span class="p">,</span>  <span class="mf">0.6042</span><span class="p">],</span>
+        <span class="p">[</span> <span class="mf">3.6624</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3556</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.7088</span><span class="p">,</span>  <span class="mf">1.4370</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.2903</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mf">1.5723</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.1346</span><span class="p">,</span>  <span class="mf">2.6892</span><span class="p">,</span>  <span class="mf">2.7130</span><span class="p">,</span>  <span class="mf">1.7636</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mf">1.8041</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.8606</span><span class="p">,</span>  <span class="mf">2.5406</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.5191</span><span class="p">,</span>  <span class="mf">1.7761</span><span class="p">]])</span>
+</code></pre></div></div>
+
+<h2 id="2-build-an-lstm">2. Build an LSTM</h2>
+
+<blockquote>
+  <p>… feed in inputs <strong>to an LSTM</strong> to get the predictions …</p>
+</blockquote>
+
+<p>Next, we need to create an LSTM. We do this in a similar fashion by creating an instance of <code class="language-plaintext highlighter-rouge">torch.nn.LSTM</code>. This time, the <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.LSTM">docs</a> list the required parameters as <code class="language-plaintext highlighter-rouge">input_size: the number of expected features in the input</code> and <code class="language-plaintext highlighter-rouge">hidden_size: the number of features in the hidden state</code>. Since LSTMs typically operate on variable length sequences, the <code class="language-plaintext highlighter-rouge">input_size</code> refers to the size of each entity in the input sequence. In our case, this means the <code class="language-plaintext highlighter-rouge">embedding_dim</code>. This might sound counter-intuitive, but if you think for a while, it makes sense.</p>
+
+<p><code class="language-plaintext highlighter-rouge">hidden_size</code>, as the name suggests, is the size of the hidden state of the RNN. In case of an LSTM, this refers to the size of both, the <code class="language-plaintext highlighter-rouge">cell_state</code> and the <code class="language-plaintext highlighter-rouge">hidden_state</code>. Note that the hidden size is a hyperparameter and <em>can be different</em> from the input size. <a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/">colah’s blog post</a> doesn’t explicitly mention this, but the equations on the PyTorch <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.LSTMCell">docs on LSTMCell</a> should make it clear. To summarize the discussion above, here is how we instantiate the LSTM.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Step 1
+</span><span class="n">lstm</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">LSTM</span><span class="p">(</span><span class="n">embedding_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="note">
+
+  <h3 id="a-note-on-dimensionality">A note on dimensionality</h3>
+
+  <p>During step 2 of the <a href="#the-pytorch-paradigm">general paradigm</a>, <code class="language-plaintext highlighter-rouge">torch.nn.LSTM</code> expects the input to be a 3D input tensor of size <code class="language-plaintext highlighter-rouge">(seq_len, batch, embedding_dim)</code>, and returns an output tensor of the size <code class="language-plaintext highlighter-rouge">(seq_len, batch, hidden_dim)</code>. We’ll only feed in one input at a time, so <code class="language-plaintext highlighter-rouge">batch</code> is always <code class="language-plaintext highlighter-rouge">1</code>.</p>
+
+  <p>As an example, consider the input-output pair <code class="language-plaintext highlighter-rouge">('ERPDRF', 'SECRET')</code>. Using an <code class="language-plaintext highlighter-rouge">embedding_dim</code> of 5, the 6 letter long input <code class="language-plaintext highlighter-rouge">ERPDRF</code> is transformed into an input tensor of size <code class="language-plaintext highlighter-rouge">6 x 1 x 5</code>. If <code class="language-plaintext highlighter-rouge">hidden_dim</code> is 10, the input is processed by the LSTM into an output tensor of size <code class="language-plaintext highlighter-rouge">6 x 1 x 10</code>.</p>
+
+</div>
+
+<p>Generally, the LSTM is expected to run over the input sequence character by character to emit a probability distribution over all the letters in the vocabulary. So for every input character, we expect a \(V\) dimensional output tensor where \(V\) is 27 (the size of the vocabulary). The most probable letter is then chosen as the output at every timestep.</p>
+
+<p>If you have a look at the output of the LSTM on the example pair <code class="language-plaintext highlighter-rouge">('ERPDRF', 'SECRET')</code> <a href="#a-note-on-dimensionality">above</a>, you can instantly make out that the dimensions are not right. The output dimension is <code class="language-plaintext highlighter-rouge">6 x 1 x 10</code> - which means that for every character, the output is a \(D\) (10) dimensional tensor instead of the expected 27.</p>
+
+<p>So how do we solve this?</p>
+
+<h2 id="3-transform-the-outputs">3. Transform the outputs</h2>
+
+<blockquote>
+  <p>… feed in inputs to an LSTM to <strong>get the predictions</strong> …</p>
+</blockquote>
+
+<p>The general workaround is to transform the \(D\) dimensional tensor into a \(V\) dimensional tensor through what is called an affine (or linear) transform. Sparing the definitions aside, the idea is to use matrix multiplication to get the desired dimensions.</p>
+
+<p>Let’s say the LSTM produces an output tensor \(O\) of size <code class="language-plaintext highlighter-rouge">seq_len x batch x hidden_dim</code>. Recall that we only feed in one example at a time, so <code class="language-plaintext highlighter-rouge">batch</code> is always <code class="language-plaintext highlighter-rouge">1</code>. This essentially gives us an output tensor \(O\) of size <code class="language-plaintext highlighter-rouge">seq_len x hidden_dim</code>. Now if we multiply this output tensor with another tensor \(W\) of size <code class="language-plaintext highlighter-rouge">hidden_dim x embedding_dim</code>, the resultant tensor \(R = O \times W\) has a size of <code class="language-plaintext highlighter-rouge">seq_len x embedding_dim</code>. Isn’t this exactly what we wanted?</p>
+
+<p>To implement the linear layer, … you guessed it! We create an instance of <code class="language-plaintext highlighter-rouge">torch.nn.Linear</code>. This time, the <a href="https://pytorch.org/docs/stable/nn.html#torch.nn.Linear">docs</a> list the required parameters as <code class="language-plaintext highlighter-rouge">in_features:  size of each input sample</code> and <code class="language-plaintext highlighter-rouge">out_features:  size of each output sample</code>. Note that this only transforms the last dimension of the input tensor. So for example, if we pass in an input tensor of size <code class="language-plaintext highlighter-rouge">(d1, d2, d3, ..., dn, in_features)</code>, the output tensor will have the same size for all but the last dimension, and will be a tensor of size <code class="language-plaintext highlighter-rouge">(d1, d2, d3, ..., dn, out_features)</code>.</p>
+
+<p>With this knowledge in mind, it’s easy to figure out that <code class="language-plaintext highlighter-rouge">in_features</code> is <code class="language-plaintext highlighter-rouge">hidden_dim</code>, and <code class="language-plaintext highlighter-rouge">out_features</code> is <code class="language-plaintext highlighter-rouge">vocab_size</code>. The linear layer is initialised below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Step 1
+</span><span class="n">linear</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>With this we’re preddy much done with the essentials. Time for some learning!</p>
+
+<h2 id="4-calculate-the-loss">4. Calculate the loss</h2>
+
+<blockquote>
+  <p>Next, we pass on the predictions along with the targets to the loss function to calculate the loss.</p>
+</blockquote>
+
+<p>If you think about it, the LSTM is essentially performing multi-class classification at every time step by choosing one letter out of the 27 characters of the vocabulary. A common choice in such a case is to use the cross entropy loss function <code class="language-plaintext highlighter-rouge">torch.nn.CrossEntropyLoss</code>. We initialize this in a similar manner.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">loss_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>You can read more about cross entropy loss in the excellent <a href="https://rdipietro.github.io/friendly-intro-to-cross-entropy-loss/">blog post by Rob DiPietro.</a></p>
+
+<h2 id="5-optimize">5. Optimize</h2>
+
+<blockquote>
+  <p>Finally, we backpropagate through the loss to update our model’s parameters.</p>
+</blockquote>
+
+<p>A popular choice is the Adam optimizer. Here’s how we initialize it. Notice that almost all torch layers have this convenient way of getting all their parameters by calling <code class="language-plaintext highlighter-rouge">module.parameters()</code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">optim</span><span class="p">.</span><span class="n">Adam</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">embed</span><span class="p">.</span><span class="n">parameters</span><span class="p">())</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">lstm</span><span class="p">.</span><span class="n">parameters</span><span class="p">())</span>
+                             <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">linear</span><span class="p">.</span><span class="n">parameters</span><span class="p">()),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>To summarize, here’s how we initialize the required layers.</p>
+
+<script src="https://gist.github.com/13243631f8ed219167ccd3866ce3204e.js?file=module-model.py"> </script>
+
+<p>Let’s wrap this up and consolidate the network. Have a look at the training script below. Most of the code should make sense on its own. There are a few helper operations like <code class="language-plaintext highlighter-rouge">torch.squeeze</code> and <code class="language-plaintext highlighter-rouge">torch.transpose</code> whose function can be inferred from the comments. You can also refer to the <a href="https://pytorch.org/docs/stable/torch.html">docs</a> for more information.</p>
+
+<script src="https://gist.github.com/13243631f8ed219167ccd3866ce3204e.js?file=module-train.py"> </script>
+
+<p>After every training iteration, we need to evaluate the network. Have a look at the validation script below. After calculating the scores as in the training script, we calculate a softmax over the scores to get a probability distribution in line 9. We then aggregate the characters with the maximum probability in line 11. We then compare the predicted output <code class="language-plaintext highlighter-rouge">batch_out</code> with the target output <code class="language-plaintext highlighter-rouge">original</code> in line 15. At the end of the epoch, we calculate the accuracy in line 18.</p>
+
+<script src="https://gist.github.com/13243631f8ed219167ccd3866ce3204e.js?file=module-valid.py"> </script>
+
+<p>Notice that the predicted outputs are still in the form of indices. Converting them back to characters is left as an exercise.</p>
+
+<p>But before you go, congratulations! You’ve built your first RNN in PyTorch! The complete code for this post is available as a <a href="https://gist.github.com/nikhilweee/13243631f8ed219167ccd3866ce3204e">GitHub gist</a>. You can test the network by simply running the <a href="https://gist.github.com/nikhilweee/13243631f8ed219167ccd3866ce3204e#file-train-py">training script</a>. Thanks for sticking around.</p>
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:why-nn" role="doc-endnote">
+      <p><strong>But why Neural Networks?</strong> You might be wondering why do we use neural networks in the first place. In our use case, it sure makes more sense to decrypt the messages by conventional programming because we <em>know</em> the encryption function beforehand. <em>This might not be the case everytime</em>. You might have a situation where you have enough data but still have no idea about the encryption function. Neural networks fit quite well in such a situation. Anyways, keep in mind that this is still a toy problem. One motivation to choose this problem is the ease of generating loads of training examples on the fly. So we don’t really need to procure any dataset. Yay! <a href="#fnref:why-nn" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:char-embedding" role="doc-endnote">
+      <p><strong>I think I read something different!</strong> Strictly speaking, what I just described here is called a <em>character embedding</em>, beacause we have a vector for each <em>character</em> in the alphabet. In case we had a vector for each <em>word</em> in a vocabulary, we would be using <em>word embeddings</em> instead. Notice the analogy here. An alphabet is the set of all the letters in a language. Similarly, a vocabulary is the collection of all the words in a language. <a href="#fnref:char-embedding" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </div><div class="post-comments" itemprop="comment"><hr />
+<h1>Comments</h1>
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+	    var disqus_shortname = 'nikhilweee';
+	    // ensure that pages with query string get the same discussion
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];	    
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div></div></article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+      
+      &copy; Nikhil Verma 2021 - Subscribe via <a href="https://nikhilweee.github.io/feed.xml">RSS</a>
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

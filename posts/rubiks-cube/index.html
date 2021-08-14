@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  
+  
+  <title>Visual Cube - Nikhil Verma</title>
+  <meta name="description" content="The rubik’s cube needs no introduction. I’ve personally seen these since my childhood but I was never quite interested in solving the cube. As a kid, I used to play around, knowing that this is impossible for me to solve. I gave up easily. This was nothing more than a fidgeting toy.">
+  
+
+  <link rel="icon" type="image/svg" href="/static/favicon.png">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://nikhilweee.github.io/posts/rubiks-cube/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Nikhil Verma" href="https://nikhilweee.github.io/feed.xml">
+
+  <!-- MathJax -->
+  
+
+  
+  <meta property="og:title" content="Visual Cube - Nikhil Verma">
+  <meta property="og:site_name" content="Nikhil Verma">
+  <meta property="og:url" content="https://nikhilweee.github.io/posts/rubiks-cube/">
+  <meta property="og:description" content="The rubik’s cube needs no introduction. I’ve personally seen these since my childhood but I was never quite interested in solving the cube. As a kid, I used to play around, knowing that this is impossible for me to solve. I gave up easily. This was nothing more than a fidgeting toy.">
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="nikhilweee">
+  <meta name="twitter:title" content="Visual Cube - Nikhil Verma">
+  <meta name="twitter:description" content="The rubik’s cube needs no introduction. I’ve personally seen these since my childhood but I was never quite interested in solving the cube. As a kid, I used to play around, knowing that this is imp...">
+  
+    <meta name="twitter:creator" content="nikhilweee">
+  
+  
+
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Bitter:400,400i,700&amp;display=swap" rel="stylesheet">
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-72048305-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://nikhilweee.github.io">Nikhil Verma</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Visual Cube</h1>
+    <h2 class="post-subtitle" itemprop="abstract description">A visual explanation of popular algorithms for the rubik&#39;s cube</h2>
+    <p class="post-meta">
+      <time datetime="2017-04-12T00:00:00+00:00" itemprop="datePublished">Apr 12, 2017</time> • <a href="https://nikhilweee.github.iocategory/explanations">Explanations</a></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>The rubik’s cube needs no introduction. I’ve personally seen these since my childhood but I was never quite interested in solving the cube. As a kid, I used to play around, knowing that this is impossible for me to solve. I gave up easily. This was nothing more than a fidgeting toy.</p>
+
+<p>Only recently has this toy caught my interest, and it was a bit too late when I tried to learn how to actually solve a cube. Most of the tutorials on the interweb throw out algorithms at you, but without an intuitive understanding of how they actually work, simply memorizing them does no good.</p>
+
+<p>Here’s an attempt to simplify all those <code class="language-plaintext highlighter-rouge">FR'UDD'R</code>s. Feel free to drag the cube around for a complete view.</p>
+
+<p><em>A big thanks to <a href="https://codepen.io/pixelass">Gregor Adams</a> for his beautiful model of the <a href="https://codepen.io/pixelass/pen/CsItl">RubiCSS cube</a>.</em><br />
+<em>All these algorithms can be seen on  <a href="https://how-to-solve-a-rubix-cube.com/">how-to-solve-a-rubix-cube.com</a></em></p>
+
+<h2 id="correcting-the-edges">Correcting the edges</h2>
+
+<p><code class="language-plaintext highlighter-rouge">F R D' R F F</code></p>
+
+<p>This might be the first “difficult” step for many newbies. Pay attention to the highlighted edge. Notice how this algorithm cleverly corrects the orientation of the red-green edge.</p>
+
+<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/static/cube/algorithms/frdrff"></object>
+
+<h2 id="the-top-cross">The Top Cross</h2>
+
+<p><code class="language-plaintext highlighter-rouge">F R U R' U' F</code></p>
+
+<p>Once you’ve made the second layer, these algorithms start to get a bit longer. And why not? These algorithms also have the additional responsibility to maintain the bottom two layers. Here’s the popular <code class="language-plaintext highlighter-rouge">fruruf</code>.</p>
+
+<p>There are a few interesting observations about this algorithm.<br />
+Notice the “L” and “Rod” shapes on the top edge that are commonly talked about. Also notice how there’s a counterclockwise follow up to every move. There’s an <code class="language-plaintext highlighter-rouge">R'</code> for an <code class="language-plaintext highlighter-rouge">R</code>, an <code class="language-plaintext highlighter-rouge">F'</code> for an <code class="language-plaintext highlighter-rouge">F</code>, and a <code class="language-plaintext highlighter-rouge">U'</code> for a <code class="language-plaintext highlighter-rouge">U</code>. These are certainly necessary to maintain the bottom two layers. Also notice that the reverse order is  not <code class="language-plaintext highlighter-rouge">U'R'F'</code> for obvious reasons.
+Notice how six iterations of the same algorithm bring you back to where you started. Also notice the “L” and “Rod” shapes formed on the top face of the cube.</p>
+
+<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/static/cube/algorithms/fruruf"></object>
+
+<h2 id="the-last-layer-edges">The Last Layer Edges</h2>
+
+<p><code class="language-plaintext highlighter-rouge">R U R' U R U U R' U</code></p>
+
+<p>Swapping the edges on the last layer can be tricky to understand. Take a look below.
+Notice how the consecutive <code class="language-plaintext highlighter-rouge">UU</code>s are important to bring the top edges back to position.</p>
+<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/static/cube/algorithms/rururuuru"></object>
+
+<h2 id="position-the-last-layer-corners">Position the Last Layer Corners</h2>
+
+<p><code class="language-plaintext highlighter-rouge">U R U' L' U R' U' L</code></p>
+
+<p>Swapping the edges on the last layer can be tricky to understand. Take a look below.
+Corner 1 always stays in the same place, and in the same orientation. Notice how the bottom layers and the top corners are gracefully in place.
+Also note the positions of the four corners at the end of every iteration. The algorithm repeats itself after three iterations. The highlighted corners can only be in one of the three possibilities.</p>
+
+<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/static/cube/algorithms/urulurul"></object>
+
+<h2 id="orient-the-last-layer-corners">Orient the Last Layer Corners</h2>
+
+<p><code class="language-plaintext highlighter-rouge">R' D' R D</code></p>
+
+<p>Swapping the edges on the last layer can be tricky to understand. Take a look below.
+Notice how the orienttion of the four corners is changed after an even iteration.</p>
+<object id="base" type="text/html" style="width: 100%; height: 500px;" data="/static/cube/algorithms/rdrd"></object>
+
+<p>I hope this visual tour helps improve your understanding of the cube. I’m sure there might be better interpretations. Please feel free to comment!</p>
+
+  </div><div class="post-comments" itemprop="comment"><hr />
+<h1>Comments</h1>
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+	    var disqus_shortname = 'nikhilweee';
+	    // ensure that pages with query string get the same discussion
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];	    
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div></div></article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+      
+      &copy; Nikhil Verma 2021 - Subscribe via <a href="https://nikhilweee.github.io/feed.xml">RSS</a>
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

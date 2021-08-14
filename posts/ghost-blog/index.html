@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  
+  
+  <title>Set up a Ghost blog - Nikhil Verma</title>
+  <meta name="description" content="Before you read This is not an in-depth tutorial for a total newbie. Something like that would make this a really long post. Though I’ve given one-liners explaining each command, It would be better if you had some experience working with the linux terminal and a basic understanding of how web content is served.">
+  
+
+  <link rel="icon" type="image/svg" href="/static/favicon.png">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://nikhilweee.github.io/posts/ghost-blog/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Nikhil Verma" href="https://nikhilweee.github.io/feed.xml">
+
+  <!-- MathJax -->
+  
+
+  
+  <meta property="og:title" content="Set up a Ghost blog - Nikhil Verma">
+  <meta property="og:site_name" content="Nikhil Verma">
+  <meta property="og:url" content="https://nikhilweee.github.io/posts/ghost-blog/">
+  <meta property="og:description" content="Before you read This is not an in-depth tutorial for a total newbie. Something like that would make this a really long post. Though I’ve given one-liners explaining each command, It would be better if you had some experience working with the linux terminal and a basic understanding of how web content is served.">
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="nikhilweee">
+  <meta name="twitter:title" content="Set up a Ghost blog - Nikhil Verma">
+  <meta name="twitter:description" content="Before you read This is not an in-depth tutorial for a total newbie. Something like that would make this a really long post. Though I’ve given one-liners explaining each command, It would be better...">
+  
+    <meta name="twitter:creator" content="nikhilweee">
+  
+  
+
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Bitter:400,400i,700&amp;display=swap" rel="stylesheet">
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-72048305-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://nikhilweee.github.io">Nikhil Verma</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Set up a Ghost blog</h1>
+    <h2 class="post-subtitle" itemprop="abstract description">from scratch, in under 30 minutes!</h2>
+    <p class="post-meta">
+      <time datetime="2016-01-08T00:00:00+00:00" itemprop="datePublished">Jan 8, 2016</time> • <a href="https://nikhilweee.github.iocategory/tutorials">Tutorials</a></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <h4 id="before-you-read">Before you read</h4>
+<p>This is <em>not</em> an in-depth tutorial for a total newbie. Something like that would make this a really long post. Though I’ve given one-liners explaining each command,
+It would be better if you had some experience working with the linux terminal and a basic understanding of how web content is served.</p>
+
+<h3 id="things-youll-need">Things you’ll need</h3>
+<p>Just the two of them will do</p>
+
+<ul>
+  <li>
+    <dl>
+      <dt>A <strong>Server</strong></dt>
+      <dd>This is where your site contents will be stored. It’s just an internet connected computer that’ll stay awake 24x7 for your blog and will serve users with your blog as and when asked to so.</dd>
+    </dl>
+  </li>
+  <li>
+    <dl>
+      <dt>A <strong>domain</strong></dt>
+      <dd>No one likes remembering IP addresses. You’ll need this to give your blog a name.</dd>
+    </dl>
+  </li>
+</ul>
+
+<h3 id="1-buy-a-server">1. Buy a server</h3>
+<p>You can buy a server online from your favourite provider. I suggest using <a href="https://www.digitalocean.com/?refcode=ad1b7e083b2e">DigitalOcean</a>, where you can spin up a server for just $5 per month.
+To get $10 in free credits, use <a href="https://www.digitalocean.com/?refcode=ad1b7e083b2e">this link</a>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.digitalocean.com/?refcode=ad1b7e083b2e
+</code></pre></div></div>
+
+<ul>
+  <li><a href="https://www.digitalocean.com/?refcode=ad1b7e083b2e">Sign up</a> for an account and enter your credit card details or pay via PayPal.</li>
+  <li>A <code class="language-plaintext highlighter-rouge">$5</code> droplet with an <code class="language-plaintext highlighter-rouge">Ubuntu</code> image at your nearest datacenter would be enough for a blog. No need for any <code class="language-plaintext highlighter-rouge">additional options</code> or <code class="language-plaintext highlighter-rouge">SSH Keys</code> for now.</li>
+</ul>
+
+<h3 id="2-set-up-your-server">2. Set up your server</h3>
+<p>Now that you’ve bought your own server, its time to set it up. Use the following commands from your terminal.
+Consult these <a href="https://www.digitalocean.com/community/tutorial_series/new-ubuntu-14-04-server-checklist">community tutorials</a> for more details.</p>
+
+<ul>
+  <li><a href="https://www.digitalocean.com/community/tutorials/how-to-connect-to-your-droplet-with-ssh"><strong>Connect to your server via ssh</strong></a></li>
+</ul>
+
+<p>The server IP and root password can be found in your email when you set up your droplet.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ssh root@&lt;server IP&gt;
+</code></pre></div></div>
+
+<h3 id="3-secure-your-server">3. Secure your server</h3>
+<p>These steps are not necessary, but <em>strictly recommended</em>.
+I have skipped explaining them for brevity. Consult the DigitalOcean <a href="https://www.digitalocean.com/community/tutorial_series/new-ubuntu-14-04-server-checklist">community tutorials</a> which explains all these steps in detail.</p>
+
+<ul>
+  <li><strong>Create a new user and restrict it</strong>. Why risk root access in case your server gets hacked?</li>
+  <li><strong>Configure passwordless ssh</strong>. So that only your computer can login to your server.</li>
+  <li><strong>Disable root login</strong>. You wouldn’t want someone gaining root access to your server. Why not disable it in the first place?</li>
+  <li><strong>Set up firewall</strong> so that only specified ports remain open.</li>
+</ul>
+
+<h3 id="4-set-up-your-domain">4. Set up your domain</h3>
+<p>I’ll cover how to buy and point your domain to your server here.</p>
+
+<ul>
+  <li><strong>Buy a domain</strong>. You can use the <a href="http://freenom.com/">free ones</a>, or spend money for the popular ones. GoDaddy and NameCheap are reliable providers.</li>
+  <li><strong>Use DigitalOcean nameservers</strong>. This is optional, but lets you manage your server and domain from the same place. Edit your domain details to configure the nameservers to the following</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ns1.digitalocean.com
+ns2.digitalocean.com
+ns3.digitalocean.com
+</code></pre></div></div>
+<ul>
+  <li><strong>Connect domain to droplet</strong>. Go to <code class="language-plaintext highlighter-rouge">Networking &gt; Domains</code> tab in DigitalOcean settings. Connect your domain with the droplet by entering your domain, say <code class="language-plaintext highlighter-rouge">nikhilweee.me</code>, selecting your droplet from the dropdown and hitting <em>Create Record</em>. Your domain should now point to your droplet IP.</li>
+</ul>
+
+<h3 id="5-set-up-ghost">5. Set up Ghost</h3>
+<p>Now that we’ve connected the domain and the droplet, it’s time to set up your Ghost blog.</p>
+
+<ul>
+  <li><strong>Install and update <code class="language-plaintext highlighter-rouge">npm</code> and <code class="language-plaintext highlighter-rouge">node</code></strong>.</li>
+</ul>
+
+<p>Ghost is written in javascript and needs node and npm to build and run on the server.</p>
+
+<p>The first command installs node and npm, the second one upgrades npm, and the third one is required for ubuntu, so that <code class="language-plaintext highlighter-rouge">node</code> is equivalent to <code class="language-plaintext highlighter-rouge">nodejs</code> in the terminal.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ apt-get install nodejs npm
+$ npm install -g npm
+$ ln -s "$(which nodejs)" /usr/bin/node
+
+</code></pre></div></div>
+<ul>
+  <li><strong>Install Ghost</strong>.</li>
+</ul>
+
+<p>We’ll download the latest version, extract and then install it to the recommended install directory.</p>
+
+<p>We’ll first install the tools <code class="language-plaintext highlighter-rouge">zip</code> and <code class="language-plaintext highlighter-rouge">wget</code> needed to download and extract the archive, then create the recommended directory <code class="language-plaintext highlighter-rouge">/var/www/</code>, and then download and extract the latest version of ghost. The following commands do just that.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo apt-get update
+$ sudo apt-get install zip wget
+$ sudo mkdir -p /var/www/
+$ cd /var/www
+$ sudo wget https://ghost.org/zip/ghost-latest.zip
+$ sudo unzip -d ghost ghost-latest.zip
+$ cd ghost/
+$ sudo npm install --production
+</code></pre></div></div>
+<ul>
+  <li><strong>Configure Ghost</strong></li>
+</ul>
+
+<p>Ghost stores your blog url in a <code class="language-plaintext highlighter-rouge">config.js</code> file. We’ll first create the file using a default template and then set the appropriate url. Open the config file  by using the following commands, and then under <code class="language-plaintext highlighter-rouge">config &gt; production</code>, change the url to your new domain.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo cp config.example.js config.js
+$ sudo nano config.js
+</code></pre></div></div>
+
+<h3 id="6-set-up-nginx">6. Set up Nginx</h3>
+<p>Nginx (read Engine-X) is the server software (that technically makes your droplet a server) that we’ll use to serve our blog. We won’t use the ghost development server as that isn’t a good practice.</p>
+
+<ul>
+  <li><strong>Install nginx</strong></li>
+</ul>
+
+<p>It’s our favourite <code class="language-plaintext highlighter-rouge">apt-get</code> command again.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo apt-get install nginx
+</code></pre></div></div>
+<ul>
+  <li><strong>Configure nginx</strong></li>
+</ul>
+
+<p>We’ll create a configuration file for your site in the  <code class="language-plaintext highlighter-rouge">sites-available</code> directory.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd /etc/nginx/
+$ sudo touch /etc/nginx/sites-available/ghost
+$ sudo nano /etc/nginx/sites-available/ghost
+</code></pre></div></div>
+<p>Now edit the config file. The following snippet is the simplest configuration for a working ghost blog. We are simply running your blog behind a proxy server. This way we get the robustness of nginx along with a simple config.
+Paste this code into the editor. Replace <code class="language-plaintext highlighter-rouge">&lt;domain.tld&gt;</code> with your actual domain.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+    listen 80;
+    server_name &lt;domain.tld&gt;;
+    location / {
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   Host      $http_host;
+        proxy_pass         http://127.0.0.1:2368;
+    }
+}
+</code></pre></div></div>
+<ul>
+  <li><strong>Enable your site</strong></li>
+</ul>
+
+<p>Simply symlink the file you just created to the <code class="language-plaintext highlighter-rouge">sites-enabled</code> directory and restart nginx.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo ln -s /etc/nginx/sites-available/ghost /etc/nginx/sites-enabled/ghost
+$ sudo service nginx restart
+</code></pre></div></div>
+<ul>
+  <li>At this stage, test your config</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd /var/www/ghost
+$ sudo npm start --production
+</code></pre></div></div>
+<p>You should be able to access your new ghost blog on your new domain. If not, there’s been a mistake. C’mon. Get working. Fix that crap!</p>
+
+<h3 id="7-set-up-autostart">7. Set up autostart</h3>
+
+<p>Now that your blog is set up, we just finally need to ensure that the blog doesn’t stop for any reason and even autostarts on droplet restart. I’ll do this using supervisor.</p>
+
+<ul>
+  <li><strong>Install supervisor</strong></li>
+</ul>
+
+<p>Again, <code class="language-plaintext highlighter-rouge">apt-get</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo apt-get install supervisor
+</code></pre></div></div>
+<ul>
+  <li><strong>Configure your blog for supervisor</strong></li>
+</ul>
+
+<p>We’ll again create a config file as we did for nginx.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo nano /etc/supervisor/conf.d/ghost.conf
+</code></pre></div></div>
+<p>Now edit the file to create an autostart process so that your blog remains stable.
+<code class="language-plaintext highlighter-rouge">user</code> should be an existing user on the system. Better to use a dedicated user as a safety measure as described in <code class="language-plaintext highlighter-rouge">4. Secure your server</code> above.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[program:ghost]
+command = node /var/www/ghost/index.js
+directory = /var/www/ghost
+user = ghost
+autostart = true
+autorestart = true
+stdout_logfile = /var/log/supervisor/ghost.log
+stderr_logfile = /var/log/supervisor/ghost_err.log
+environment = NODE_ENV="production"
+</code></pre></div></div>
+<ul>
+  <li><strong>Restart</strong></li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo supervisorctl reread
+$ sudo supervisorctl update
+$ sudo supervisorctl restart ghost
+</code></pre></div></div>
+<p>Now your blog is all set and would even withstand restarts. Cheers!</p>
+
+  </div><div class="post-comments" itemprop="comment"><hr />
+<h1>Comments</h1>
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+	    var disqus_shortname = 'nikhilweee';
+	    // ensure that pages with query string get the same discussion
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];	    
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div></div></article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+      
+      &copy; Nikhil Verma 2021 - Subscribe via <a href="https://nikhilweee.github.io/feed.xml">RSS</a>
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
