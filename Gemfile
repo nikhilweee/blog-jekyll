@@ -3,6 +3,9 @@ source "https://rubygems.org"
 # Required Gems
 gem "jekyll", "~> 4.1.1"
 
+# Required for ruby 3
+gem "webrick"
+
 # Plugins
 group :jekyll_plugins do
   gem "jekyll-gist", "~> 1.5.0"
